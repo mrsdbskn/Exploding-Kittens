@@ -37,15 +37,34 @@ export function calculateDeckRecipe({
           shortDesc: card.shortDesc,
           mechanics: card.mechanics,
           totalAvailable: 0,
+          totalWithPaw: 0,
+          totalWithoutPaw: 0,
+          pawDetailNote: '',
           deckSources: []
         };
       }
       availablePool[card.slug].totalAvailable += card.quantity;
+      if (card.withPawQty) availablePool[card.slug].totalWithPaw += card.withPawQty;
+      if (card.withoutPawQty) availablePool[card.slug].totalWithoutPaw += card.withoutPawQty;
+
       availablePool[card.slug].deckSources.push({
         deckId: deck.id,
         deckName: deck.name,
-        quantity: card.quantity
+        quantity: card.quantity,
+        pawDetailNote: card.pawDetailNote,
+        withPawQty: card.withPawQty,
+        withoutPawQty: card.withoutPawQty
       });
+    }
+  }
+
+  // Generate aggregate paw detail note
+  for (const slug in availablePool) {
+    const item = availablePool[slug];
+    if (item.totalWithPaw > 0 && item.totalWithoutPaw > 0) {
+      item.pawDetailNote = `${item.totalWithPaw} with 🐾, ${item.totalWithoutPaw} without 🐾`;
+    } else if (item.totalWithPaw > 0) {
+      item.pawDetailNote = `${item.totalWithPaw} with 🐾`;
     }
   }
 

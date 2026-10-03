@@ -255,7 +255,10 @@
 
               <div class="check-card-info">
                 <span class="check-card-name">{{ item.name }}</span>
-                <span class="check-card-role">{{ item.role }}</span>
+                <span class="check-card-role">
+                  {{ item.role }}
+                  <span v-if="item.pawDetailNote" class="checklist-paw-note"> • 🐾 {{ item.pawDetailNote }}</span>
+                </span>
               </div>
 
               <div class="check-card-qty-badge">
@@ -368,6 +371,7 @@ const checklistItems = computed(() => {
       quantity: c.quantity,
       category: c.category || 'chaos',
       role: 'Action Pool: Dealt to hands + Draw pile',
+      pawDetailNote: c.pawDetailNote,
       icon: c.icons?.[0] || props.catalog[c.slug]?.icons?.[0]
     });
   }

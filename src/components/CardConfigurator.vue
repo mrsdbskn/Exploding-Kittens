@@ -178,6 +178,9 @@
               <span v-if="card.icons && card.icons.length > 1" class="m3-badge m3-badge-warning">
                 {{ card.icons.length }} artwork styles
               </span>
+              <span v-if="card.pawDetailNote" class="m3-badge m3-badge-secondary" :title="card.pawDetailNote">
+                🐾 {{ card.pawDetailNote }}
+              </span>
             </div>
           </div>
         </div>

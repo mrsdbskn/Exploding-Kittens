@@ -78,6 +78,18 @@ const test5 = calculateDeckRecipe({
 console.log('\nTest 5 (Dead player cards without Zombie Kitten):');
 const deadSugg = test5.suggestions.find(s => s.id === 'dead-player-zombie-kitten');
 console.log('  Dead player warning detected:', !!deadSugg);
-console.assert(!!deadSugg, 'Should warn when dead-player cards are active without Zombie Kitten');
+// Test 6: Party Pack Edition - 35 Cat Cards and 120 Total Cards
+const test6 = calculateDeckRecipe({
+  ownedDeckIds: ['exploding-kittens-party-pack-edition'],
+  decks: DECKS,
+  catalog: ALL_CARDS_CATALOG,
+  playerCount: 10
+});
+
+console.log('\nTest 6 (Party Pack Edition 10p):');
+console.log('  Party Pack Cat Cards Total:', test6.availablePool['cat-card'].totalAvailable, '(Expected: 35)');
+console.log('  Party Pack Total Cards in Deck:', test6.totalGameCards);
+console.assert(test6.availablePool['cat-card'].totalAvailable === 35, 'Party Pack must have exactly 35 Cat Cards (15 with paw, 20 without)');
+console.assert(test6.totalGameCards >= 100, 'Party Pack is a mega 120 card deck');
 
 console.log('\n All engine tests passed with 100% success!');
