@@ -100,6 +100,18 @@
       @close="showPresetModal = false"
       @load-preset="handleLoadPreset"
     />
+
+    <!-- Instructions & Embedded Rulebooks Modal -->
+    <InstructionsModal 
+      v-if="showInstructionsModal"
+      @close="showInstructionsModal = false"
+    />
+
+    <!-- Interactive Kitten Rules Referee Chatbot -->
+    <RulesBotDrawer 
+      @open-instructions="showInstructionsModal = true"
+      @inspect-card="inspectCard"
+    />
   </div>
 </template>
 
@@ -115,6 +127,8 @@ import SynergyAlerts from './components/SynergyAlerts.vue';
 import DeckRecipeOutput from './components/DeckRecipeOutput.vue';
 import CardDetailModal from './components/CardDetailModal.vue';
 import PresetModal from './components/PresetModal.vue';
+import InstructionsModal from './components/InstructionsModal.vue';
+import RulesBotDrawer from './components/RulesBotDrawer.vue';
 
 // Navigation state
 const currentStep = ref('decks');
@@ -132,6 +146,7 @@ const extraDefusesInDeck = ref(2);
 // Modals
 const inspectedCardSlug = ref(null);
 const showPresetModal = ref(false);
+const showInstructionsModal = ref(false);
 
 // LocalStorage persistence
 onMounted(() => {

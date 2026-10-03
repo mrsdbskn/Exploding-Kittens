@@ -13,9 +13,9 @@ Deployed and fully compatible with **GitHub Pages**.
   - **Original Edition** (56 cards)
   - **NSFW Edition** (56 cards)
   - **Recipes for Disaster** (121 cards)
-  - **Party Pack Edition** (53 cards)
+  - **Party Pack Edition** (120 cards - including all 35 Cat Cards with paw distribution)
   - **Good vs. Evil** (55 cards)
-  - **Zombie Kittens** (34 cards)
+  - **Zombie Kittens** (61 cards)
   - **2-Player Edition** (32 cards)
   - **Cat Burglar Edition** (56 cards)
   - **Imploding Kittens Expansion** (20 cards)
@@ -23,6 +23,24 @@ Deployed and fully compatible with **GitHub Pages**.
   - **Barking Kittens Expansion** (20 cards)
 - Displays official logos, theme colors, and card breakdown peeks for each deck.
 - Quick presets: *Select All*, *Classic + 3 Expansions*, *Recipes for Disaster*, *Party Pack*, etc.
+
+### 2. 🤖 Kitten Rules Referee (Interactive Chatbot)
+- Floating **Rules Bot** accessible from any screen on game night!
+- Answers questions instantly using official rulebooks and mechanics:
+  - *"Can you Nope a Defuse?"* -> Explains why Defuses and Exploding Kittens cannot be Noped.
+  - *"Can you Nope a Nope?"* -> Explains Nope chains ("Yup!").
+  - *"What happens if someone steals my Exploding Kitten when I have Streaking Kitten?"*
+  - *"Do Attack cards stack?"*
+  - *"How do Cat Card combos work?"*
+  - *"Can Imploding Kitten be defused?"*
+  - *"Can Godcat be played as a Nope?"*
+- Features 1-click suggested question chips, card inspection links, and official rule citations.
+
+### 3. 📖 Embedded Official Rulebooks & PDF Links
+- Dedicated in-app **Rules Reader**:
+  - Full readable sections for all 11 decks: *Overview*, *Turn Structure (Play, Pass, Draw)*, *Defusing*, *Cat Combos*, and *Expansion Mechanics*.
+  - Direct links to official rulebook PDFs on CloudFront, AWS S3, and Shopify.
+  - Global text search across all rulebooks.
 
 ### 2. Step 2: Card Exclusions & Player Count Configurator
 - Set Player Count from **2 to 10 players**.
