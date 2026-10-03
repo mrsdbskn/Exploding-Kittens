@@ -586,4 +586,90 @@ const getSynergyTip = (slug) => {
   font-size: 0.8rem;
   color: #aaa;
 }
+
+@media (max-width: 850px) {
+  .codex-backdrop {
+    padding: 0;
+  }
+  .codex-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .codex-header {
+    padding: 12px 14px;
+  }
+  .codex-title {
+    font-size: 1.05rem;
+  }
+  .codex-subtitle {
+    font-size: 0.72rem;
+  }
+  .codex-toolbar {
+    padding: 8px 12px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar-left-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .codex-search {
+    flex: 1;
+    max-width: 70%;
+  }
+  .codex-search-input {
+    width: 100%;
+  }
+  .category-chips-scroll {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .codex-detail-panel {
+    padding: 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .card-hero-thumb-box {
+    width: 80px;
+    height: 80px;
+  }
+  .codex-hero-icon {
+    width: 60px;
+    height: 60px;
+  }
+  .codex-card-title {
+    font-size: 1.25rem;
+  }
+  .codex-grid-panel {
+    padding: 12px;
+  }
+  .codex-grid {
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    gap: 8px;
+  }
+  .codex-grid-item {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .grid-card-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .grid-card-name {
+    font-size: 0.8rem;
+  }
+  .codex-footer {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 12px)) 16px;
+  }
+}
 </style>

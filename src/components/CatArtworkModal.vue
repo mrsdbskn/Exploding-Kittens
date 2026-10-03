@@ -683,4 +683,67 @@ const close = () => {
   font-size: 0.8rem;
   color: #aaa;
 }
+
+@media (max-width: 850px) {
+  .cat-modal-backdrop {
+    padding: 0;
+  }
+  .cat-gallery-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .gallery-header {
+    padding: 12px 14px;
+  }
+  .gallery-title {
+    font-size: 1.05rem;
+  }
+  .gallery-subtitle {
+    font-size: 0.72rem;
+  }
+  .gallery-toolbar {
+    padding: 8px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .filter-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    width: 100%;
+  }
+  .gallery-search {
+    width: 100%;
+  }
+  .gallery-content-split {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .art-preview-panel {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px;
+  }
+  .card-frame {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+  .art-grid-panel {
+    padding: 12px;
+  }
+  .cat-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+  .gallery-footer {
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 12px)) 14px;
+  }
+}
 </style>

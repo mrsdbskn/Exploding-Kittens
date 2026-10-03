@@ -430,4 +430,48 @@ const boxFitAnalysis = computed(() => {
   display: flex;
   justify-content: flex-end;
 }
+
+@media (max-width: 640px) {
+  .sleeve-backdrop {
+    padding: 0;
+  }
+  .sleeve-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .sleeve-header {
+    padding: 12px 14px;
+  }
+  .sleeve-title {
+    font-size: 1.1rem;
+  }
+  .sleeve-subtitle {
+    font-size: 0.72rem;
+  }
+  .sleeve-body {
+    padding: 14px 12px;
+    gap: 14px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .thickness-comparison {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .box-fit-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .sleeve-footer {
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 12px)) 14px;
+  }
+}
 </style>

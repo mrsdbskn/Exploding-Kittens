@@ -156,11 +156,13 @@
     <!-- Bottom Navigation -->
     <div class="synergy-bottom-nav">
       <button class="m3-btn m3-btn-tonal" @click="$emit('back')">
-        ← Back to Card Selection
+        <span class="btn-text-desktop">← Back to Card Selection</span>
+        <span class="btn-text-mobile">← Back to Selection</span>
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('continue')">
-        Generate Assembly Recipe Guide →
+        <span class="btn-text-desktop">Generate Assembly Recipe Guide →</span>
+        <span class="btn-text-mobile">Generate Recipe Guide →</span>
       </button>
     </div>
   </div>
@@ -427,5 +429,83 @@ const getBadgeClass = (type) => {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .synergy-alerts-section {
+    padding: 16px 12px calc(80px + env(safe-area-inset-bottom, 16px)) 12px;
+  }
+
+  .synergy-title {
+    font-size: 1.4rem;
+  }
+
+  .synergy-desc {
+    font-size: 0.875rem;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .header-right .m3-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .status-banner {
+    padding: 16px;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .banner-emoji {
+    font-size: 2rem;
+  }
+
+  .banner-headline {
+    font-size: 1.1rem;
+  }
+
+  .banner-subtext {
+    font-size: 0.8125rem;
+  }
+
+  .sugg-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sugg-card-badge {
+    align-self: flex-start;
+  }
+
+  .sugg-footer {
+    width: 100%;
+  }
+
+  .sugg-footer .m3-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .synergy-bottom-nav {
+    flex-direction: column-reverse;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .synergy-bottom-nav .m3-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

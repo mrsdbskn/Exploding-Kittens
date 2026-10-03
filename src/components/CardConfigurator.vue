@@ -343,7 +343,8 @@
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('continue')">
-        Review Synergies & Rules ({{ suggestionsCount }}) →
+        <span class="btn-text-desktop">Review Synergies & Rules ({{ suggestionsCount }}) →</span>
+        <span class="btn-text-mobile">Review Synergies ({{ suggestionsCount }}) →</span>
       </button>
     </div>
 
@@ -1233,13 +1234,125 @@ const formatCategory = (cat) => {
   gap: 16px;
 }
 
-@media (max-width: 600px) {
+.btn-text-desktop {
+  display: inline;
+}
+
+.btn-text-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .controls-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .search-box {
+    max-width: 100%;
+    width: 100%;
+  }
+  .sort-control-block {
+    width: 100%;
+  }
+  .sort-chip-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .view-mode-toggle {
+    width: 100%;
+    display: flex;
+  }
+  .mode-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .category-pills-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  .card-configurator-section {
+    padding: 16px 12px calc(60px + env(safe-area-inset-bottom, 20px)) 12px;
+  }
   .panel-row {
     flex-direction: column;
     align-items: flex-start;
   }
+  .player-chips {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pool-validation-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .quick-bulk-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .quick-bulk-actions .btn-xs {
+    flex: 1;
+    text-align: center;
+  }
   .cards-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .card-item {
+    padding: 14px;
+  }
+  .cat-variants-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .cat-variants-strip-left {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .browse-art-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .card-item-footer {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .qty-stepper {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .toggle-exclude-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .deck-cards-list {
+    grid-template-columns: 1fr;
+  }
+  .config-bottom-nav {
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .config-bottom-nav .m3-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+  .btn-text-desktop {
+    display: none;
+  }
+  .btn-text-mobile {
+    display: inline;
   }
 }
 </style>

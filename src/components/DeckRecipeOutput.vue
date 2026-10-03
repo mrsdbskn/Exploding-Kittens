@@ -398,11 +398,13 @@
     <!-- Bottom Actions -->
     <div class="recipe-bottom-nav">
       <button class="m3-btn m3-btn-tonal" @click="$emit('back')">
-        ← Back to Synergies
+        <span class="btn-text-desktop">← Back to Synergies</span>
+        <span class="btn-text-mobile">← Synergies</span>
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('restart')">
-        Build Another Deck ↺
+        <span class="btn-text-desktop">Build Another Deck ↺</span>
+        <span class="btn-text-mobile">Build New Deck ↺</span>
       </button>
     </div>
 
@@ -1469,6 +1471,208 @@ const printRecipe = () => {
   justify-content: space-between;
   gap: 16px;
   margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .recipe-output-section {
+    padding: 16px 12px calc(80px + env(safe-area-inset-bottom, 16px)) 12px;
+  }
+
+  .recipe-title {
+    font-size: 1.4rem;
+  }
+
+  .recipe-desc {
+    font-size: 0.875rem;
+  }
+
+  .hero-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .hero-actions .m3-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .stats-ribbon {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 12px;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .stat-pill {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .stat-icon {
+    font-size: 1.3rem;
+  }
+
+  .stat-val {
+    font-size: 1.05rem;
+  }
+
+  .stat-lbl {
+    font-size: 0.7rem;
+  }
+
+  .danger-meter-card {
+    padding: 14px;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .danger-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .danger-left {
+    gap: 10px;
+  }
+
+  .danger-icon {
+    font-size: 1.5rem;
+    padding: 6px 8px;
+  }
+
+  .danger-title {
+    font-size: 1.1rem;
+  }
+
+  .volatility-score-box {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 14px;
+  }
+
+  .danger-metrics-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .hazard-curve-wrapper {
+    padding: 10px;
+  }
+
+  .curve-bars-grid {
+    gap: 4px;
+    height: 75px;
+  }
+
+  .bar-track {
+    height: 50px;
+  }
+
+  .bar-val, .bar-turn {
+    font-size: 0.55rem;
+  }
+
+  .cat-variants-section {
+    padding: 16px 12px;
+    margin-bottom: 20px;
+  }
+
+  .cat-variants-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .cat-variant-card {
+    padding: 10px 8px;
+  }
+
+  .cat-art-thumb-wrapper {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 6px;
+  }
+
+  .cat-variant-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .cat-variant-name {
+    font-size: 0.8125rem;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .step-card {
+    padding: 16px;
+  }
+
+  .checklist-section {
+    padding: 16px 12px;
+    margin-bottom: 24px;
+  }
+
+  .checklist-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+  }
+
+  .checklist-title {
+    font-size: 1.2rem;
+  }
+
+  .progress-container {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .group-items-list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .checklist-item-row {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .check-card-name {
+    font-size: 0.875rem;
+  }
+
+  .check-card-role {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-bottom-nav {
+    flex-direction: column-reverse;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .recipe-bottom-nav .m3-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media print {

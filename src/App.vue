@@ -402,6 +402,10 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
 <style scoped>
 .app-root {
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -409,5 +413,8 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
 
 .main-content {
   flex: 1;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 </style>

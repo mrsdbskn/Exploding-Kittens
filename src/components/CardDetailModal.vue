@@ -309,12 +309,30 @@ const getSynergyTip = (slug) => {
 }
 
 @media (max-width: 600px) {
+  .modal-backdrop {
+    padding: 0;
+  }
   .modal-container {
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 20px)) 16px;
   }
   .modal-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+  .modal-card-name {
+    font-size: 1.35rem;
+  }
+  .close-btn {
+    top: 14px;
+    right: 14px;
   }
 }
 </style>

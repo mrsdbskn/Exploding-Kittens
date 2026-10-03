@@ -350,14 +350,101 @@ const formatSectionText = (text) => {
 }
 
 @media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 0;
+  }
+
+  .instructions-modal {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)) 16px;
+  }
+
+  .close-btn {
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 14px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .modal-header {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    padding-right: 36px;
+    gap: 10px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .instructions-search {
+    width: 100%;
+  }
+
   .instructions-layout {
     flex-direction: column;
+    gap: 12px;
   }
+
   .deck-tabs-sidebar {
     width: 100%;
-    max-height: 140px;
+    max-height: none;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-right: 0;
+    padding-bottom: 8px;
     border-right: none;
     border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .deck-tab-item {
+    flex-shrink: 0;
+    padding: 8px 12px;
+  }
+
+  .deck-tab-name {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
+  .deck-tab-sub {
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .rulebook-content-panel {
+    padding-right: 4px;
+  }
+
+  .panel-header-row {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .pdf-link-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rule-section-card {
+    padding: 14px 14px;
+  }
+
+  .modal-footer {
+    margin-top: 10px;
+  }
+
+  .modal-footer .m3-btn {
+    width: 100%;
   }
 }
 </style>

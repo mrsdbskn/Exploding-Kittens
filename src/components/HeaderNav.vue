@@ -60,7 +60,7 @@
             <path d="M6 6h10"/>
             <path d="M6 10h10"/>
           </svg>
-          <span>Recipes</span>
+          <span class="hide-mobile">Recipes</span>
         </button>
 
         <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('reset-all')" title="Reset to defaults">
@@ -280,22 +280,62 @@ const steps = computed(() => [
     display: none;
   }
   .step-tab {
-    padding: 8px 12px;
+    padding: 6px 12px;
   }
   .brand-subtitle {
     display: none;
   }
-  .hide-mobile {
-    display: none;
-  }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .header-container {
-    padding: 10px 14px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .brand {
+    flex: 1;
+    min-width: 140px;
   }
   .brand-title {
-    font-size: 1rem;
+    font-size: 1.05rem;
+  }
+  .brand-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  .brand-emoji {
+    font-size: 18px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .btn-sm {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  .nav-steps {
+    width: 100%;
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 3px;
+    gap: 2px;
+  }
+  .step-tab {
+    padding: 6px 4px;
+    font-size: 0.75rem;
+    justify-content: center;
+    gap: 4px;
+  }
+  .step-num {
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
   }
 }
 </style>

@@ -531,4 +531,60 @@ const exportRecipesJson = () => {
   align-items: center;
   justify-content: space-between;
 }
+
+@media (max-width: 640px) {
+  .custom-recipe-backdrop {
+    padding: 0;
+  }
+  .custom-recipe-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .modal-header {
+    padding: 12px 14px;
+  }
+  .modal-title {
+    font-size: 1.1rem;
+  }
+  .modal-subtitle {
+    font-size: 0.72rem;
+  }
+  .modal-tabs-bar {
+    padding: 4px 12px;
+  }
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  .modal-body {
+    padding: 14px 12px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .saved-recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .saved-recipe-card {
+    padding: 12px;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .form-actions .m3-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .modal-footer {
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 12px)) 14px;
+  }
+}
 </style>

@@ -163,6 +163,7 @@
         <div class="floating-stat">
           <span class="stat-count">{{ ownedDeckIds.length }}</span>
           <span class="stat-label">Decks Chosen ({{ totalCardsPool }} cards)</span>
+          <span class="stat-label-mobile">Decks ({{ totalCardsPool }})</span>
         </div>
 
         <button 
@@ -170,7 +171,8 @@
           :disabled="ownedDeckIds.length === 0"
           @click="$emit('continue')"
         >
-          <span>Configure Cards & Players</span>
+          <span class="btn-text-desktop">Configure Cards & Players</span>
+          <span class="btn-text-mobile">Configure Cards</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -282,7 +284,7 @@ const handleImgError = (e) => {
 .deck-selector-section {
   max-width: 1380px;
   margin: 0 auto;
-  padding: 32px 24px 120px 24px;
+  padding: 32px 24px calc(140px + env(safe-area-inset-bottom, 20px)) 24px;
 }
 
 .section-hero {
@@ -589,13 +591,14 @@ const handleImgError = (e) => {
 /* Bottom Floating Bar */
 .floating-next-bar {
   position: fixed;
-  bottom: 24px;
+  bottom: max(16px, env(safe-area-inset-bottom, 16px));
   left: 0;
   right: 0;
   z-index: 90;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  padding: 0 16px;
 }
 
 .floating-container {
@@ -611,12 +614,15 @@ const handleImgError = (e) => {
   border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-4);
   animation: popIn 0.3s ease;
+  max-width: 600px;
+  width: auto;
 }
 
 .floating-stat {
   display: flex;
   align-items: baseline;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .stat-count {
@@ -630,6 +636,18 @@ const handleImgError = (e) => {
   color: var(--md-sys-color-on-surface-variant);
 }
 
+.stat-label-mobile {
+  display: none;
+}
+
+.btn-text-desktop {
+  display: inline;
+}
+
+.btn-text-mobile {
+  display: none;
+}
+
 .floating-btn {
   padding: 12px 28px;
   font-size: 1rem;
@@ -641,13 +659,41 @@ const handleImgError = (e) => {
   transform: none !important;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .deck-selector-section {
+    padding: 16px 12px calc(150px + env(safe-area-inset-bottom, 20px)) 12px;
+  }
   .decks-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .floating-next-bar {
+    bottom: max(10px, env(safe-area-inset-bottom, 10px));
+    padding: 0 8px;
   }
   .floating-container {
-    width: 90%;
+    width: 100%;
+    padding: 8px 14px;
+    gap: 10px;
     justify-content: space-between;
+  }
+  .stat-label {
+    display: none;
+  }
+  .stat-label-mobile {
+    display: inline;
+    font-size: 0.78rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .btn-text-desktop {
+    display: none;
+  }
+  .btn-text-mobile {
+    display: inline;
+  }
+  .floating-btn {
+    padding: 10px 18px;
+    font-size: 0.875rem;
   }
 }
 </style>

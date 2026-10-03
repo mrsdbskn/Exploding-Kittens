@@ -407,4 +407,86 @@ const formatCardSlug = (slug) => {
   display: flex;
   justify-content: flex-end;
 }
+
+@media (max-width: 640px) {
+  .modal-backdrop {
+    padding: 0;
+  }
+
+  .modal-container {
+    max-width: 100%;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)) 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .close-btn {
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 14px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .modal-header {
+    margin-bottom: 14px;
+    padding-right: 36px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .preset-tabs {
+    margin-bottom: 14px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 0.8125rem;
+  }
+
+  .presets-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .preset-card {
+    padding: 14px;
+  }
+
+  .preset-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .save-custom-box {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .save-custom-box .m3-btn {
+    width: 100%;
+  }
+
+  .custom-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .modal-footer {
+    margin-top: 14px;
+  }
+
+  .modal-footer .m3-btn {
+    width: 100%;
+  }
+}
 </style>

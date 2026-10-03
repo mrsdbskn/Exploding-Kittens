@@ -535,15 +535,47 @@ const formatCardName = (slug) => {
   cursor: not-allowed;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .rules-bot-wrapper {
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    right: 16px;
+  }
+  .bot-fab-btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
   .bot-drawer-backdrop {
     padding: 0;
   }
   .bot-drawer-card {
     max-width: 100%;
+    width: 100%;
     height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     border-radius: 0;
+    border: none;
+  }
+  .drawer-header {
+    padding: 12px 14px;
+  }
+  .bot-title {
+    font-size: 0.95rem;
+  }
+  .bot-subtitle {
+    font-size: 0.68rem;
+  }
+  .messages-container {
+    padding: 14px 12px;
+  }
+  .drawer-input-bar {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 10px)) 12px;
+  }
+  .followups-chips-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
   }
 }
 </style>

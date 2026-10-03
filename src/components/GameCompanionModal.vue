@@ -791,4 +791,79 @@ onUnmounted(() => {
   font-size: 0.8rem;
   color: #aaa;
 }
+
+@media (max-width: 768px) {
+  .companion-backdrop {
+    padding: 0;
+  }
+  .companion-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .companion-header {
+    padding: 12px 16px;
+  }
+  .companion-title {
+    font-size: 1.1rem;
+  }
+  .companion-subtitle {
+    font-size: 0.75rem;
+  }
+  .header-icon-badge {
+    font-size: 1.5rem;
+    padding: 6px 8px;
+  }
+  .tactical-sfx-bar {
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  .sfx-buttons-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+  .timer-section {
+    margin: 10px 14px;
+    padding: 12px;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .timer-left {
+    width: 100%;
+    justify-content: space-around;
+    gap: 12px;
+  }
+  .timer-digits {
+    font-size: 2rem;
+  }
+  .timer-presets {
+    width: 100%;
+    justify-content: center;
+  }
+  .special-rules-banner {
+    margin: 0 14px 10px 14px;
+    padding: 8px 12px;
+  }
+  .players-container {
+    padding: 0 14px 14px 14px;
+  }
+  .players-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .player-card {
+    padding: 12px;
+  }
+  .companion-footer {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 12px)) 16px;
+  }
+}
 </style>
