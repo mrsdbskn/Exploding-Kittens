@@ -55,6 +55,31 @@ export function calculateDeckRecipe({
         withPawQty: card.withPawQty,
         withoutPawQty: card.withoutPawQty
       });
+
+      // If card has variants (e.g. cat-card), aggregate each variant
+      if (card.variants && Array.isArray(card.variants)) {
+        if (!availablePool[card.slug].variantMap) {
+          availablePool[card.slug].variantMap = {};
+        }
+        for (const v of card.variants) {
+          if (!availablePool[card.slug].variantMap[v.slug]) {
+            availablePool[card.slug].variantMap[v.slug] = {
+              slug: v.slug,
+              name: v.name,
+              icon: v.icon,
+              art: v.art,
+              totalAvailable: 0,
+              deckSources: []
+            };
+          }
+          availablePool[card.slug].variantMap[v.slug].totalAvailable += v.quantity;
+          availablePool[card.slug].variantMap[v.slug].deckSources.push({
+            deckId: deck.id,
+            deckName: deck.name,
+            quantity: v.quantity
+          });
+        }
+      }
     }
   }
 
@@ -304,10 +329,51 @@ export function calculateDeckRecipe({
     } else {
       // Safe card (action, cat card, etc.)
       totalSafeCards += qty;
-      drawPileCards.push({
-        ...cardInfo,
-        quantity: qty
-      });
+
+      if (slug === 'cat-card' && cardInfo.variantMap) {
+        const variantsList = Object.values(cardInfo.variantMap);
+        let remainingDesired = qty;
+        const variantsBreakdown = [];
+
+        if (remainingDesired >= cardInfo.totalAvailable) {
+          for (const v of variantsList) {
+            variantsBreakdown.push({
+              slug: v.slug,
+              name: v.name,
+              icon: v.icon,
+              art: v.art,
+              quantity: v.totalAvailable,
+              deckSources: v.deckSources
+            });
+          }
+        } else {
+          // Distribute remaining count proportionally or in sets of 4/2
+          for (const v of variantsList) {
+            if (remainingDesired <= 0) break;
+            const take = Math.min(v.totalAvailable, remainingDesired);
+            variantsBreakdown.push({
+              slug: v.slug,
+              name: v.name,
+              icon: v.icon,
+              art: v.art,
+              quantity: take,
+              deckSources: v.deckSources
+            });
+            remainingDesired -= take;
+          }
+        }
+
+        drawPileCards.push({
+          ...cardInfo,
+          quantity: qty,
+          variantsBreakdown
+        });
+      } else {
+        drawPileCards.push({
+          ...cardInfo,
+          quantity: qty
+        });
+      }
     }
   }
 
@@ -326,7 +392,11 @@ export function calculateDeckRecipe({
     + totalDrawPileSize 
     + (tableStashList.reduce((sum, c) => sum + c.quantity, 0));
 
+  const catCardItem = drawPileCards.find(c => c.slug === 'cat-card');
+  const catVariantsBreakdown = catCardItem?.variantsBreakdown || [];
+
   return {
+    ownedDeckIds,
     playerCount,
     availablePool,
     activeCards,
@@ -347,6 +417,7 @@ export function calculateDeckRecipe({
     safeCardsInDrawPile,
     totalDrawPileSize,
     totalGameCards,
-    explodingKittensNeeded
+    explodingKittensNeeded,
+    catVariantsBreakdown
   };
 }

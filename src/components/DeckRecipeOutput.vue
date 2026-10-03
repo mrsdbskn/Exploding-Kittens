@@ -187,6 +187,56 @@
       </div>
     </div>
 
+    <!-- Cat Cards Artwork Breakdown Spotlight Card -->
+    <div v-if="recipe.catVariantsBreakdown && recipe.catVariantsBreakdown.length > 0" class="m3-card cat-variants-section animate-fade-in">
+      <div class="cat-variants-header">
+        <div class="cat-header-left">
+          <span class="cat-badge-emoji">😼</span>
+          <div>
+            <h3 class="cat-spotlight-title">Cat Cards Artwork Breakdown</h3>
+            <p class="cat-spotlight-sub">
+              Exploding Kittens has 23 unique cat artwork styles. Based on your owned decks, add these exact artwork cards:
+            </p>
+          </div>
+        </div>
+        <div class="cat-header-actions">
+          <div class="cat-total-badge">
+            {{ totalCatCards }} Total Cat Cards ({{ recipe.catVariantsBreakdown.length }} Artwork Styles)
+          </div>
+          <button class="m3-btn m3-btn-tonal btn-sm" @click="openCatGallery(null)">
+            🎨 Browse All 23 Styles
+          </button>
+        </div>
+      </div>
+
+      <div class="cat-variants-grid">
+        <div 
+          v-for="v in recipe.catVariantsBreakdown" 
+          :key="v.slug" 
+          class="cat-variant-card"
+          @click="openCatGallery(v.slug)"
+        >
+          <div class="cat-art-thumb-wrapper">
+            <img :src="v.icon" :alt="v.name" class="cat-variant-icon" />
+            <div class="cat-variant-qty-chip">{{ v.quantity }}x</div>
+          </div>
+          <div class="cat-variant-meta">
+            <span class="cat-variant-name">{{ v.name }}</span>
+            <span class="cat-variant-deck">
+              {{ v.deckSources?.map(d => d.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') }}
+            </span>
+          </div>
+          <button class="cat-preview-btn" title="View Full Card Artwork" @click.stop="openCatGallery(v.slug)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>Artwork</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Interactive Card Gathering Checklist -->
     <div class="checklist-section m3-card">
       <div class="checklist-header">
@@ -254,7 +304,17 @@
               <img v-if="item.icon" :src="item.icon" :alt="item.name" class="check-card-icon" />
 
               <div class="check-card-info">
-                <span class="check-card-name">{{ item.name }}</span>
+                <div class="check-card-name-row">
+                  <span class="check-card-name">{{ item.name }}</span>
+                  <button 
+                    v-if="item.isCatVariant" 
+                    class="cat-art-tag-btn" 
+                    @click.stop="openCatGallery(item.variantSlug)"
+                    title="View Full Artwork"
+                  >
+                    🎨 View Artwork
+                  </button>
+                </div>
                 <span class="check-card-role">{{ item.role }}</span>
               </div>
 
@@ -277,12 +337,21 @@
         Build Another Deck ↺
       </button>
     </div>
+
+    <!-- Cat Artworks Archive Modal -->
+    <CatArtworkModal
+      :is-open="isCatModalOpen"
+      :initial-variant-slug="activeCatVariantSlug"
+      :owned-deck-ids="recipe.ownedDeckIds || []"
+      @close="isCatModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import confetti from 'canvas-confetti';
+import CatArtworkModal from './CatArtworkModal.vue';
 
 const props = defineProps({
   recipe: { type: Object, required: true },
@@ -295,8 +364,20 @@ defineEmits(['back', 'restart', 'inspect-card']);
 const checkedItems = ref(new Set());
 const copied = ref(false);
 
+const isCatModalOpen = ref(false);
+const activeCatVariantSlug = ref(null);
+
+const openCatGallery = (slug = null) => {
+  activeCatVariantSlug.value = slug;
+  isCatModalOpen.value = true;
+};
+
 const totalHazardsCount = computed(() => {
   return props.recipe.hazardsList.reduce((sum, h) => sum + h.quantity, 0);
+});
+
+const totalCatCards = computed(() => {
+  return props.recipe.catVariantsBreakdown?.reduce((sum, v) => sum + v.quantity, 0) || 0;
 });
 
 // Build list of items to gather
@@ -361,16 +442,35 @@ const checklistItems = computed(() => {
 
   // 5. Draw Pile & Hand Safe Cards
   for (const c of props.recipe.drawPileCards) {
-    items.push({
-      key: `safe-${c.slug}`,
-      slug: c.slug,
-      name: c.name,
-      quantity: c.quantity,
-      category: c.category || 'chaos',
-      role: 'Action Pool: Dealt to hands + Draw pile',
-      pawDetailNote: c.pawDetailNote,
-      icon: c.icons?.[0] || props.catalog[c.slug]?.icons?.[0]
-    });
+    if (c.slug === 'cat-card' && c.variantsBreakdown && c.variantsBreakdown.length > 0) {
+      // Expand each cat variant into its own checklist item with its icon!
+      for (const v of c.variantsBreakdown) {
+        const deckLabel = v.deckSources?.map(s => s.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') || 'owned deck';
+        items.push({
+          key: `cat-variant-${v.slug}`,
+          slug: 'cat-card',
+          variantSlug: v.slug,
+          name: `${v.name} (Cat Card)`,
+          quantity: v.quantity,
+          category: 'stealing',
+          role: `Combo Pair: Insert ${v.quantity}x (${deckLabel})`,
+          icon: v.icon,
+          art: v.art,
+          isCatVariant: true
+        });
+      }
+    } else {
+      items.push({
+        key: `safe-${c.slug}`,
+        slug: c.slug,
+        name: c.name,
+        quantity: c.quantity,
+        category: c.category || 'chaos',
+        role: 'Action Pool: Dealt to hands + Draw pile',
+        pawDetailNote: c.pawDetailNote,
+        icon: c.icons?.[0] || props.catalog[c.slug]?.icons?.[0]
+      });
+    }
   }
 
   return items;
@@ -901,6 +1001,194 @@ const printRecipe = () => {
 .checklist-item-row.is-checked .check-card-qty-badge {
   color: var(--md-sys-color-tertiary);
   background-color: rgba(117, 223, 138, 0.1);
+}
+
+/* Cat Variants Spotlight Section */
+.cat-variants-section {
+  padding: 24px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(235, 115, 80, 0.08), rgba(255, 180, 160, 0.02));
+  border: 1px solid rgba(255, 180, 160, 0.25);
+  border-radius: var(--md-shape-lg);
+}
+
+.cat-variants-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cat-badge-emoji {
+  font-size: 2rem;
+  background-color: rgba(255, 180, 160, 0.15);
+  padding: 8px 10px;
+  border-radius: var(--md-shape-md);
+}
+
+.cat-spotlight-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.cat-spotlight-sub {
+  margin: 4px 0 0 0;
+  font-size: 0.875rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.cat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cat-total-badge {
+  background-color: rgba(255, 180, 160, 0.15);
+  color: #ffb4a0;
+  border: 1px solid rgba(255, 180, 160, 0.3);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 9999px;
+}
+
+.cat-variants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.cat-variant-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--md-shape-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.cat-variant-card:hover {
+  transform: translateY(-4px);
+  border-color: #ffb4a0;
+  background: rgba(255, 180, 160, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.cat-art-thumb-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.cat-variant-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.cat-variant-card:hover .cat-variant-icon {
+  transform: scale(1.12);
+}
+
+.cat-variant-qty-chip {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ffb4a0;
+  color: #4a180d;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.cat-variant-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.cat-variant-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.cat-variant-deck {
+  font-size: 0.72rem;
+  color: var(--md-sys-color-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-preview-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffb4a0;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cat-preview-btn:hover {
+  background: rgba(255, 180, 160, 0.2);
+  border-color: #ffb4a0;
+}
+
+.check-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cat-art-tag-btn {
+  background: rgba(255, 180, 160, 0.12);
+  border: 1px solid rgba(255, 180, 160, 0.3);
+  color: #ffb4a0;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cat-art-tag-btn:hover {
+  background: rgba(255, 180, 160, 0.25);
+  transform: scale(1.05);
 }
 
 /* Bottom Nav */

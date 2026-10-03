@@ -67,16 +67,32 @@
 
       <!-- Modal Footer -->
       <div class="modal-footer">
+        <button 
+          v-if="card.slug === 'cat-card'" 
+          class="m3-btn m3-btn-tonal"
+          @click="isCatGalleryOpen = true"
+        >
+          🎨 View 23 Cat Artworks Archive
+        </button>
+
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
           Close Rules
         </button>
       </div>
     </div>
+
+    <!-- Cat Artworks Archive Modal -->
+    <CatArtworkModal
+      :is-open="isCatGalleryOpen"
+      :owned-deck-ids="card.decks || []"
+      @close="isCatGalleryOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
+import CatArtworkModal from './CatArtworkModal.vue';
 
 const props = defineProps({
   card: { type: Object, default: null }
@@ -85,6 +101,7 @@ const props = defineProps({
 defineEmits(['close']);
 
 const activeIconIndex = ref(0);
+const isCatGalleryOpen = ref(false);
 
 watch(() => props.card, () => {
   activeIconIndex.value = 0;

@@ -175,7 +175,10 @@
               <span class="m3-badge m3-badge-primary cat-badge">
                 {{ formatCategory(card.category) }}
               </span>
-              <span v-if="card.icons && card.icons.length > 1" class="m3-badge m3-badge-warning">
+              <span v-if="card.slug === 'cat-card'" class="m3-badge m3-badge-warning">
+                23 Artwork Styles Catalog
+              </span>
+              <span v-else-if="card.icons && card.icons.length > 1" class="m3-badge m3-badge-warning">
                 {{ card.icons.length }} artwork styles
               </span>
             </div>
@@ -186,6 +189,26 @@
         <p class="card-short-desc">
           {{ card.shortDesc || 'Special card mechanics and strategic options.' }}
         </p>
+
+        <!-- Cat Card Variants Quick Strip -->
+        <div v-if="card.slug === 'cat-card'" class="cat-variants-strip">
+          <div class="cat-variants-strip-left">
+            <span class="strip-label">Artworks in your decks:</span>
+            <div class="strip-icons">
+              <img 
+                v-for="(icon, idx) in card.icons.slice(0, 8)" 
+                :key="idx" 
+                :src="icon" 
+                class="strip-icon-thumb"
+                :title="`Artwork #${idx + 1}`"
+              />
+              <span v-if="card.icons.length > 8" class="strip-more-badge">+{{ card.icons.length - 8 }}</span>
+            </div>
+          </div>
+          <button class="m3-btn m3-btn-tonal btn-xs browse-art-btn" @click.stop="openCatGallery">
+            🎨 View 23 Artworks
+          </button>
+        </div>
 
         <!-- Deck Sources Badges -->
         <div class="deck-sources-bar">
@@ -310,11 +333,24 @@
         Review Synergies & Rules ({{ suggestionsCount }}) →
       </button>
     </div>
+
+    <!-- Cat Artworks Archive Modal -->
+    <CatArtworkModal
+      :is-open="isCatModalOpen"
+      :owned-deck-ids="ownedDeckIds"
+      @close="isCatModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import CatArtworkModal from './CatArtworkModal.vue';
+
+const isCatModalOpen = ref(false);
+const openCatGallery = () => {
+  isCatModalOpen.value = true;
+};
 
 const props = defineProps({
   decks: { type: Array, required: true },
@@ -814,6 +850,66 @@ const formatCategory = (cat) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 2.2em;
+}
+
+.cat-variants-strip {
+  background: rgba(255, 180, 160, 0.08);
+  border: 1px solid rgba(255, 180, 160, 0.2);
+  border-radius: var(--md-shape-sm);
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cat-variants-strip-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.strip-label {
+  font-size: 0.72rem;
+  color: #ffb4a0;
+  font-weight: 600;
+}
+
+.strip-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.strip-icon-thumb {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.strip-more-badge {
+  font-size: 0.68rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 2px 5px;
+}
+
+.browse-art-btn {
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  background: rgba(255, 180, 160, 0.15);
+  color: #ffb4a0;
+  border: 1px solid rgba(255, 180, 160, 0.3);
+}
+
+.browse-art-btn:hover {
+  background: rgba(255, 180, 160, 0.3);
 }
 
 .deck-sources-bar {

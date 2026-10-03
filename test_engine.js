@@ -1,5 +1,5 @@
 import { calculateDeckRecipe } from './src/utils/deckEngine.js';
-import { DECKS, ALL_CARDS_CATALOG, CATEGORIES, OFFICIAL_RECIPES } from './src/data/decksData.js';
+import { DECKS, ALL_CARDS_CATALOG, CATEGORIES, OFFICIAL_RECIPES, CAT_VARIANTS_CATALOG } from './src/data/decksData.js';
 
 console.log('--- Testing Exploding Kittens Deck Engine ---');
 
@@ -89,7 +89,28 @@ const test6 = calculateDeckRecipe({
 console.log('\nTest 6 (Party Pack Edition 10p):');
 console.log('  Party Pack Cat Cards Total:', test6.availablePool['cat-card'].totalAvailable, '(Expected: 35)');
 console.log('  Party Pack Total Cards in Deck:', test6.totalGameCards);
-console.assert(test6.availablePool['cat-card'].totalAvailable === 35, 'Party Pack must have exactly 35 Cat Cards (15 with paw, 20 without)');
+console.assert(test6.availablePool['cat-card'].totalAvailable === 35, 'Party Pack must have exactly 35 Cat Cards');
 console.assert(test6.totalGameCards >= 100, 'Party Pack is a mega 120 card deck');
+
+// Test 7: Verify 23 Cat Artwork Styles Catalog
+console.log('\nTest 7 (23 Cat Artwork Styles Archive):');
+console.log('  Total cat variants in catalog:', CAT_VARIANTS_CATALOG.length, '(Expected: 23)');
+console.assert(CAT_VARIANTS_CATALOG.length === 23, 'Must have all 23 official artwork styles');
+console.assert(ALL_CARDS_CATALOG['cat-card'].icons.length === 23, 'Catalog cat-card must include all 23 icons');
+
+// Test 8: Verify Cat Variant Breakdown in Recipe Output
+const test8 = calculateDeckRecipe({
+  ownedDeckIds: ['exploding-kittens-original-edition', 'exploding-kittens-good-vs-evil'],
+  decks: DECKS,
+  catalog: ALL_CARDS_CATALOG
+});
+
+console.log('\nTest 8 (Multi-Deck Cat Variants Assembly Breakdown):');
+console.log('  Active cat variants count:', test8.catVariantsBreakdown.length, '(Expected: 9 = 5 Original + 4 GvE)');
+console.assert(test8.catVariantsBreakdown.length === 9, 'Should have 9 unique cat styles across Original + Good vs Evil');
+for (const v of test8.catVariantsBreakdown) {
+  console.assert(v.icon && v.name && v.quantity === 4, `Variant ${v.name} must have valid icon and count`);
+}
+console.log('  All 9 cat variants have valid icons, artwork paths, and quantities!');
 
 console.log('\n All engine tests passed with 100% success!');
