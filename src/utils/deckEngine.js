@@ -377,6 +377,10 @@ export function calculateDeckRecipe({
     }
   }
 
+  // Sort cards alphabetically A-Z
+  drawPileCards.sort((a, b) => a.name.localeCompare(b.name));
+  hazardsList.sort((a, b) => a.name.localeCompare(b.name));
+
   // Check if we have enough safe cards to deal starting hands
   const canDealFullHands = totalSafeCards >= starterHandTotalCards;
   const cardsShortage = Math.max(0, starterHandTotalCards - totalSafeCards);
@@ -393,7 +397,9 @@ export function calculateDeckRecipe({
     + (tableStashList.reduce((sum, c) => sum + c.quantity, 0));
 
   const catCardItem = drawPileCards.find(c => c.slug === 'cat-card');
-  const catVariantsBreakdown = catCardItem?.variantsBreakdown || [];
+  const catVariantsBreakdown = catCardItem?.variantsBreakdown 
+    ? [...catCardItem.variantsBreakdown].sort((a, b) => a.name.localeCompare(b.name))
+    : [];
 
   return {
     ownedDeckIds,

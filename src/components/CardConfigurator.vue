@@ -97,6 +97,19 @@
         <button v-if="searchQuery" class="clear-search" @click="searchQuery = ''">✕</button>
       </div>
 
+      <!-- Sort Selector (Default A-Z) -->
+      <div class="sort-control-block">
+        <button 
+          class="sort-chip-btn" 
+          @click="cycleSortMode"
+          :title="`Current sort: ${currentSortOption.label}. Click to cycle sorting.`"
+        >
+          <span class="sort-icon">{{ currentSortOption.icon }}</span>
+          <span class="sort-label">Sort: {{ currentSortOption.label }}</span>
+          <span class="sort-cycle-hint">🔄</span>
+        </button>
+      </div>
+
       <!-- View Mode Toggle -->
       <div class="view-mode-toggle">
         <button 
@@ -294,7 +307,7 @@
         <div v-if="openAccordionId === deck.id" class="deck-accordion-body">
           <div class="deck-cards-list">
             <div 
-              v-for="c in deck.cards" 
+              v-for="c in getSortedDeckCards(deck.cards)" 
               :key="c.slug" 
               class="deck-card-row"
               :class="{ 'is-excluded': isCardExcluded(c.slug) }"
@@ -414,9 +427,56 @@ const isCatExcluded = computed(() => {
   return props.excludedCards.has('cat-card');
 });
 
-const unifiedCardList = computed(() => {
-  return Object.values(props.availablePool);
+const sortMode = ref('name-asc'); // ALWAYS default to 'name-asc' (A-Z)
+
+const sortOptions = [
+  { id: 'name-asc', label: 'Name (A → Z)', icon: '🔤' },
+  { id: 'name-desc', label: 'Name (Z → A)', icon: '🔤' },
+  { id: 'category', label: 'Category', icon: '🏷️' },
+  { id: 'qty-desc', label: 'Qty (High-Low)', icon: '🔢' }
+];
+
+const currentSortOption = computed(() => {
+  return sortOptions.find(o => o.id === sortMode.value) || sortOptions[0];
 });
+
+const cycleSortMode = () => {
+  const currentIndex = sortOptions.findIndex(o => o.id === sortMode.value);
+  const nextIndex = (currentIndex + 1) % sortOptions.length;
+  sortMode.value = sortOptions[nextIndex].id;
+};
+
+const sortCardList = (list) => {
+  return [...list].sort((a, b) => {
+    if (sortMode.value === 'name-asc') {
+      return a.name.localeCompare(b.name);
+    }
+    if (sortMode.value === 'name-desc') {
+      return b.name.localeCompare(a.name);
+    }
+    if (sortMode.value === 'qty-desc') {
+      const qtyA = a.totalAvailable !== undefined ? a.totalAvailable : (a.quantity || 0);
+      const qtyB = b.totalAvailable !== undefined ? b.totalAvailable : (b.quantity || 0);
+      if (qtyA !== qtyB) return qtyB - qtyA;
+      return a.name.localeCompare(b.name);
+    }
+    if (sortMode.value === 'category') {
+      if (a.category !== b.category) {
+        return (a.category || '').localeCompare(b.category || '');
+      }
+      return a.name.localeCompare(b.name);
+    }
+    return a.name.localeCompare(b.name);
+  });
+};
+
+const unifiedCardList = computed(() => {
+  return Object.values(props.availablePool).sort((a, b) => a.name.localeCompare(b.name));
+});
+
+const getSortedDeckCards = (cards) => {
+  return sortCardList(cards || []);
+};
 
 const getCategoryCount = (catId) => {
   if (catId === 'all') return unifiedCardList.value.length;
@@ -439,13 +499,7 @@ const filteredUnifiedCards = computed(() => {
     );
   }
 
-  // Sort by category order then name
-  return [...list].sort((a, b) => {
-    if (a.category !== b.category) {
-      return a.category.localeCompare(b.category);
-    }
-    return a.name.localeCompare(b.name);
-  });
+  return sortCardList(list);
 });
 
 const toggleCardExclude = (slug, maxQty) => {
@@ -691,6 +745,38 @@ const formatCategory = (cat) => {
 .clear-search {
   color: var(--md-sys-color-outline);
   font-size: 0.875rem;
+}
+
+.sort-control-block {
+  display: flex;
+  align-items: center;
+}
+
+.sort-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-full);
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.sort-chip-btn:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  border-color: var(--md-sys-color-primary);
+  transform: translateY(-1px);
+}
+
+.sort-chip-btn .sort-cycle-hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
 }
 
 .view-mode-toggle {

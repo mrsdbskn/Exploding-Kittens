@@ -17,19 +17,31 @@
 
       <!-- Controls Toolbar -->
       <div class="codex-toolbar">
-        <!-- Search Input -->
-        <div class="codex-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Search card name or keyword..." 
-            class="codex-search-input"
-          />
-          <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
+        <div class="toolbar-left-group">
+          <!-- Search Input -->
+          <div class="codex-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              v-model="searchQuery" 
+              type="text" 
+              placeholder="Search card name or keyword..." 
+              class="codex-search-input"
+            />
+            <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
+          </div>
+
+          <!-- Sort Button (A-Z by default) -->
+          <button 
+            class="codex-sort-btn"
+            :title="sortAsc ? 'Sorted A to Z. Click to reverse (Z to A).' : 'Sorted Z to A. Click to sort A to Z.'"
+            @click="sortAsc = !sortAsc"
+          >
+            <span class="sort-icon">🔤</span>
+            <span class="sort-label">{{ sortAsc ? 'A → Z' : 'Z → A' }}</span>
+          </button>
         </div>
 
         <!-- Category Filter Chips -->
@@ -141,7 +153,11 @@ defineEmits(['close']);
 
 const searchQuery = ref('');
 const selectedCategory = ref('all');
-const allCards = Object.values(ALL_CARDS_CATALOG);
+const sortAsc = ref(true); // Always sorted A-Z by default
+const categories = [{ id: 'all', name: 'All Cards' }, ...CATEGORIES];
+
+// Cards are strictly sorted alphabetically A-Z by default
+const allCards = Object.values(ALL_CARDS_CATALOG).slice().sort((a, b) => a.name.localeCompare(b.name));
 const selectedCard = ref(allCards[0]);
 
 watch(() => props.isOpen, (open) => {
@@ -155,17 +171,23 @@ watch(() => props.isOpen, (open) => {
 });
 
 const filteredCards = computed(() => {
-  return allCards.filter(c => {
+  const list = allCards.filter(c => {
     if (selectedCategory.value !== 'all' && c.category !== selectedCategory.value) {
       return false;
     }
     if (searchQuery.value) {
-      const q = searchQuery.value.toLowerCase();
+      const q = searchQuery.value.toLowerCase().trim();
       if (!c.name.toLowerCase().includes(q) && !c.shortDesc.toLowerCase().includes(q) && !(c.mechanics || '').toLowerCase().includes(q)) {
         return false;
       }
     }
     return true;
+  });
+
+  return [...list].sort((a, b) => {
+    return sortAsc.value 
+      ? a.name.localeCompare(b.name) 
+      : b.name.localeCompare(a.name);
   });
 });
 
@@ -313,6 +335,36 @@ const getSynergyTip = (slug) => {
   color: #fff;
   font-size: 0.85rem;
   width: 200px;
+}
+
+.toolbar-left-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.codex-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 180, 160, 0.12);
+  border: 1px solid rgba(255, 180, 160, 0.28);
+  border-radius: 9999px;
+  color: #ffb4a0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.codex-sort-btn:hover {
+  background: rgba(255, 180, 160, 0.24);
+  border-color: #ffb4a0;
+  transform: translateY(-1px);
 }
 
 .clear-btn {
