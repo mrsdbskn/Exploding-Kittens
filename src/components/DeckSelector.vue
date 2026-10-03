@@ -150,7 +150,6 @@
               <div class="peek-info">
                 <span class="peek-name">{{ c.name }}</span>
                 <span class="peek-count">{{ c.quantity }}x</span>
-                <span v-if="c.withPawQty" class="peek-paw-badge" :title="c.pawDetailNote">🐾</span>
               </div>
             </div>
           </div>

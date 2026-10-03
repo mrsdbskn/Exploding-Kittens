@@ -255,10 +255,7 @@
 
               <div class="check-card-info">
                 <span class="check-card-name">{{ item.name }}</span>
-                <span class="check-card-role">
-                  {{ item.role }}
-                  <span v-if="item.pawDetailNote" class="checklist-paw-note"> • 🐾 {{ item.pawDetailNote }}</span>
-                </span>
+                <span class="check-card-role">{{ item.role }}</span>
               </div>
 
               <div class="check-card-qty-badge">
