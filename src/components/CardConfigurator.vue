@@ -219,7 +219,7 @@
             </div>
           </div>
           <button class="m3-btn m3-btn-tonal btn-xs browse-art-btn" @click.stop="openCatGallery">
-            🎨 View 23 Artworks
+            🎨 View 18 Artworks
           </button>
         </div>
 

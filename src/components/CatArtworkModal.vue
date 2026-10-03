@@ -6,9 +6,9 @@
         <div class="header-left">
           <span class="gallery-badge-icon">😼</span>
           <div>
-            <h2 class="gallery-title">Exploding Kittens: 23 Cat Artworks Archive</h2>
+            <h2 class="gallery-title">Exploding Kittens: 18 Cat Artworks Archive</h2>
             <p class="gallery-subtitle">
-              All 23 official artwork styles across editions. Select any card to view in full detail.
+              All 18 official artwork styles across editions. Select any card to view in full detail.
             </p>
           </div>
         </div>
@@ -24,7 +24,7 @@
             :class="{ active: currentFilter === 'all' }"
             @click="currentFilter = 'all'"
           >
-            All 23 Artworks (23)
+            All 18 Artworks (18)
           </button>
           <button 
             class="filter-tab-btn" 
@@ -35,17 +35,17 @@
           </button>
           <button 
             class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'special' }"
-            @click="currentFilter = 'special'"
+            :class="{ active: currentFilter === 'core' }"
+            @click="currentFilter = 'core'"
           >
-            Zombie & Evil (8)
+            Core 5 Original (5)
           </button>
           <button 
             class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'uk' }"
-            @click="currentFilter = 'uk'"
+            :class="{ active: currentFilter === 'special' }"
+            @click="currentFilter = 'special'"
           >
-            UK Exclusive (5)
+            Special & Expansions (13)
           </button>
         </div>
 
@@ -227,12 +227,12 @@ const filteredVariants = computed(() => {
   return CAT_VARIANTS_CATALOG.filter(v => {
     // Filter tabs
     if (currentFilter.value === 'owned' && !isVariantOwned(v.slug)) return false;
-    if (currentFilter.value === 'special' && !['cat-o-lantern', 'de-cat-ipated', 'electrocat', 'vampire-cat', 'horse-cat', 'knight-cat', 'mercat', 'troll-cat', 'zombie-cat'].includes(v.slug)) return false;
-    if (currentFilter.value === 'uk' && !['cat-henge', 'football-cat', 'kit-tea-cat', 'loch-ness-kitty', 'telephone-boxcat'].includes(v.slug)) return false;
+    if (currentFilter.value === 'core' && !['beard-cat', 'cattermelon', 'hairy-potato-cat', 'rainbow-ralphing-cat', 'tacocat'].includes(v.slug)) return false;
+    if (currentFilter.value === 'special' && ['beard-cat', 'cattermelon', 'hairy-potato-cat', 'rainbow-ralphing-cat', 'tacocat'].includes(v.slug)) return false;
 
     // Search query
     if (searchQuery.value) {
-      const q = searchQuery.value.toLowerCase();
+      const q = searchQuery.value.toLowerCase().trim();
       if (!v.name.toLowerCase().includes(q) && !v.slug.includes(q)) return false;
     }
     return true;
@@ -268,12 +268,7 @@ const getCatTagline = (slug) => {
     'cat-o-lantern': 'Spooky glowing feline carved for mischief.',
     'de-cat-ipated': 'Mind lost, paws sharp and relentless.',
     'electrocat': 'Charged with 10,000 volts of static fur shock.',
-    'vampire-cat': 'I vant to suck your warm catnip milk.',
-    'cat-henge': 'Ancient feline monoliths holding cosmic energy.',
-    'football-cat': 'Star striker of the Kitty Premier League.',
-    'kit-tea-cat': 'Best served steaming hot with milk and biscuits.',
-    'loch-ness-kitty': 'Mysterious Scottish lake dweller seeking scritches.',
-    'telephone-boxcat': 'Ring ring... emergency kitten line is open.'
+    'vampire-cat': 'I vant to suck your warm catnip milk.'
   };
   return map[slug] || 'Powerless on its own. Play matching pairs to steal!';
 };

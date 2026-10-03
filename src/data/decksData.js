@@ -23,13 +23,6 @@ export const CAT_VARIANTS_CATALOG = [
     ]
   },
   {
-    "slug": "cat-henge",
-    "name": "Cat-Henge",
-    "icon": "./cards/cat-card/cat-henge.png",
-    "art": "./cards/cat-card/artworks/Cat-Henge.jpg",
-    "decks": []
-  },
-  {
     "slug": "cat-o-lantern",
     "name": "Cat-O-Lantern",
     "icon": "./cards/cat-card/cat-o-lantern.png",
@@ -77,13 +70,6 @@ export const CAT_VARIANTS_CATALOG = [
     ]
   },
   {
-    "slug": "football-cat",
-    "name": "Football Cat",
-    "icon": "./cards/cat-card/football-cat.png",
-    "art": "./cards/cat-card/artworks/Football-Cat.jpg",
-    "decks": []
-  },
-  {
     "slug": "hairy-potato-cat",
     "name": "Hairy Potato Cat",
     "icon": "./cards/cat-card/hairy-potato-cat.png",
@@ -104,13 +90,6 @@ export const CAT_VARIANTS_CATALOG = [
     ]
   },
   {
-    "slug": "kit-tea-cat",
-    "name": "Kit-Tea Cat",
-    "icon": "./cards/cat-card/kit-tea-cat.png",
-    "art": "./cards/cat-card/artworks/Kit-Tea-Cat.jpg",
-    "decks": []
-  },
-  {
     "slug": "knight-cat",
     "name": "Knight Cat",
     "icon": "./cards/cat-card/knight-cat.png",
@@ -118,13 +97,6 @@ export const CAT_VARIANTS_CATALOG = [
     "decks": [
       "exploding-kittens-good-vs-evil"
     ]
-  },
-  {
-    "slug": "loch-ness-kitty",
-    "name": "Loch Ness Kitty",
-    "icon": "./cards/cat-card/loch-ness-kitty.png",
-    "art": "./cards/cat-card/artworks/Loch-Ness-Kitty.jpg",
-    "decks": []
   },
   {
     "slug": "mercat",
@@ -178,13 +150,6 @@ export const CAT_VARIANTS_CATALOG = [
       "exploding-kittens-recipes-for-disaster",
       "exploding-kittens-2-player-edition"
     ]
-  },
-  {
-    "slug": "telephone-boxcat",
-    "name": "Telephone Boxcat",
-    "icon": "./cards/cat-card/telephone-boxcat.png",
-    "art": "./cards/cat-card/artworks/Telephone-Boxcat.jpg",
-    "decks": []
   },
   {
     "slug": "troll-cat",
@@ -2499,29 +2464,24 @@ export const ALL_CARDS_CATALOG = {
     "slug": "cat-card",
     "name": "Cat Card",
     "icons": [
-      "./cards/cat-card/beard-cat.png",
-      "./cards/cat-card/bikini-cat.png",
-      "./cards/cat-card/cat-henge.png",
-      "./cards/cat-card/cat-o-lantern.png",
-      "./cards/cat-card/cats-schrodinger.png",
-      "./cards/cat-card/cattermelon.png",
-      "./cards/cat-card/de-cat-ipated.png",
-      "./cards/cat-card/electrocat.png",
-      "./cards/cat-card/football-cat.png",
-      "./cards/cat-card/hairy-potato-cat.png",
-      "./cards/cat-card/horse-cat.png",
-      "./cards/cat-card/kit-tea-cat.png",
-      "./cards/cat-card/knight-cat.png",
-      "./cards/cat-card/loch-ness-kitty.png",
-      "./cards/cat-card/mercat.png",
-      "./cards/cat-card/momma-cat.png",
-      "./cards/cat-card/rainbow-ralphing-cat.png",
-      "./cards/cat-card/shy-bladder-cat.png",
-      "./cards/cat-card/tacocat.png",
-      "./cards/cat-card/telephone-boxcat.png",
-      "./cards/cat-card/troll-cat.png",
-      "./cards/cat-card/vampire-cat.png",
-      "./cards/cat-card/zombie-cat.png"
+          "./cards/cat-card/beard-cat.png",
+          "./cards/cat-card/bikini-cat.png",
+          "./cards/cat-card/cat-o-lantern.png",
+          "./cards/cat-card/cats-schrodinger.png",
+          "./cards/cat-card/cattermelon.png",
+          "./cards/cat-card/de-cat-ipated.png",
+          "./cards/cat-card/electrocat.png",
+          "./cards/cat-card/hairy-potato-cat.png",
+          "./cards/cat-card/horse-cat.png",
+          "./cards/cat-card/knight-cat.png",
+          "./cards/cat-card/mercat.png",
+          "./cards/cat-card/momma-cat.png",
+          "./cards/cat-card/rainbow-ralphing-cat.png",
+          "./cards/cat-card/shy-bladder-cat.png",
+          "./cards/cat-card/tacocat.png",
+          "./cards/cat-card/troll-cat.png",
+          "./cards/cat-card/vampire-cat.png",
+          "./cards/cat-card/zombie-cat.png"
     ],
     "shortDesc": "This is a cat card and is powerless on its own. Play two of the same cats as a pair to steal a random card from another player.",
     "mechanics": "These cards are powerless on their own, but can be used in Special Combos.\nTWO OF A KIND\nPlaying matching Pairs of Cat Cards (where you get to steal a random card from another player) no longer only applies to pairs of Cat Cards. It now applies to ANY pair of cards with the same title (a pair of Shuffle Cards, a pair of Skip Cards, etc). Ignore the instructions on the cards when you play a combo.\nTHREE OF A KIND\nWhen you play 3 matching cards (any three cards with the same title), you get to pick a player and name a card. If they had that card, they must give you one. If they don\u2019t have it, you get nothing. Ignore the instructions on the cards when you play a combo.",
@@ -2537,220 +2497,185 @@ export const ALL_CARDS_CATALOG = {
       "exploding-kittens-2-player-edition"
     ],
     "variants": [
-      {
-        "slug": "beard-cat",
-        "name": "Beard Cat",
-        "icon": "./cards/cat-card/beard-cat.png",
-        "art": "./cards/cat-card/artworks/Beard-Cat.jpg",
-        "decks": [
-          "exploding-kittens-original-edition",
-          "exploding-kittens-party-pack-edition",
-          "exploding-kittens-cat-burglar-edition",
-          "exploding-kittens-recipes-for-disaster",
-          "exploding-kittens-2-player-edition"
-        ]
-      },
-      {
-        "slug": "bikini-cat",
-        "name": "Bikini Cat",
-        "icon": "./cards/cat-card/bikini-cat.png",
-        "art": "./cards/cat-card/artworks/Bikini-Cat.jpg",
-        "decks": [
-          "exploding-kittens-nsfw-edition"
-        ]
-      },
-      {
-        "slug": "cat-henge",
-        "name": "Cat-Henge",
-        "icon": "./cards/cat-card/cat-henge.png",
-        "art": "./cards/cat-card/artworks/Cat-Henge.jpg",
-        "decks": []
-      },
-      {
-        "slug": "cat-o-lantern",
-        "name": "Cat-O-Lantern",
-        "icon": "./cards/cat-card/cat-o-lantern.png",
-        "art": "./cards/cat-card/artworks/Cat-O-Lantern.jpg",
-        "decks": [
-          "exploding-kittens-zombie-kittens"
-        ]
-      },
-      {
-        "slug": "cats-schrodinger",
-        "name": "Cat's Schr\u00f6dinger",
-        "icon": "./cards/cat-card/cats-schrodinger.png",
-        "art": "./cards/cat-card/artworks/Cats-Schrodinger.jpg",
-        "decks": [
-          "exploding-kittens-nsfw-edition"
-        ]
-      },
-      {
-        "slug": "cattermelon",
-        "name": "Cattermelon",
-        "icon": "./cards/cat-card/cattermelon.png",
-        "art": "./cards/cat-card/artworks/Cattermelon.jpg",
-        "decks": [
-          "exploding-kittens-original-edition",
-          "exploding-kittens-party-pack-edition",
-          "exploding-kittens-cat-burglar-edition"
-        ]
-      },
-      {
-        "slug": "de-cat-ipated",
-        "name": "De-Cat-Ipated",
-        "icon": "./cards/cat-card/de-cat-ipated.png",
-        "art": "./cards/cat-card/artworks/De-Cat-Ipated.jpg",
-        "decks": [
-          "exploding-kittens-zombie-kittens"
-        ]
-      },
-      {
-        "slug": "electrocat",
-        "name": "Electrocat",
-        "icon": "./cards/cat-card/electrocat.png",
-        "art": "./cards/cat-card/artworks/Electrocat.jpg",
-        "decks": [
-          "exploding-kittens-zombie-kittens"
-        ]
-      },
-      {
-        "slug": "football-cat",
-        "name": "Football Cat",
-        "icon": "./cards/cat-card/football-cat.png",
-        "art": "./cards/cat-card/artworks/Football-Cat.jpg",
-        "decks": []
-      },
-      {
-        "slug": "hairy-potato-cat",
-        "name": "Hairy Potato Cat",
-        "icon": "./cards/cat-card/hairy-potato-cat.png",
-        "art": "./cards/cat-card/artworks/Hairy-Potato-Cat.jpg",
-        "decks": [
-          "exploding-kittens-original-edition",
-          "exploding-kittens-party-pack-edition",
-          "exploding-kittens-cat-burglar-edition"
-        ]
-      },
-      {
-        "slug": "horse-cat",
-        "name": "Horse Cat",
-        "icon": "./cards/cat-card/horse-cat.png",
-        "art": "./cards/cat-card/artworks/Horse-Cat.jpg",
-        "decks": [
-          "exploding-kittens-good-vs-evil"
-        ]
-      },
-      {
-        "slug": "kit-tea-cat",
-        "name": "Kit-Tea Cat",
-        "icon": "./cards/cat-card/kit-tea-cat.png",
-        "art": "./cards/cat-card/artworks/Kit-Tea-Cat.jpg",
-        "decks": []
-      },
-      {
-        "slug": "knight-cat",
-        "name": "Knight Cat",
-        "icon": "./cards/cat-card/knight-cat.png",
-        "art": "./cards/cat-card/artworks/Knight-Cat.jpg",
-        "decks": [
-          "exploding-kittens-good-vs-evil"
-        ]
-      },
-      {
-        "slug": "loch-ness-kitty",
-        "name": "Loch Ness Kitty",
-        "icon": "./cards/cat-card/loch-ness-kitty.png",
-        "art": "./cards/cat-card/artworks/Loch-Ness-Kitty.jpg",
-        "decks": []
-      },
-      {
-        "slug": "mercat",
-        "name": "Mercat",
-        "icon": "./cards/cat-card/mercat.png",
-        "art": "./cards/cat-card/artworks/Mercat.jpg",
-        "decks": [
-          "exploding-kittens-good-vs-evil"
-        ]
-      },
-      {
-        "slug": "momma-cat",
-        "name": "Momma Cat",
-        "icon": "./cards/cat-card/momma-cat.png",
-        "art": "./cards/cat-card/artworks/Momma-Cat.jpg",
-        "decks": [
-          "exploding-kittens-nsfw-edition"
-        ]
-      },
-      {
-        "slug": "rainbow-ralphing-cat",
-        "name": "Rainbow-Ralphing Cat",
-        "icon": "./cards/cat-card/rainbow-ralphing-cat.png",
-        "art": "./cards/cat-card/artworks/Rainbow-Ralphing-Cat.jpg",
-        "decks": [
-          "exploding-kittens-original-edition",
-          "exploding-kittens-party-pack-edition",
-          "exploding-kittens-cat-burglar-edition",
-          "exploding-kittens-recipes-for-disaster",
-          "exploding-kittens-2-player-edition"
-        ]
-      },
-      {
-        "slug": "shy-bladder-cat",
-        "name": "Shy Bladder Cat",
-        "icon": "./cards/cat-card/shy-bladder-cat.png",
-        "art": "./cards/cat-card/artworks/Shy-Bladder-Cat.jpg",
-        "decks": [
-          "exploding-kittens-nsfw-edition"
-        ]
-      },
-      {
-        "slug": "tacocat",
-        "name": "Tacocat",
-        "icon": "./cards/cat-card/tacocat.png",
-        "art": "./cards/cat-card/artworks/Tacocat.jpg",
-        "decks": [
-          "exploding-kittens-original-edition",
-          "exploding-kittens-party-pack-edition",
-          "exploding-kittens-cat-burglar-edition",
-          "exploding-kittens-recipes-for-disaster",
-          "exploding-kittens-2-player-edition"
-        ]
-      },
-      {
-        "slug": "telephone-boxcat",
-        "name": "Telephone Boxcat",
-        "icon": "./cards/cat-card/telephone-boxcat.png",
-        "art": "./cards/cat-card/artworks/Telephone-Boxcat.jpg",
-        "decks": []
-      },
-      {
-        "slug": "troll-cat",
-        "name": "Troll Cat",
-        "icon": "./cards/cat-card/troll-cat.png",
-        "art": "./cards/cat-card/artworks/Troll-Cat.jpg",
-        "decks": [
-          "exploding-kittens-good-vs-evil"
-        ]
-      },
-      {
-        "slug": "vampire-cat",
-        "name": "Vampire Cat",
-        "icon": "./cards/cat-card/vampire-cat.png",
-        "art": "./cards/cat-card/artworks/Vampire-Cat.jpg",
-        "decks": [
-          "exploding-kittens-zombie-kittens"
-        ]
-      },
-      {
-        "slug": "zombie-cat",
-        "name": "Zombie Cat",
-        "icon": "./cards/cat-card/zombie-cat.png",
-        "art": "./cards/cat-card/artworks/Zombie-Cat.jpg",
-        "decks": [
-          "exploding-kittens-nsfw-edition",
-          "exploding-kittens-recipes-for-disaster"
-        ]
-      }
+          {
+                "slug": "beard-cat",
+                "name": "Beard Cat",
+                "icon": "./cards/cat-card/beard-cat.png",
+                "art": "./cards/cat-card/artworks/Beard-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-original-edition",
+                      "exploding-kittens-party-pack-edition",
+                      "exploding-kittens-cat-burglar-edition",
+                      "exploding-kittens-recipes-for-disaster",
+                      "exploding-kittens-2-player-edition"
+                ]
+          },
+          {
+                "slug": "bikini-cat",
+                "name": "Bikini Cat",
+                "icon": "./cards/cat-card/bikini-cat.png",
+                "art": "./cards/cat-card/artworks/Bikini-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-nsfw-edition"
+                ]
+          },
+          {
+                "slug": "cat-o-lantern",
+                "name": "Cat-O-Lantern",
+                "icon": "./cards/cat-card/cat-o-lantern.png",
+                "art": "./cards/cat-card/artworks/Cat-O-Lantern.jpg",
+                "decks": [
+                      "exploding-kittens-zombie-kittens"
+                ]
+          },
+          {
+                "slug": "cats-schrodinger",
+                "name": "Cat's Schr\u00f6dinger",
+                "icon": "./cards/cat-card/cats-schrodinger.png",
+                "art": "./cards/cat-card/artworks/Cats-Schrodinger.jpg",
+                "decks": [
+                      "exploding-kittens-nsfw-edition"
+                ]
+          },
+          {
+                "slug": "cattermelon",
+                "name": "Cattermelon",
+                "icon": "./cards/cat-card/cattermelon.png",
+                "art": "./cards/cat-card/artworks/Cattermelon.jpg",
+                "decks": [
+                      "exploding-kittens-original-edition",
+                      "exploding-kittens-party-pack-edition",
+                      "exploding-kittens-cat-burglar-edition"
+                ]
+          },
+          {
+                "slug": "de-cat-ipated",
+                "name": "De-Cat-Ipated",
+                "icon": "./cards/cat-card/de-cat-ipated.png",
+                "art": "./cards/cat-card/artworks/De-Cat-Ipated.jpg",
+                "decks": [
+                      "exploding-kittens-zombie-kittens"
+                ]
+          },
+          {
+                "slug": "electrocat",
+                "name": "Electrocat",
+                "icon": "./cards/cat-card/electrocat.png",
+                "art": "./cards/cat-card/artworks/Electrocat.jpg",
+                "decks": [
+                      "exploding-kittens-zombie-kittens"
+                ]
+          },
+          {
+                "slug": "hairy-potato-cat",
+                "name": "Hairy Potato Cat",
+                "icon": "./cards/cat-card/hairy-potato-cat.png",
+                "art": "./cards/cat-card/artworks/Hairy-Potato-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-original-edition",
+                      "exploding-kittens-party-pack-edition",
+                      "exploding-kittens-cat-burglar-edition"
+                ]
+          },
+          {
+                "slug": "horse-cat",
+                "name": "Horse Cat",
+                "icon": "./cards/cat-card/horse-cat.png",
+                "art": "./cards/cat-card/artworks/Horse-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-good-vs-evil"
+                ]
+          },
+          {
+                "slug": "knight-cat",
+                "name": "Knight Cat",
+                "icon": "./cards/cat-card/knight-cat.png",
+                "art": "./cards/cat-card/artworks/Knight-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-good-vs-evil"
+                ]
+          },
+          {
+                "slug": "mercat",
+                "name": "Mercat",
+                "icon": "./cards/cat-card/mercat.png",
+                "art": "./cards/cat-card/artworks/Mercat.jpg",
+                "decks": [
+                      "exploding-kittens-good-vs-evil"
+                ]
+          },
+          {
+                "slug": "momma-cat",
+                "name": "Momma Cat",
+                "icon": "./cards/cat-card/momma-cat.png",
+                "art": "./cards/cat-card/artworks/Momma-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-nsfw-edition"
+                ]
+          },
+          {
+                "slug": "rainbow-ralphing-cat",
+                "name": "Rainbow-Ralphing Cat",
+                "icon": "./cards/cat-card/rainbow-ralphing-cat.png",
+                "art": "./cards/cat-card/artworks/Rainbow-Ralphing-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-original-edition",
+                      "exploding-kittens-party-pack-edition",
+                      "exploding-kittens-cat-burglar-edition",
+                      "exploding-kittens-recipes-for-disaster",
+                      "exploding-kittens-2-player-edition"
+                ]
+          },
+          {
+                "slug": "shy-bladder-cat",
+                "name": "Shy Bladder Cat",
+                "icon": "./cards/cat-card/shy-bladder-cat.png",
+                "art": "./cards/cat-card/artworks/Shy-Bladder-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-nsfw-edition"
+                ]
+          },
+          {
+                "slug": "tacocat",
+                "name": "Tacocat",
+                "icon": "./cards/cat-card/tacocat.png",
+                "art": "./cards/cat-card/artworks/Tacocat.jpg",
+                "decks": [
+                      "exploding-kittens-original-edition",
+                      "exploding-kittens-party-pack-edition",
+                      "exploding-kittens-cat-burglar-edition",
+                      "exploding-kittens-recipes-for-disaster",
+                      "exploding-kittens-2-player-edition"
+                ]
+          },
+          {
+                "slug": "troll-cat",
+                "name": "Troll Cat",
+                "icon": "./cards/cat-card/troll-cat.png",
+                "art": "./cards/cat-card/artworks/Troll-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-good-vs-evil"
+                ]
+          },
+          {
+                "slug": "vampire-cat",
+                "name": "Vampire Cat",
+                "icon": "./cards/cat-card/vampire-cat.png",
+                "art": "./cards/cat-card/artworks/Vampire-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-zombie-kittens"
+                ]
+          },
+          {
+                "slug": "zombie-cat",
+                "name": "Zombie Cat",
+                "icon": "./cards/cat-card/zombie-cat.png",
+                "art": "./cards/cat-card/artworks/Zombie-Cat.jpg",
+                "decks": [
+                      "exploding-kittens-nsfw-edition",
+                      "exploding-kittens-recipes-for-disaster"
+                ]
+          }
     ]
   },
   "defuse": {

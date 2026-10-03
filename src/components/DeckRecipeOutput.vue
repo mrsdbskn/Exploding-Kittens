@@ -263,7 +263,7 @@
           <div>
             <h3 class="cat-spotlight-title">Cat Cards Artwork Breakdown</h3>
             <p class="cat-spotlight-sub">
-              Exploding Kittens has 23 unique cat artwork styles. Based on your owned decks, add these exact artwork cards:
+              Exploding Kittens has 18 unique cat artwork styles. Based on your owned decks, add these exact artwork cards:
             </p>
           </div>
         </div>
@@ -272,7 +272,7 @@
             {{ totalCatCards }} Total Cat Cards ({{ recipe.catVariantsBreakdown.length }} Artwork Styles)
           </div>
           <button class="m3-btn m3-btn-tonal btn-sm" @click="openCatGallery(null)">
-            🎨 Browse All 23 Styles
+            🎨 Browse All 18 Styles
           </button>
         </div>
       </div>
