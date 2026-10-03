@@ -10,7 +10,11 @@
       :has-errors="hasErrors"
       :recipe-complete="isRecipeComplete"
       @update:step="setStep"
+      @open-instructions="showInstructionsModal = true"
       @open-presets="showPresetModal = true"
+      @open-companion="showCompanionModal = true"
+      @open-codex="showCodexModal = true"
+      @open-custom-studio="showCustomRecipeModal = true"
       @reset-all="resetAll"
     />
 
@@ -107,6 +111,34 @@
       @close="showInstructionsModal = false"
     />
 
+    <!-- Live Game Night Companion & Timer Modal (Features 5, 7, 8) -->
+    <GameCompanionModal 
+      :is-open="showCompanionModal"
+      :player-count="playerCount"
+      :has-dead-player-cards="deckRecipe.isZombieDeckMode || deckRecipe.drawPileCards?.some(c => ['attack-of-the-dead', 'feed-the-dead', 'grave-robber'].includes(c.slug))"
+      @close="showCompanionModal = false"
+    />
+
+    <!-- Card Lore & Rules Codex Modal (Feature 6) -->
+    <CardLoreCodexModal 
+      :is-open="showCodexModal"
+      :initial-card-slug="inspectedCardSlug"
+      @close="showCodexModal = false"
+    />
+
+    <!-- Custom Recipe Studio & Bookmarks Modal (Features 2, 10) -->
+    <CustomRecipeModal 
+      :is-open="showCustomRecipeModal"
+      :current-config="{
+        playerCount,
+        ownedDeckIds,
+        customQuantities,
+        excludedCards
+      }"
+      @close="showCustomRecipeModal = false"
+      @load-custom-recipe="handleLoadCustomRecipe"
+    />
+
     <!-- Interactive Kitten Rules Referee Chatbot -->
     <RulesBotDrawer 
       @open-instructions="showInstructionsModal = true"
@@ -129,6 +161,9 @@ import CardDetailModal from './components/CardDetailModal.vue';
 import PresetModal from './components/PresetModal.vue';
 import InstructionsModal from './components/InstructionsModal.vue';
 import RulesBotDrawer from './components/RulesBotDrawer.vue';
+import GameCompanionModal from './components/GameCompanionModal.vue';
+import CardLoreCodexModal from './components/CardLoreCodexModal.vue';
+import CustomRecipeModal from './components/CustomRecipeModal.vue';
 
 // Navigation state
 const currentStep = ref('decks');
@@ -147,6 +182,23 @@ const extraDefusesInDeck = ref(2);
 const inspectedCardSlug = ref(null);
 const showPresetModal = ref(false);
 const showInstructionsModal = ref(false);
+const showCompanionModal = ref(false);
+const showCodexModal = ref(false);
+const showCustomRecipeModal = ref(false);
+
+const handleLoadCustomRecipe = (recipe) => {
+  if (recipe.config) {
+    if (Array.isArray(recipe.config.ownedDeckIds) && recipe.config.ownedDeckIds.length > 0) {
+      ownedDeckIds.value = recipe.config.ownedDeckIds;
+    }
+    if (recipe.config.playerCount) playerCount.value = recipe.config.playerCount;
+    if (recipe.config.customQuantities) customQuantities.value = recipe.config.customQuantities;
+    if (Array.isArray(recipe.config.excludedCards)) {
+      excludedCards.value = new Set(recipe.config.excludedCards);
+    }
+    currentStep.value = 'cards';
+  }
+};
 
 // LocalStorage persistence
 onMounted(() => {

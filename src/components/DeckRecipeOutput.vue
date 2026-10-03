@@ -29,13 +29,21 @@
           <span>Export JSON</span>
         </button>
 
+        <button class="m3-btn m3-btn-tonal" @click="showSleeveModal = true" title="Card Sleeving & Box Fit Guide">
+          🎴 Sleeves & Box
+        </button>
+
+        <button class="m3-btn m3-btn-primary" @click="showCompanionModal = true" title="Launch Game Night Companion & Timer">
+          🎮 Game Companion
+        </button>
+
         <button class="m3-btn m3-btn-primary" @click="printRecipe">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 6 2 18 2 18 9"/>
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
             <rect width="12" height="8" x="6" y="14"/>
           </svg>
-          <span>Print Guide</span>
+          <span>Print</span>
         </button>
       </div>
     </div>
@@ -87,6 +95,66 @@
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.starterDefusesNeeded }} + {{ recipe.extraDefusesToInsert }}</span>
           <span class="stat-lbl">Defuses (Hand + Deck)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger Meter & Hazard Probability Simulator (Feature 3) -->
+    <div class="danger-meter-card m3-card animate-fade-in" :style="{ '--danger-color': probabilities.dangerColor }">
+      <div class="danger-header">
+        <div class="danger-left">
+          <span class="danger-icon">🎯</span>
+          <div>
+            <div class="danger-title-row">
+              <h3 class="danger-title">Danger Meter & Hazard Volatility</h3>
+              <span class="danger-badge" :style="{ backgroundColor: probabilities.dangerColor }">
+                {{ probabilities.dangerLevel }}
+              </span>
+            </div>
+            <p class="danger-desc">{{ probabilities.analysisSummary }}</p>
+          </div>
+        </div>
+
+        <div class="volatility-score-box">
+          <span class="volatility-num">{{ probabilities.volatilityScore }}<small>/100</small></span>
+          <span class="volatility-lbl">Volatility Score</span>
+        </div>
+      </div>
+
+      <!-- Probability Metrics -->
+      <div class="danger-metrics-row">
+        <div class="metric-pill">
+          <span class="metric-lbl">Turn 1 Bomb Odds</span>
+          <span class="metric-val">{{ probabilities.turn1HazardChance }}%</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-lbl">Avg Turn to 1st Bomb</span>
+          <span class="metric-val">Turn {{ probabilities.firstBombExpectedTurn }}</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-lbl">Draw Pile Hazard Density</span>
+          <span class="metric-val">{{ probabilities.hazardCount }} in {{ probabilities.drawPileSize }} cards</span>
+        </div>
+      </div>
+
+      <!-- Turn-by-Turn Hazard Cumulative Curve -->
+      <div class="hazard-curve-wrapper">
+        <span class="curve-title">Cumulative Explosion Probability Across Turns 1 - 10:</span>
+        <div class="curve-bars-grid">
+          <div 
+            v-for="pt in probabilities.survivalCurve" 
+            :key="pt.turn" 
+            class="curve-bar-col"
+          >
+            <div class="bar-track">
+              <div 
+                class="bar-fill" 
+                :style="{ height: `${Math.max(6, pt.cumulativeExplosionChance)}%` }"
+              ></div>
+            </div>
+            <span class="bar-val">{{ pt.cumulativeExplosionChance }}%</span>
+            <span class="bar-turn">T{{ pt.turn }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -345,6 +413,22 @@
       :owned-deck-ids="recipe.ownedDeckIds || []"
       @close="isCatModalOpen = false"
     />
+
+    <!-- Card Sleeving & Box Storage Calculator Modal (Feature 9) -->
+    <SleeveCalculatorModal
+      :is-open="showSleeveModal"
+      :total-cards="recipe.totalGameCards"
+      :owned-deck-ids="recipe.ownedDeckIds || []"
+      @close="showSleeveModal = false"
+    />
+
+    <!-- Live Game Night Companion & Timer Modal (Features 5, 7, 8) -->
+    <GameCompanionModal
+      :is-open="showCompanionModal"
+      :player-count="recipe.playerCount"
+      :has-dead-player-cards="recipe.isZombieDeckMode || recipe.drawPileCards?.some(c => ['attack-of-the-dead', 'feed-the-dead', 'grave-robber'].includes(c.slug))"
+      @close="showCompanionModal = false"
+    />
   </div>
 </template>
 
@@ -352,6 +436,9 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import confetti from 'canvas-confetti';
 import CatArtworkModal from './CatArtworkModal.vue';
+import SleeveCalculatorModal from './SleeveCalculatorModal.vue';
+import GameCompanionModal from './GameCompanionModal.vue';
+import { calculateDeckProbabilities } from '../utils/probabilityEngine.js';
 
 const props = defineProps({
   recipe: { type: Object, required: true },
@@ -366,6 +453,13 @@ const copied = ref(false);
 
 const isCatModalOpen = ref(false);
 const activeCatVariantSlug = ref(null);
+
+const showSleeveModal = ref(false);
+const showCompanionModal = ref(false);
+
+const probabilities = computed(() => {
+  return calculateDeckProbabilities(props.recipe);
+});
 
 const openCatGallery = (slug = null) => {
   activeCatVariantSlug.value = slug;
@@ -1189,6 +1283,183 @@ const printRecipe = () => {
 .cat-art-tag-btn:hover {
   background: rgba(255, 180, 160, 0.25);
   transform: scale(1.05);
+}
+
+/* Danger Meter & Probability Card */
+.danger-meter-card {
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(30, 27, 24, 0.9), rgba(24, 20, 18, 0.95));
+  border: 1px solid rgba(255, 180, 160, 0.25);
+  border-radius: var(--md-shape-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.danger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.danger-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.danger-icon {
+  font-size: 2rem;
+  background-color: rgba(255, 180, 160, 0.15);
+  padding: 8px 10px;
+  border-radius: var(--md-shape-md);
+}
+
+.danger-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.danger-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.danger-badge {
+  color: #141210;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.danger-desc {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.volatility-score-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--md-shape-md);
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.volatility-num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--danger-color, #ffb4a0);
+  line-height: 1;
+}
+
+.volatility-num small {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.volatility-lbl {
+  font-size: 0.7rem;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.danger-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.metric-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-lbl {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.metric-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.hazard-curve-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 14px;
+  border-radius: 14px;
+}
+
+.curve-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffb4a0;
+}
+
+.curve-bars-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  align-items: flex-end;
+  height: 90px;
+}
+
+.curve-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.bar-track {
+  width: 100%;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  background: linear-gradient(to top, var(--danger-color, #ffb4a0), #ff5252);
+  border-radius: 6px;
+  transition: height 0.3s ease;
+}
+
+.bar-val {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bar-turn {
+  font-size: 0.65rem;
+  color: #888;
 }
 
 /* Bottom Nav */

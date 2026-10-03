@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="./favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#141210" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eb7350" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Exploding Kittens - Deck Builder & Recipe Assembly</title>
     <meta name="description" content="Custom Exploding Kittens Deck Builder: Select your owned expansions, exclude unwanted cards, pick player count, get smart card synergy suggestions, and generate exact physical deck assembly recipes." />
     <!-- Google Fonts: Outfit & Inter for high-end Material You aesthetics -->
@@ -14,5 +21,14 @@
   <body class="m3-dark-theme">
     <div id="app"></div>
     <script type="module" src="./src/main.js"></script>
+    <script>
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => {
+            console.log('SW registration skipped:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
