@@ -1,174 +1,176 @@
 <template>
-  <div v-if="isOpen" class="cat-modal-backdrop animate-fade-in" @click.self="close">
-    <div class="m3-card cat-gallery-modal animate-pop-in">
-      <!-- Modal Header -->
-      <div class="gallery-header">
-        <div class="header-left">
-          <span class="gallery-badge-icon">😼</span>
-          <div>
-            <h2 class="gallery-title">Exploding Kittens: 18 Cat Artworks Archive</h2>
-            <p class="gallery-subtitle">
-              All 18 official artwork styles across editions. Select any card to view in full detail.
-            </p>
-          </div>
-        </div>
-        <button class="close-btn" @click="close" title="Close">✕</button>
-      </div>
-
-      <!-- Controls & Filter Toolbar -->
-      <div class="gallery-toolbar">
-        <!-- Filter Tabs -->
-        <div class="filter-tabs">
-          <button 
-            class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'all' }"
-            @click="currentFilter = 'all'"
-          >
-            All 18 Artworks (18)
-          </button>
-          <button 
-            class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'owned' }"
-            @click="currentFilter = 'owned'"
-          >
-            In Owned Decks ({{ ownedVariants.length }})
-          </button>
-          <button 
-            class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'core' }"
-            @click="currentFilter = 'core'"
-          >
-            Core 5 Original (5)
-          </button>
-          <button 
-            class="filter-tab-btn" 
-            :class="{ active: currentFilter === 'special' }"
-            @click="currentFilter = 'special'"
-          >
-            Special & Expansions (13)
-          </button>
-        </div>
-
-        <!-- Search Input -->
-        <div class="gallery-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Search cat art name..." 
-            class="gallery-search-input"
-          />
-          <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
-        </div>
-      </div>
-
-      <!-- Modal Content: Main Split View (Selected Card Preview + Gallery Grid) -->
-      <div class="gallery-content-split">
-        <!-- Left: Selected Large Artwork Preview -->
-        <div class="preview-panel" v-if="selectedVariant">
-          <div class="card-art-frame">
-            <img 
-              :src="selectedVariant.art" 
-              :alt="selectedVariant.name" 
-              class="full-card-img" 
-              loading="lazy"
-            />
-          </div>
-
-          <div class="preview-details">
-            <div class="preview-title-row">
-              <img :src="selectedVariant.icon" :alt="selectedVariant.name" class="preview-icon-sm" />
-              <div>
-                <h3 class="preview-cat-name">{{ selectedVariant.name }}</h3>
-                <span class="preview-tagline">{{ getCatTagline(selectedVariant.slug) }}</span>
-              </div>
-            </div>
-
-            <!-- Owned Status -->
-            <div class="ownership-status-badge" :class="isVariantOwned(selectedVariant.slug) ? 'is-owned' : 'is-unowned'">
-              <span v-if="isVariantOwned(selectedVariant.slug)">
-                ✅ In your deck: <strong>{{ getOwnedQuantity(selectedVariant.slug) }}x cards</strong>
-              </span>
-              <span v-else>
-                📦 Not in current owned decks
-              </span>
-            </div>
-
-            <!-- Decks Featuring this Artwork -->
-            <div class="preview-decks-section">
-              <span class="preview-label">Featured In Editions:</span>
-              <div class="preview-decks-chips">
-                <span 
-                  v-for="dSlug in getDecksForVariant(selectedVariant.slug)" 
-                  :key="dSlug"
-                  class="edition-chip"
-                >
-                  {{ formatDeckName(dSlug) }}
-                </span>
-                <span v-if="getDecksForVariant(selectedVariant.slug).length === 0" class="edition-chip uk-exclusive">
-                  🇬🇧 UK / Amazon UK Special Edition
-                </span>
-              </div>
-            </div>
-
-            <!-- Combo Reminder -->
-            <div class="combo-rule-box">
-              <span class="combo-title">🐱 Special Combo Mechanics</span>
-              <p class="combo-text">
-                Play <strong>2 matching {{ selectedVariant.name }}</strong> cards to steal a random card from another player.
-                Or play 3 matching cards to name a specific card to steal!
+  <Teleport to="body">
+    <div v-if="isOpen" class="cat-modal-backdrop animate-fade-in" @click.self="close">
+      <div class="m3-card cat-gallery-modal animate-pop-in">
+        <!-- Modal Header -->
+        <div class="gallery-header">
+          <div class="header-left">
+            <span class="gallery-badge-icon">😼</span>
+            <div>
+              <h2 class="gallery-title">Exploding Kittens: 18 Cat Artworks Archive</h2>
+              <p class="gallery-subtitle">
+                All 18 official artwork styles across editions. Select any card to view in full detail.
               </p>
             </div>
           </div>
+          <button class="close-btn" @click="close" title="Close">✕</button>
         </div>
 
-        <!-- Right: 23 Artworks Scrollable Grid -->
-        <div class="grid-panel">
-          <div class="artworks-grid">
-            <div 
-              v-for="v in filteredVariants" 
-              :key="v.slug"
-              class="gallery-card-item"
-              :class="{ 
-                selected: selectedVariant?.slug === v.slug,
-                'is-owned-item': isVariantOwned(v.slug)
-              }"
-              @click="selectedVariant = v"
+        <!-- Controls & Filter Toolbar -->
+        <div class="gallery-toolbar">
+          <!-- Filter Tabs -->
+          <div class="filter-tabs">
+            <button 
+              class="filter-tab-btn" 
+              :class="{ active: currentFilter === 'all' }"
+              @click="currentFilter = 'all'"
             >
-              <div class="card-thumb-container">
-                <img :src="v.icon" :alt="v.name" class="thumb-icon" />
-                <span v-if="isVariantOwned(v.slug)" class="owned-qty-pill">
-                  {{ getOwnedQuantity(v.slug) }}x
+              All 18 Artworks (18)
+            </button>
+            <button 
+              class="filter-tab-btn" 
+              :class="{ active: currentFilter === 'owned' }"
+              @click="currentFilter = 'owned'"
+            >
+              In Owned Decks ({{ ownedVariants.length }})
+            </button>
+            <button 
+              class="filter-tab-btn" 
+              :class="{ active: currentFilter === 'core' }"
+              @click="currentFilter = 'core'"
+            >
+              Core 5 Original (5)
+            </button>
+            <button 
+              class="filter-tab-btn" 
+              :class="{ active: currentFilter === 'special' }"
+              @click="currentFilter = 'special'"
+            >
+              Special & Expansions (13)
+            </button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="gallery-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              v-model="searchQuery" 
+              type="text" 
+              placeholder="Search cat art name..." 
+              class="gallery-search-input"
+            />
+            <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
+          </div>
+        </div>
+
+        <!-- Modal Content: Main Split View (Selected Card Preview + Gallery Grid) -->
+        <div class="gallery-content-split" ref="contentSplitRef">
+          <!-- Left: Selected Large Artwork Preview -->
+          <div class="preview-panel" v-if="selectedVariant">
+            <div class="card-art-frame">
+              <img 
+                :src="selectedVariant.art" 
+                :alt="selectedVariant.name" 
+                class="full-card-img" 
+                loading="lazy"
+              />
+            </div>
+
+            <div class="preview-details">
+              <div class="preview-title-row">
+                <img :src="selectedVariant.icon" :alt="selectedVariant.name" class="preview-icon-sm" />
+                <div>
+                  <h3 class="preview-cat-name">{{ selectedVariant.name }}</h3>
+                  <span class="preview-tagline">{{ getCatTagline(selectedVariant.slug) }}</span>
+                </div>
+              </div>
+
+              <!-- Owned Status -->
+              <div class="ownership-status-badge" :class="isVariantOwned(selectedVariant.slug) ? 'is-owned' : 'is-unowned'">
+                <span v-if="isVariantOwned(selectedVariant.slug)">
+                  ✅ In your deck: <strong>{{ getOwnedQuantity(selectedVariant.slug) }}x cards</strong>
+                </span>
+                <span v-else>
+                  📦 Not in current owned decks
                 </span>
               </div>
-              <span class="card-item-name">{{ v.name }}</span>
+
+              <!-- Decks Featuring this Artwork -->
+              <div class="preview-decks-section">
+                <span class="preview-label">Featured In Editions:</span>
+                <div class="preview-decks-chips">
+                  <span 
+                    v-for="dSlug in getDecksForVariant(selectedVariant.slug)" 
+                    :key="dSlug"
+                    class="edition-chip"
+                  >
+                    {{ formatDeckName(dSlug) }}
+                  </span>
+                  <span v-if="getDecksForVariant(selectedVariant.slug).length === 0" class="edition-chip uk-exclusive">
+                    🇬🇧 UK / Amazon UK Special Edition
+                  </span>
+                </div>
+              </div>
+
+              <!-- Combo Reminder -->
+              <div class="combo-rule-box">
+                <span class="combo-title">🐱 Special Combo Mechanics</span>
+                <p class="combo-text">
+                  Play <strong>2 matching {{ selectedVariant.name }}</strong> cards to steal a random card from another player.
+                  Or play 3 matching cards to name a specific card to steal!
+                </p>
+              </div>
             </div>
           </div>
 
-          <div v-if="filteredVariants.length === 0" class="empty-results">
-            No cat artwork styles match "{{ searchQuery }}".
+          <!-- Right: 18 Artworks Scrollable Grid -->
+          <div class="grid-panel">
+            <div class="artworks-grid">
+              <div 
+                v-for="v in filteredVariants" 
+                :key="v.slug"
+                class="gallery-card-item"
+                :class="{ 
+                  selected: selectedVariant?.slug === v.slug,
+                  'is-owned-item': isVariantOwned(v.slug)
+                }"
+                @click="selectVariant(v)"
+              >
+                <div class="card-thumb-container">
+                  <img :src="v.icon" :alt="v.name" class="thumb-icon" />
+                  <span v-if="isVariantOwned(v.slug)" class="owned-qty-pill">
+                    {{ getOwnedQuantity(v.slug) }}x
+                  </span>
+                </div>
+                <span class="card-item-name">{{ v.name }}</span>
+              </div>
+            </div>
+
+            <div v-if="filteredVariants.length === 0" class="empty-results">
+              No cat artwork styles match "{{ searchQuery }}".
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Modal Footer -->
-      <div class="gallery-footer">
-        <span class="footer-hint">
-          💡 Tip: Exploding Kittens standard rules allow combining cat cards across decks into identical matching pairs.
-        </span>
-        <button class="m3-btn m3-btn-primary" @click="close">
-          Done
-        </button>
+        <!-- Modal Footer -->
+        <div class="gallery-footer">
+          <span class="footer-hint">
+            💡 Tip: Exploding Kittens standard rules allow combining cat cards across decks into identical matching pairs.
+          </span>
+          <button class="m3-btn m3-btn-primary" @click="close">
+            Done
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onUnmounted } from 'vue';
 import { CAT_VARIANTS_CATALOG, DECKS } from '../data/decksData.js';
 
 const props = defineProps({
@@ -179,20 +181,35 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+const contentSplitRef = ref(null);
 const currentFilter = ref('all');
 const searchQuery = ref('');
 const selectedVariant = ref(CAT_VARIANTS_CATALOG[0]);
 
-// Initialize selected variant on open
+const selectVariant = (v) => {
+  selectedVariant.value = v;
+  if (contentSplitRef.value && window.innerWidth <= 850) {
+    contentSplitRef.value.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+// Initialize selected variant and lock body scroll on open
 watch(() => props.isOpen, (open) => {
   if (open) {
+    document.body.style.overflow = 'hidden';
     if (props.initialVariantSlug) {
       const match = CAT_VARIANTS_CATALOG.find(v => v.slug === props.initialVariantSlug);
       if (match) selectedVariant.value = match;
     } else {
       selectedVariant.value = CAT_VARIANTS_CATALOG[0];
     }
+  } else {
+    document.body.style.overflow = '';
   }
+});
+
+onUnmounted(() => {
+  document.body.style.overflow = '';
 });
 
 // Map owned variants and quantities based on ownedDeckIds
@@ -436,13 +453,6 @@ const close = () => {
   min-height: 480px;
 }
 
-@media (max-width: 850px) {
-  .gallery-content-split {
-    grid-template-columns: 1fr;
-    overflow-y: auto;
-  }
-}
-
 .preview-panel {
   padding: 24px;
   background-color: #181512;
@@ -456,16 +466,23 @@ const close = () => {
 
 .card-art-frame {
   width: 220px;
+  max-width: 100%;
+  aspect-ratio: 720 / 1005;
+  flex-shrink: 0 !important;
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
   border: 2px solid rgba(255, 180, 160, 0.3);
   background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .full-card-img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -723,27 +740,73 @@ const close = () => {
     width: 100%;
   }
   .gallery-content-split {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-height: 0;
   }
-  .art-preview-panel {
+
+  .preview-panel {
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 14px;
+    border-bottom: 1.5px solid rgba(255, 180, 160, 0.2);
+    padding: 18px 14px;
+    width: 100%;
+    overflow-y: visible;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #1d1916 0%, #151210 100%);
   }
-  .card-frame {
-    max-width: 220px;
+
+  .card-art-frame {
+    width: 200px;
+    max-width: 65vw;
+    aspect-ratio: 720 / 1005;
+    flex-shrink: 0 !important;
     margin: 0 auto;
   }
-  .art-grid-panel {
-    padding: 12px;
+
+  .preview-details {
+    width: 100%;
   }
-  .cat-gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+
+  .grid-panel {
+    padding: 16px 12px;
+    overflow-y: visible;
+    flex: 1;
+  }
+
+  .artworks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 8px;
   }
+
+  .gallery-card-item {
+    padding: 10px 6px;
+    border-radius: 12px;
+  }
+
+  .card-thumb-container {
+    width: 54px;
+    height: 54px;
+    margin-bottom: 4px;
+  }
+
+  .thumb-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .card-item-name {
+    font-size: 0.75rem;
+  }
+
   .gallery-footer {
-    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 12px)) 14px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 12px)) 16px;
+  }
+
+  .gallery-footer .m3-btn {
+    width: 100%;
   }
 }
 </style>

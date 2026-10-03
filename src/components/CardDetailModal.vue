@@ -1,4 +1,5 @@
 <template>
+  <Teleport to="body">
   <div v-if="card" class="modal-backdrop animate-fade-in" @click.self="$emit('close')">
     <div class="m3-card modal-container animate-pop-in">
       <!-- Modal Close Button -->
@@ -72,7 +73,7 @@
           class="m3-btn m3-btn-tonal"
           @click="isCatGalleryOpen = true"
         >
-          🎨 View 23 Cat Artworks Archive
+          🎨 View 18 Cat Artworks Archive
         </button>
 
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
@@ -88,6 +89,7 @@
       @close="isCatGalleryOpen = false"
     />
   </div>
+  </Teleport>
 </template>
 
 <script setup>

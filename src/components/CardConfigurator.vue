@@ -189,7 +189,7 @@
                 {{ formatCategory(card.category) }}
               </span>
               <span v-if="card.slug === 'cat-card'" class="m3-badge m3-badge-warning">
-                23 Artwork Styles Catalog
+                18 Artwork Styles Catalog
               </span>
               <span v-else-if="card.icons && card.icons.length > 1" class="m3-badge m3-badge-warning">
                 {{ card.icons.length }} artwork styles
