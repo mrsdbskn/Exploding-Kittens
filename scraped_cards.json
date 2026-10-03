@@ -1,0 +1,632 @@
+{
+  "attack-2x": {
+    "slug": "attack-2x",
+    "name": "Attack 2x",
+    "icons": [
+      "https://explodi.ng/images/cards/attack-2x/attack-2x.png"
+    ],
+    "shortDesc": "End your turn without drawing a card. Force the next player to take two turns.",
+    "mechanics": "Do not draw any cards. Instead, immediately force the next player to take 2 turns in a row. Play then continues from that player. The victim of this card takes a turn as normal (pass-or-play then draw). Then, when their first turn is over, it's their turn again.\nIf the victim of an Attack Card plays an Attack Card on any of their turns, the new target must take any remaining turns plus the number of attacks on the Attack Card just played (e.g. 4 turns, then 6, and so on).",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "cat-card": {
+    "slug": "cat-card",
+    "name": "Cat Card",
+    "icons": [
+      "https://explodi.ng/images/cards/cat-card/beard-cat.png",
+      "https://explodi.ng/images/cards/cat-card/cattermelon.png",
+      "https://explodi.ng/images/cards/cat-card/hairy-potato-cat.png",
+      "https://explodi.ng/images/cards/cat-card/rainbow-ralphing-cat.png",
+      "https://explodi.ng/images/cards/cat-card/tacocat.png"
+    ],
+    "shortDesc": "This is a cat card and is powerless on its own. Play two of the same cats as a pair to steal a random card from another player.",
+    "mechanics": "These cards are powerless on their own, but can be used in Special Combos.\nTWO OF A KIND\nPlaying matching Pairs of Cat Cards (where you get to steal a random card from another player) no longer only applies to pairs of Cat Cards. It now applies to ANY pair of cards with the same title (a pair of Shuffle Cards, a pair of Skip Cards, etc). Ignore the instructions on the cards when you play a combo.\nTHREE OF A KIND\nWhen you play 3 matching cards (any three cards with the same title), you get to pick a player and name a card. If they had that card, they must give you one. If they don’t have it, you get nothing. Ignore the instructions on the cards when you play a combo.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "defuse": {
+    "slug": "defuse",
+    "name": "Defuse",
+    "icons": [
+      "https://explodi.ng/images/cards/defuse/defuse.png"
+    ],
+    "shortDesc": "Instead of exploding, secretly put your last drawn card back into the deck.",
+    "mechanics": "If you drew an Exploding Kitten, you can play this card instead of dying. Place your Defuse Card in the Discard Pile.\nThen take the Exploding Kitten, and without reordering or viewing the other cards, secretly put it back in the Draw Pile anywhere you’d like.\nWant to screw over the player right after you? Put the Kitten right on top of the deck. If you’d like, hold the deck under the table so that no one else can see where you put it.\nYour turn is over after playing this card.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "exploding-kitten": {
+    "slug": "exploding-kitten",
+    "name": "Exploding Kitten",
+    "icons": [
+      "https://explodi.ng/images/cards/exploding-kitten/exploding-kitten.png"
+    ],
+    "shortDesc": "Show this card immediately.",
+    "mechanics": "You must show this card immediately. Unless you have a Defuse Card, you’re dead. Discard all of your cards, including the Exploding Kitten.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "favor": {
+    "slug": "favor",
+    "name": "Favor",
+    "icons": [
+      "https://explodi.ng/images/cards/favor/favor.png"
+    ],
+    "shortDesc": "One player must give you a card of their choice.",
+    "mechanics": "Force any other player to give you 1 card from their hand. They choose which card to give you.\nIf you have an Exploding Kitten in your hand (see “Streaking Kitten”), you can use it as your chosen card when Favor is played on you.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "nope": {
+    "slug": "nope",
+    "name": "Nope",
+    "icons": [
+      "https://explodi.ng/images/cards/nope/nope.png"
+    ],
+    "shortDesc": "Stop the action of another player. You can play this at any time.",
+    "mechanics": "Stop any action (Special Combo, Shuffle etc.) except for an Exploding Kitten or a Defuse Card. Imagine that any card beneath a Nope Card never existed.\nA Nope can also be played on another Nope to negate it and create a Yup, and so on.\nA Nope can be played at any time before an action has begun, even if it’s not your turn. Any cards that have been Noped are lost. Leave them in the Discard Pile.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "see-the-future-3x": {
+    "slug": "see-the-future-3x",
+    "name": "See the Future 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/see-the-future-3x/see-the-future-3x.png"
+    ],
+    "shortDesc": "Privately view the top three cards of the deck.",
+    "mechanics": "Privately view the top 3 cards from the Draw Pile and put them back in the same order. Don’t show the cards to the other players.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "shuffle": {
+    "slug": "shuffle",
+    "name": "Shuffle",
+    "icons": [
+      "https://explodi.ng/images/cards/shuffle/shuffle.png"
+    ],
+    "shortDesc": "Shuffle the draw pile.",
+    "mechanics": "Shuffle the Draw Pile without viewing the cards until told to stop.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "skip": {
+    "slug": "skip",
+    "name": "Skip",
+    "icons": [
+      "https://explodi.ng/images/cards/skip/skip.png"
+    ],
+    "shortDesc": "End your turn without drawing a card.",
+    "mechanics": "If you play a Skip Card as a defense to an Attack Card, it only ends 1 of the 2 turns. 2 Skip Cards would end both turns.",
+    "decks": [
+      "exploding-kittens-original-edition",
+      "exploding-kittens-nsfw-edition",
+      "exploding-kittens-cat-burglar-edition",
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-zombie-kittens",
+      "exploding-kittens-2-player-edition"
+    ]
+  },
+  "alter-the-future-3x": {
+    "slug": "alter-the-future-3x",
+    "name": "Alter the Future 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/alter-the-future-3x/alter-the-future-3x.png"
+    ],
+    "shortDesc": "Privately view and rearrange the top three cards of the draw pile.",
+    "mechanics": "Privately view the top 3 cards from the Draw Pile, and rearrange them in any order you'd like. Don't show the cards to the other players.",
+    "decks": [
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "draw-from-the-bottom": {
+    "slug": "draw-from-the-bottom",
+    "name": "Draw From the Bottom",
+    "icons": [
+      "https://explodi.ng/images/cards/draw-from-the-bottom/draw-from-the-bottom.png"
+    ],
+    "shortDesc": "End your turn by drawing the bottom card from the Draw Pile.",
+    "mechanics": "If you play a Draw From Bottom as a defense to an Attack Card, it only ends 1 of the 2 turns. 2 Draw From Bottom Cards would end both turns.",
+    "decks": [
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "feral-cat": {
+    "slug": "feral-cat",
+    "name": "Feral Cat",
+    "icons": [
+      "https://explodi.ng/images/cards/feral-cat/feral-cat.png"
+    ],
+    "shortDesc": "Use as any cat card.",
+    "mechanics": "Use as any Cat Card (any card that is powerless on its own).\nThis card cannot be used as a non-Cat Card (Shuffle, Attack, etc).",
+    "decks": [
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "targeted-attack-2x": {
+    "slug": "targeted-attack-2x",
+    "name": "Targeted Attack 2x",
+    "icons": [
+      "https://explodi.ng/images/cards/targeted-attack-2x/targeted-attack-2x.png"
+    ],
+    "shortDesc": "Do not draw any cards. Instead, immediately choose ANY OTHER PLAYER to take 2 turns in a row. Play then continues from that player. The victim of this card takes a turn as normal (play-or-pass, then draw). Then, when their turn is over, it’s their turn again.",
+    "mechanics": "Immediately end your turn(s) without drawing a card and choose any player to take 2 turns in a row. The victim of this card takes a turn as normal (play-or-pass then draw). Then, when their first turn is over, it's their turn again. Play then continues from the attacked player.\nIf the victim of any Attack (Targeted Attack, normal Attack, etc.) plays any Attack card, their turns are immediately over, and the next victim must take any remaining turns plus 2 more; e.g. 4 turns, then 6, and so on.",
+    "decks": [
+      "exploding-kittens-party-pack-edition",
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-good-vs-evil",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "alter-the-future-3x-now": {
+    "slug": "alter-the-future-3x-now",
+    "name": "Alter the Future 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/alter-the-future-3x-now/alter-the-future-3x-now.png"
+    ],
+    "shortDesc": "Privately view and rearrange the top three cards of the draw pile. Play at any time.",
+    "mechanics": "Privately view the top 3 cards from the Draw Pile, and rearrange them in any order you'd like. Don't show the cards to the other players.\nUnlike a normal Alter the Future, the \"NOW\" part means that you can play this card even when it’s not your turn. The only time you can’t play this card is in the middle of an action (i.e. you couldn’t play the card WHILE someone was shuffling the deck).",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "barking-kitten": {
+    "slug": "barking-kitten",
+    "name": "Barking Kitten",
+    "icons": [
+      "https://explodi.ng/images/cards/barking-kitten/barking-kitten.png"
+    ],
+    "shortDesc": "When played, if anyone has another Barking Kitten they explode (or Defuse). Otherwise keep it in front of you, and it becomes a target when another one is played.",
+    "mechanics": "Place this card face up in front of you and ask for the other Barking Kitten. If any player has it, they are your target and must play a Defuse Card or explode. Discard both Barking Kittens at the end of the turn.\nIf no one has the other Barking Kitten, leave the card face up in front of you. (You cannot play it again, and it is not part of your hand.) When someone plays the other Barking Kitten, you are their target and you must play a Defuse Card or explode.\nIf you get both Barking Kittens (even if you've already played one), play them together and pick any player as your target.\nIt is still your turn after playing this card.\nLike all Kittens, Barking Kittens cannot be Noped.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "bury": {
+    "slug": "bury",
+    "name": "Bury",
+    "icons": [
+      "https://explodi.ng/images/cards/bury/bury.png"
+    ],
+    "shortDesc": "End your turn by secretly putting the next card you draw back into the draw pile as if you had defused it.",
+    "mechanics": "Play this card, then end your turn by drawing a card. After looking at it, put it back into the Draw Pile anywhere you’d like in secret.\nThis is great if you’re sure the top card in the Draw Pile is an Exploding Kitten; not so great if you were wrong.\nWhen Bury is played on an Imploding Kitten, leave the Imploding Kitten in the orientation you drew it (face up or face down) when putting it back into the Draw Pile.\nYou cannot play this card if you have an I'll Take That card in front of you.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "catomic-bomb": {
+    "slug": "catomic-bomb",
+    "name": "Catomic Bomb",
+    "icons": [
+      "https://explodi.ng/images/cards/catomic-bomb/catomic-bomb.png"
+    ],
+    "shortDesc": "Remove the Exploding Kittens from the Deck. Shuffle the deck. Put all those kittens face down on top. Your turn ends after playing this card.",
+    "mechanics": "Remove all the Exploding Kittens (leave Imploding Kitten) from the Draw Pile so that everyone can see them. Then, shuffle the Draw Pile, and return the Exploding Kittens face down on top.\nEnd your turn without drawing a card.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "garbage-collection": {
+    "slug": "garbage-collection",
+    "name": "Garbage Collection",
+    "icons": [
+      "https://explodi.ng/images/cards/garbage-collection/garbage-collection.png"
+    ],
+    "shortDesc": "Every player (Including the one who played this card) must choose one card to shuffle into the draw pile.",
+    "mechanics": "Every player who has cards (including the player who played this card) must choose 1 card from their hand to secretly insert into the Draw Pile. Then, shuffle the entire Draw Pile.\nIf you have an Exploding Kitten in your hand (see “Streaking Kitten”), you can use it as your chosen card when Garbage Collection is played.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "i-ll-take-that": {
+    "slug": "i-ll-take-that",
+    "name": "I'll Take That",
+    "icons": [
+      "https://explodi.ng/images/cards/i-ll-take-that/i-ll-take-that.png"
+    ],
+    "shortDesc": "Put this card in front of another player to steal the next card they draw from the pile.",
+    "mechanics": "Play this card face-up in front of another player. The next time they draw a card, they must secretly view it and hand it to you.\nIf they hand you an Exploding Kitten, you must Defuse it or explode. Play continues as if that player had drawn a card and ended their turn.\nYou cannot play this card in front of a player who already has one in front of them.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "imploding-kitten": {
+    "slug": "imploding-kitten",
+    "name": "Imploding Kitten",
+    "icons": [
+      "https://explodi.ng/images/cards/imploding-kitten/imploding-kitten.png"
+    ],
+    "shortDesc": "When drawn face down, put back in the deck face up, without using a defuse.\n\nWhen drawn face up, explode immediately. This card cannot be defused.",
+    "mechanics": "When this card is drawn, put it back into the Draw Pile FACE UP anywhere you’d like in secret. Do not use a Defuse Card. The card has a white border so when it's face up everyone can see it coming.\nWhen you have no choice but to draw this card face up, you immediately implode and are out of the game. This card cannot be defused nor can it be noped.\nWhen the Imploding Kitten implodes and kills a player, it must be put into the Discard Pile just like an Exploding Kitten would be.\nIf there is an Imploding Kitten face up on top of the deck and you play a Shuffle Card, shuffle the deck under the table so that you still have a chance of shuffling the Imploding Kitten back to the top of the deck without realizing it.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "mark": {
+    "slug": "mark",
+    "name": "Mark",
+    "icons": [
+      "https://explodi.ng/images/cards/mark/mark.png"
+    ],
+    "shortDesc": "Choose a player and randomly pick one of their cards. They must keep that card facing outward in their hand until it is played or stolen.",
+    "mechanics": "Pick a target player. Randomly pick 1 of their cards and 'mark' it by returning the card to their hand facing out to the other players. The card is still part of their hand (and they can look at it), but it must stay marked until it is played or stolen.\nIf a marked card is stolen, it doesn’t stay marked.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "personal-attack-3x": {
+    "slug": "personal-attack-3x",
+    "name": "Personal Attack 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/personal-attack-3x/personal-attack-3x.png"
+    ],
+    "shortDesc": "Take three turns in a row.",
+    "mechanics": "This Attack is played on yourself. Take three turns in a row. Take your first turn as normal (play-or-pass then draw). Then, when your turn is over, it’s your turn two more times.\nIf you play another Attack Card (Personal Attack, Normal Attack, etc.) on any of your turns, your target must take any of your remaining turns plus the number of attacks on the Attack Card just played.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "reverse": {
+    "slug": "reverse",
+    "name": "Reverse",
+    "icons": [
+      "https://explodi.ng/images/cards/reverse/reverse.png"
+    ],
+    "shortDesc": "Reverse the order of play and end your turn without drawing a card.",
+    "mechanics": "If there are only two players, this card acts like a Skip card.\nIf you play this card after you’ve been attacked, the order of play is reversed, but you’ve only ended 1 of your 2 turns.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "imploding-kittens-expansion"
+    ]
+  },
+  "see-the-future-5x": {
+    "slug": "see-the-future-5x",
+    "name": "See the Future 5x",
+    "icons": [
+      "https://explodi.ng/images/cards/see-the-future-5x/see-the-future-5x.png"
+    ],
+    "shortDesc": "Privately view the top five cards of the draw pile.",
+    "mechanics": "Privately view the top 5 cards from the Draw Pile and put them back in the same order. Don’t show the cards to the other players.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "share-the-future-3x": {
+    "slug": "share-the-future-3x",
+    "name": "Share the Future 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/share-the-future-3x/share-the-future-3x.png"
+    ],
+    "shortDesc": "View and rearrange the top three cards in the draw pile, then show the cards to the next player.",
+    "mechanics": "Privately view the top 3 cards in the Draw Pile and rearrange them in any order you’d like. Show these cards to the next player before returning them to the top of the Draw Pile face down, then continue with your turn.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "barking-kittens-expansion"
+    ]
+  },
+  "streaking-kitten": {
+    "slug": "streaking-kitten",
+    "name": "Streaking Kitten",
+    "icons": [
+      "https://explodi.ng/images/cards/streaking-kitten/streaking-kitten.png"
+    ],
+    "shortDesc": "Keep this card a secret. As long as it's in your hand you may draw and secretly hold one Exploding Kitten without blowing up.",
+    "mechanics": "If the Streaking Kitten leaves your hand for any reason, the Exploding Kitten in your hand will explode.\nIf another player steals or receives an Exploding Kitten from your hand, they explode. They must defuse it or lose the game.\nIf you take any action causing you to play an Exploding Kitten from your hand into the Discard Pile, you explode. You must defuse it or lose the game.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "super-skip": {
+    "slug": "super-skip",
+    "name": "Super Skip",
+    "icons": [
+      "https://explodi.ng/images/cards/super-skip/super-skip.png"
+    ],
+    "shortDesc": "End your turn without drawing a card. If you’re supposed to take multiple turns, end them all.",
+    "mechanics": "",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "exploding-kittens-zombie-kittens",
+      "streaking-kittens-expansion",
+      "barking-kittens-expansion"
+    ]
+  },
+  "swap-top-and-bottom": {
+    "slug": "swap-top-and-bottom",
+    "name": "Swap Top and Bottom",
+    "icons": [
+      "https://explodi.ng/images/cards/swap-top-and-bottom/swap-top-and-bottom.png"
+    ],
+    "shortDesc": "Swap the top and bottom cards of the draw pile.",
+    "mechanics": "Swap the top and bottom cards of the Draw Pile without looking.",
+    "decks": [
+      "exploding-kittens-recipes-for-disaster",
+      "streaking-kittens-expansion"
+    ]
+  },
+  "armageddon": {
+    "slug": "armageddon",
+    "name": "Armageddon",
+    "icons": [
+      "https://explodi.ng/images/cards/armageddon/armageddon.png"
+    ],
+    "shortDesc": "Trigger the Armageddon afterwards. End your turn. Can only be played if Godcat is on the playmat.",
+    "mechanics": "This card triggers the Armageddon played with the two cards on the Playmat. (For details see “When You Play The Armageddon Card” on the other side of the instructions or the NOTES section below.)\nAn Armageddon Card can only be played if both Godcat and Devilcat are on the Playmat. (i.e., no one currently has Godcat in their hand.) After the Armageddon, your turn is over—you do not need to draw a card.\nThe Armageddon Card can be Noped, but you have to play your Nope Card before the person who played the Armageddon Card takes the two cards from the Playmat!\nIf you play an Armageddon Card after someone plays an Attack Card on you, it only ends 1 of your 2 turns.\nWHEN YOU PLAY THE ARMAGEDDON CARD\nGrab Godcat and Devilcat from the Playmat.\n[!Shuffle] and look at the two cards in secret, then place one face down in front of you and one in front of any other player so that only you know which is which.\nWithout looking at the cards, the other player must decide to keep the card in front of them OR swap with the card in front of you.\nOnce they’ve made their decision, flip over both cards. The player with Godcat in front of them gets to add it to their hand. The player with Devilcat in front of them immediately explodes, and must play a Defuse Card or die.\nEither way (if a player exploded or played a Defuse to save themselves), put Devilcat back on its spot on the Playmat. The player who got Godcat gets to keep it in their hand.\nYour turn is now over. You do not need to draw a card from the Draw Pile.",
+    "decks": [
+      "exploding-kittens-good-vs-evil"
+    ]
+  },
+  "devilcat": {
+    "slug": "devilcat",
+    "name": "Devilcat",
+    "icons": [
+      "https://explodi.ng/images/cards/devilcat/devilcat.png"
+    ],
+    "shortDesc": "Explode if you get Devilcat in the Armageddon. You must discard a Defuse or explode. Then put it back on the playmat.",
+    "mechanics": "Devilcat explodes if it’s in front of you at the end of the Armageddon, and you must discard a Defuse to avoid dying. After the Armageddon, set Devilcat back on the Playmat.\nNever put Devilcat into the Draw Pile. Always return it to the Playmat.",
+    "decks": [
+      "exploding-kittens-good-vs-evil"
+    ]
+  },
+  "godcat": {
+    "slug": "godcat",
+    "name": "Godcat",
+    "icons": [
+      "https://explodi.ng/images/cards/godcat/godcat.png"
+    ],
+    "shortDesc": "Play as any card in the game. Except a Nope. After playing Godcat, put it back on the playmat.",
+    "mechanics": "If you win Godcat in the Armageddon, add it to your hand. Godcat can be played on your turn as ANY card in the deck except for a Nope. This means you can play it as a Defuse, an Attack, or anything else in the deck!\nAfter playing Godcat, set it next to Devilcat on the Playmat. DO NOT put Godcat in the Discard Pile.\nThe reason you can’t use Godcat as a Nope is because any time someone tries to steal it from you, you’d just use it as a Nope, and the game would be no fun!\nThe back of Godcat is different from the rest of the cards in your hand, so it’s easy for other players to steal it from you, even when you fan out your cards and they get to steal a “random” card.\nThe only cards that can save you from the Devilcat card are Defuse or Zombie Kitten — you cannot use a Streaking Kitten to hold or avoid the Devilcat card. Godcat should never go into the Draw Pile, so you cannot add it into the deck after playing Potluck or Garbage Collection.",
+    "decks": [
+      "exploding-kittens-good-vs-evil"
+    ]
+  },
+  "raising-heck": {
+    "slug": "raising-heck",
+    "name": "Raising Heck",
+    "icons": [
+      "https://explodi.ng/images/cards/raising-heck/raising-heck.png"
+    ],
+    "shortDesc": "Draw the bottom card from the draw pile. Look at it, and either keep it or put it on the top of the draw pile. This ends your turn.",
+    "mechanics": "Draw the bottom card from the Draw Pile, then decide whether you want to take it into your hand or put it on top of the Draw Pile. Regardless of your decision, this ends your turn.",
+    "decks": [
+      "exploding-kittens-good-vs-evil"
+    ]
+  },
+  "reveal-the-future-3x": {
+    "slug": "reveal-the-future-3x",
+    "name": "Reveal the Future 3x",
+    "icons": [
+      "https://explodi.ng/images/cards/reveal-the-future-3x/reveal-the-future-3x.png"
+    ],
+    "shortDesc": "Show everyone the top three cards.",
+    "mechanics": "Reveal the top three cards of the Draw Pile to ALL players, then put them back without changing their order.",
+    "decks": [
+      "exploding-kittens-good-vs-evil"
+    ]
+  },
+  "attack-of-the-dead": {
+    "slug": "attack-of-the-dead",
+    "name": "Attack of the Dead",
+    "icons": [
+      "https://explodi.ng/images/cards/attack-of-the-dead/attack-of-the-dead.png"
+    ],
+    "shortDesc": "Do not draw any cards. Force the next player to take three turns for each dead player.",
+    "mechanics": "End your turn without drawing a card. Force the next player to take three turns for each Dead player.\nIf the victim of an Attack Card plays an Attack Card on any of their turns, the new target must take any remaining turns plus the number of attacks on the Attack Card just played.\nYou cannot play this card if there are no Dead players.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "clairvoyance": {
+    "slug": "clairvoyance",
+    "name": "Clairvoyance",
+    "icons": [
+      "https://explodi.ng/images/cards/clairvoyance/clairvoyance.png"
+    ],
+    "shortDesc": "Use when someone plays a zombie kitten. You get to watch where they secretly put the exploding kitten(s). Play at any time.",
+    "mechanics": "Play this card once another player has defused an Exploding Kitten. You will get to see where they add the Exploding Kitten Card(s) into the deck.\nYou can play this at any time before an action has begun, even if it is not your turn.\nDead players can also play this card.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "clone": {
+    "slug": "clone",
+    "name": "Clone",
+    "icons": [
+      "https://explodi.ng/images/cards/clone/clone.png"
+    ],
+    "shortDesc": "When you play this card, it becomes whatever card is beneath it.",
+    "mechanics": "Play this card onto the Discard Pile and it becomes whatever card is beneath it and adopts the rules of that card.\nYou cannot play a Clone on top of another Clone.\nYou cannot play a Clone Card when it is not your turn or if you are Dead―even if you play it on top of a card with the symbol (because at the time you played it, it was still a Clone Card and can only be played on your turn).\nYou can play a Cat Card with a Clone to create a pair and steal a card (because the Clone becomes the same card as the Cat Card you put beneath it). This only works if you are the player who played both the Cat Card AND the Clone ― you could not play a Clone on top of a Cat Card played by another player!",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "dig-deeper": {
+    "slug": "dig-deeper",
+    "name": "Dig Deeper",
+    "icons": [
+      "https://explodi.ng/images/cards/dig-deeper/dig-deeper.png"
+    ],
+    "shortDesc": "Draw a card, look at it and then either keep it, or draw the next card (which you must keep) and put the first card facedown on top of the draw pile.",
+    "mechanics": "Draw the top card from the Draw Pile, look at it, and decide if you want to keep it. If so, put it in your hand. Otherwise you MUST draw the next card in the Draw Pile no matter what it is. (Then put the card you decided not to draw back on top of the Draw Pile). Your turn is now over.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "feed-the-dead": {
+    "slug": "feed-the-dead",
+    "name": "Feed The Dead",
+    "icons": [
+      "https://explodi.ng/images/cards/feed-the-dead/feed-the-dead.png"
+    ],
+    "shortDesc": "Pick a dead player. All living players (except you) must choose one card from their hand to give to them. Play at any time.",
+    "mechanics": "Pick a Dead player. All Living players with cards (except you) must pick a card of their choice and give it to that player. You cannot play this card if there are no Dead players.\nYou can play this at any time before an action has begun, even if it is not your turn. Dead players can also play this card.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "grave-robber": {
+    "slug": "grave-robber",
+    "name": "Grave Robber",
+    "icons": [
+      "https://explodi.ng/images/cards/grave-robber/grave-robber.png"
+    ],
+    "shortDesc": "All dead players with cards must choose one card from their hand to shuffle into the draw pile.",
+    "mechanics": "All Dead players with cards must choose one card from their hand to shuffle into the Draw Pile.\nYou cannot play this card if there are no Dead players.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "shuffle-now": {
+    "slug": "shuffle-now",
+    "name": "Shuffle",
+    "icons": [
+      "https://explodi.ng/images/cards/shuffle-now/shuffle-now.png"
+    ],
+    "shortDesc": "Shuffle the draw pile. Play at any time.",
+    "mechanics": "You can play this at any time before an action has begun, even if it is not your turn. Dead Players can also play this card.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "zombie-kitten": {
+    "slug": "zombie-kitten",
+    "name": "Zombie Kitten",
+    "icons": [
+      "https://explodi.ng/images/cards/zombie-kitten/zombie-kitten.png"
+    ],
+    "shortDesc": "Instead of exploding, secretly put an exploding kitten back into the draw pile, and bring a dead player back to life.",
+    "mechanics": "If you drew an Exploding Kitten, you can (but do not have to) play this card instead of exploding. Place your Zombie Kitten Card on the Discard Pile. If there are any Dead players, you must choose one of them and bring them back into the game.\nNext, take the Exploding Kitten and, without reordering or viewing the other cards, secretly put it back in the Draw Pile anywhere you’d like. If you bring another player back from the Dead, you’ll do the same thing with the Exploding Kitten Card face up in front of them. (This means you’ll be putting 2 Exploding Kittens back into the deck at once, each in its own secret location.)\nYour turn is over after playing this card. You can still play this card if there are no Dead players.",
+    "decks": [
+      "exploding-kittens-zombie-kittens"
+    ]
+  },
+  "alter-the-future-5x": {
+    "slug": "alter-the-future-5x",
+    "name": "Alter the Future 5x",
+    "icons": [
+      "https://explodi.ng/images/cards/alter-the-future-5x/alter-the-future-5x.png"
+    ],
+    "shortDesc": "Privately view and rearrange the top five cards of the draw pile.",
+    "mechanics": "Privately view the top 5 cards from the Draw Pile, and rearrange them in any order you'd like. Don't show the cards to the other players.",
+    "decks": [
+      "streaking-kittens-expansion"
+    ]
+  },
+  "curse-of-the-cat-butt": {
+    "slug": "curse-of-the-cat-butt",
+    "name": "Curse of the Cat Butt",
+    "icons": [
+      "https://explodi.ng/images/cards/curse-of-the-cat-butt/curse-of-the-cat-butt.png"
+    ],
+    "shortDesc": "Choose a player to be \"Blind.\" they must shuffle and keep their cards face down until they draw a card.",
+    "mechanics": "Pick a target player. That player must immediately make their cards BLIND by putting them face down on the table and shuffling them. The blind player is not allowed to look at any of their cards until they successfully draw a card from the Draw Pile without exploding.\nOn their turn, if the blind player decides to play any cards, those cards must be picked randomly and played face up on the Discard Pile. If the card is playable, play as normal.",
+    "decks": [
+      "streaking-kittens-expansion"
+    ]
+  },
+  "potluck": {
+    "slug": "potluck",
+    "name": "Potluck",
+    "icons": [
+      "https://explodi.ng/images/cards/potluck/potluck.png"
+    ],
+    "shortDesc": "Starting with you, and going in the direction of play around the table, each player puts a card on top of the draw pile.",
+    "mechanics": "If you have an Exploding Kitten in your hand (see “Streaking Kitten”), you can use it as your chosen card when Potluck is played.",
+    "decks": [
+      "barking-kittens-expansion"
+    ]
+  },
+  "tower-of-power": {
+    "slug": "tower-of-power",
+    "name": "Tower of Power",
+    "icons": [
+      "https://explodi.ng/images/cards/tower-of-power/tower-of-power.png"
+    ],
+    "shortDesc": "Anyone who steals a card from you blindly steals from inside the Tower of Power crown instead.",
+    "mechanics": "At the start of the game deal out 6 cards and put them on the table. Then put the Tower of Power Crown on top of them. This is the stash. Insert the Tower of Power Card back into the deck and shuffle.\nTo play this card, wear the Tower of Power Crown. Then take the Stash Cards, and without looking, put them inside on top of your head.\nThe Crown protects you against all forms of stealing. If anyone steals cards from you, they blindly take a random card from the Tower of Power Crown instead of your hand (until there are no more Stash Cards left). This applies to Favor Cards, playing pairs, playing 3 of a kind, or any other form of stealing.\nYou may never move Stash Cards from the Tower of Power Crown into your own hand. It only protects you from stealing stealers who want to steal cards from you. Continue wearing the Tower of Power for the rest of the game.",
+    "decks": [
+      "barking-kittens-expansion"
+    ]
+  }
+}
