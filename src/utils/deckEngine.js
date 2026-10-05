@@ -19,7 +19,9 @@ export function calculateDeckRecipe({
   startingHandNonDefuse = 7,
   implodingReplacesEK = true,
   streakingAddsEK = true,
-  extraDefusesInDeck = 2
+  extraDefusesInDeck = 2,
+  bonusExplodingKittens = 0, // Danger Adjuster: extra bombs beyond the official count
+  drawPileSafeRatio = 1 // Danger Adjuster: fraction (0.3 - 1) of safe draw-pile cards to keep
 }) {
   // 1. Calculate the maximum available pool of cards from owned decks
   const availablePool = {}; // slug -> { count, cardInfo, deckSources: [] }
@@ -273,7 +275,11 @@ export function calculateDeckRecipe({
 
   // Extra Defuses to insert into draw pile:
   const extraDefusesMax = Math.max(0, totalDefusesAvailable - starterDefusesNeeded);
-  const extraDefusesToInsert = Math.min(extraDefusesInDeck, extraDefusesMax);
+  const extraDefusesToInsert = Math.max(0, Math.min(extraDefusesInDeck, extraDefusesMax));
+
+  // Bonus Exploding Kittens (Danger Adjuster) limited by physical EK cards owned
+  const bonusEKMax = Math.max(0, getQty('exploding-kitten') - explodingKittensNeeded);
+  const bonusEKApplied = Math.max(0, Math.min(bonusExplodingKittens, bonusEKMax));
 
   // Starter Hand Cards (Non-defuses):
   // 7 cards per player (or startingHandNonDefuse)
@@ -296,10 +302,13 @@ export function calculateDeckRecipe({
     const cardInfo = availablePool[slug];
 
     if (slug === 'exploding-kitten') {
+      const ekQty = Math.min(qty, explodingKittensNeeded + bonusEKApplied);
       hazardsList.push({
         ...cardInfo,
-        quantity: Math.min(qty, explodingKittensNeeded),
-        ruleNote: `Insert ${Math.min(qty, explodingKittensNeeded)} Exploding Kittens into the draw pile after dealing.`
+        quantity: ekQty,
+        ruleNote: bonusEKApplied > 0
+          ? `Insert ${ekQty} Exploding Kittens into the draw pile after dealing (${explodingKittensNeeded} official + ${bonusEKApplied} bonus from the Danger Adjuster).`
+          : `Insert ${ekQty} Exploding Kittens into the draw pile after dealing.`
       });
     } else if (slug === 'imploding-kitten') {
       hazardsList.push({
@@ -377,6 +386,43 @@ export function calculateDeckRecipe({
     }
   }
 
+  // Danger Adjuster: trim safe cards out of the draw pile to raise hazard density.
+  // Starting hands are always kept intact; cards are removed from the largest stacks first
+  // (cat cards are removed in pairs where possible) so the deck stays balanced.
+  const safeRatio = Math.max(0.3, Math.min(1, Number(drawPileSafeRatio) || 1));
+  const untrimmedSafeDrawPile = Math.max(0, totalSafeCards - starterHandTotalCards);
+  const trimmedCardsMap = {};
+  if (safeRatio < 1 && untrimmedSafeDrawPile > 0) {
+    let toRemove = untrimmedSafeDrawPile - Math.round(untrimmedSafeDrawPile * safeRatio);
+    while (toRemove > 0) {
+      let target = null;
+      for (const c of drawPileCards) {
+        if (c.quantity <= 1) continue;
+        if (!target || c.quantity > target.quantity || (c.quantity === target.quantity && c.name.localeCompare(target.name) < 0)) {
+          target = c;
+        }
+      }
+      if (!target) break;
+
+      let removed = 1;
+      if (target.slug === 'cat-card' && Array.isArray(target.variantsBreakdown) && target.variantsBreakdown.length > 0) {
+        const v = target.variantsBreakdown.reduce((best, cur) => (cur.quantity > best.quantity ? cur : best));
+        removed = (toRemove >= 2 && v.quantity >= 2 && target.quantity >= 3) ? 2 : 1;
+        v.quantity -= removed;
+        target.variantsBreakdown = target.variantsBreakdown.filter(x => x.quantity > 0);
+      }
+      target.quantity -= removed;
+      totalSafeCards -= removed;
+      toRemove -= removed;
+      if (!trimmedCardsMap[target.slug]) {
+        trimmedCardsMap[target.slug] = { slug: target.slug, name: target.name, icons: target.icons, removed: 0 };
+      }
+      trimmedCardsMap[target.slug].removed += removed;
+    }
+  }
+  const trimmedCards = Object.values(trimmedCardsMap).sort((a, b) => b.removed - a.removed || a.name.localeCompare(b.name));
+  const trimmedCardsTotal = trimmedCards.reduce((sum, c) => sum + c.removed, 0);
+
   // Sort cards alphabetically A-Z
   drawPileCards.sort((a, b) => a.name.localeCompare(b.name));
   hazardsList.sort((a, b) => a.name.localeCompare(b.name));
@@ -424,6 +470,14 @@ export function calculateDeckRecipe({
     totalDrawPileSize,
     totalGameCards,
     explodingKittensNeeded,
-    catVariantsBreakdown
+    catVariantsBreakdown,
+    // Danger Adjuster metadata
+    extraDefusesMax,
+    bonusEKMax,
+    bonusEKApplied,
+    drawPileSafeRatio: safeRatio,
+    untrimmedSafeDrawPile,
+    trimmedCards,
+    trimmedCardsTotal
   };
 }

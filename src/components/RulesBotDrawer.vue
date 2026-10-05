@@ -1,5 +1,5 @@
 <template>
-  <div class="rules-bot-wrapper">
+  <div class="rules-bot-wrapper" :class="{ 'is-lifted': liftAboveBar && !isOpen }">
     <!-- Floating Action Button Trigger -->
     <button 
       class="bot-fab-btn"
@@ -120,6 +120,11 @@
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue';
 import { queryRulesEngine } from '../utils/rulesBotEngine.js';
+
+const props = defineProps({
+  // When a fixed bottom action bar is visible (Step 1), lift the FAB above it on phones
+  liftAboveBar: { type: Boolean, default: false }
+});
 
 const emit = defineEmits(['open-instructions', 'inspect-card']);
 
@@ -535,14 +540,37 @@ const formatCardName = (slug) => {
   cursor: not-allowed;
 }
 
+@media (max-width: 768px) {
+  .rules-bot-wrapper {
+    transition: bottom 0.25s cubic-bezier(0.2, 0, 0, 1);
+  }
+  .rules-bot-wrapper.is-lifted {
+    bottom: calc(max(10px, env(safe-area-inset-bottom, 10px)) + 78px);
+  }
+}
+
 @media (max-width: 640px) {
   .rules-bot-wrapper {
     bottom: max(16px, env(safe-area-inset-bottom, 16px));
-    right: 16px;
+    right: 14px;
   }
+  .rules-bot-wrapper.is-lifted {
+    bottom: calc(max(10px, env(safe-area-inset-bottom, 10px)) + 78px);
+  }
+  /* Compact circular FAB on phones so it never hides content or buttons */
   .bot-fab-btn {
-    padding: 10px 16px;
-    font-size: 0.85rem;
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .bot-fab-label {
+    display: none;
+  }
+  .bot-emoji {
+    font-size: 1.15rem;
+    letter-spacing: -0.15em;
   }
   .bot-drawer-backdrop {
     padding: 0;

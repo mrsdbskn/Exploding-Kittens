@@ -78,6 +78,9 @@
         :recipe="deckRecipe"
         :catalog="ALL_CARDS_CATALOG"
         :categories="CATEGORIES"
+        :danger-settings="dangerSettings"
+        :danger-previews="dangerPreviews"
+        @update:danger="handleUpdateDanger"
         @inspect-card="inspectCard"
         @back="setStep('synergies')"
         @restart="setStep('decks')"
@@ -141,6 +144,7 @@
 
     <!-- Interactive Kitten Rules Referee Chatbot -->
     <RulesBotDrawer 
+      :lift-above-bar="currentStep === 'decks'"
       @open-instructions="showInstructionsModal = true"
       @inspect-card="inspectCard"
     />
@@ -151,6 +155,8 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { DECKS, ALL_CARDS_CATALOG, CATEGORIES, OFFICIAL_RECIPES } from './data/decksData.js';
 import { calculateDeckRecipe } from './utils/deckEngine.js';
+import { calculateDeckProbabilities } from './utils/probabilityEngine.js';
+import { DANGER_PRESETS, settingsFromPreset } from './utils/dangerPresets.js';
 
 import HeaderNav from './components/HeaderNav.vue';
 import DeckSelector from './components/DeckSelector.vue';
@@ -177,6 +183,11 @@ const excludedCards = ref(new Set());
 const streakingAddsEK = ref(true);
 const implodingReplacesEK = ref(true);
 const extraDefusesInDeck = ref(2);
+
+// Danger Adjuster (Hazard Volatility) levers
+const bonusExplodingKittens = ref(0);
+const drawPileSafeRatio = ref(1);
+const dangerPreset = ref('balanced');
 
 // Modals
 const inspectedCardSlug = ref(null);
@@ -215,6 +226,14 @@ onMounted(() => {
       if (Array.isArray(parsed.excludedCards)) {
         excludedCards.value = new Set(parsed.excludedCards);
       }
+      if (parsed.danger) {
+        const d = parsed.danger;
+        if (typeof d.extraDefuses === 'number') extraDefusesInDeck.value = d.extraDefuses;
+        if (typeof d.bonusEK === 'number') bonusExplodingKittens.value = d.bonusEK;
+        if (typeof d.safeRatio === 'number') drawPileSafeRatio.value = d.safeRatio;
+        if (typeof d.implodingReplacesEK === 'boolean') implodingReplacesEK.value = d.implodingReplacesEK;
+        if (d.preset) dangerPreset.value = d.preset;
+      }
     }
   } catch (e) {
     console.warn('Could not restore from localStorage', e);
@@ -222,14 +241,18 @@ onMounted(() => {
 });
 
 // Auto-save state
-watch([ownedDeckIds, playerCount, startingHandNonDefuse, customQuantities, excludedCards], () => {
+watch([
+  ownedDeckIds, playerCount, startingHandNonDefuse, customQuantities, excludedCards,
+  extraDefusesInDeck, bonusExplodingKittens, drawPileSafeRatio, implodingReplacesEK, dangerPreset
+], () => {
   try {
     const payload = {
       ownedDeckIds: ownedDeckIds.value,
       playerCount: playerCount.value,
       startingHandNonDefuse: startingHandNonDefuse.value,
       customQuantities: customQuantities.value,
-      excludedCards: Array.from(excludedCards.value)
+      excludedCards: Array.from(excludedCards.value),
+      danger: dangerSettings.value
     };
     localStorage.setItem('ek_saved_config', JSON.stringify(payload));
   } catch (e) {
@@ -248,21 +271,66 @@ const totalOwnedCards = computed(() => {
   return count;
 });
 
-// Main Deck Recipe calculation
-const deckRecipe = computed(() => {
-  return calculateDeckRecipe({
-    ownedDeckIds: ownedDeckIds.value,
-    decks: DECKS,
-    catalog: ALL_CARDS_CATALOG,
-    customQuantities: customQuantities.value,
-    excludedCards: excludedCards.value,
-    playerCount: playerCount.value,
-    startingHandNonDefuse: startingHandNonDefuse.value,
-    implodingReplacesEK: implodingReplacesEK.value,
-    streakingAddsEK: streakingAddsEK.value,
-    extraDefusesInDeck: extraDefusesInDeck.value
-  });
+// Current Danger Adjuster settings (single object passed to Step 4)
+const dangerSettings = computed(() => ({
+  preset: dangerPreset.value,
+  extraDefuses: extraDefusesInDeck.value,
+  bonusEK: bonusExplodingKittens.value,
+  safeRatio: drawPileSafeRatio.value,
+  implodingReplacesEK: implodingReplacesEK.value
+}));
+
+const buildRecipe = (overrides = {}) => calculateDeckRecipe({
+  ownedDeckIds: ownedDeckIds.value,
+  decks: DECKS,
+  catalog: ALL_CARDS_CATALOG,
+  customQuantities: customQuantities.value,
+  excludedCards: excludedCards.value,
+  playerCount: playerCount.value,
+  startingHandNonDefuse: startingHandNonDefuse.value,
+  implodingReplacesEK: implodingReplacesEK.value,
+  streakingAddsEK: streakingAddsEK.value,
+  extraDefusesInDeck: extraDefusesInDeck.value,
+  bonusExplodingKittens: bonusExplodingKittens.value,
+  drawPileSafeRatio: drawPileSafeRatio.value,
+  ...overrides
 });
+
+// Main Deck Recipe calculation
+const deckRecipe = computed(() => buildRecipe());
+
+// Live predicted volatility for each Danger Adjuster preset
+const dangerPreviews = computed(() => {
+  if (currentStep.value !== 'recipe') return {};
+  const out = {};
+  for (const p of DANGER_PRESETS) {
+    const r = buildRecipe({
+      extraDefusesInDeck: p.extraDefuses,
+      bonusExplodingKittens: p.bonusEK,
+      drawPileSafeRatio: p.safeRatio,
+      implodingReplacesEK: p.implodingReplacesEK
+    });
+    const prob = calculateDeckProbabilities(r);
+    out[p.id] = {
+      score: prob.volatilityScore,
+      color: prob.dangerColor,
+      drawPileSize: r.totalDrawPileSize,
+      turn1: prob.turn1HazardChance
+    };
+  }
+  return out;
+});
+
+const handleUpdateDanger = (settings) => {
+  if (settings.preset && settings.preset !== 'custom' && !('extraDefuses' in settings)) {
+    settings = settingsFromPreset(settings.preset);
+  }
+  if (typeof settings.extraDefuses === 'number') extraDefusesInDeck.value = Math.max(0, settings.extraDefuses);
+  if (typeof settings.bonusEK === 'number') bonusExplodingKittens.value = Math.max(0, settings.bonusEK);
+  if (typeof settings.safeRatio === 'number') drawPileSafeRatio.value = Math.max(0.3, Math.min(1, settings.safeRatio));
+  if (typeof settings.implodingReplacesEK === 'boolean') implodingReplacesEK.value = settings.implodingReplacesEK;
+  dangerPreset.value = settings.preset || 'custom';
+};
 
 const hasErrors = computed(() => {
   return deckRecipe.value.suggestions.some(s => s.type === 'error');
@@ -321,6 +389,7 @@ const handleApplySuggestionAction = (suggestion) => {
     streakingAddsEK.value = actionPayload.enabled;
   } else if (actionType === 'TOGGLE_IMPLODING_MODE') {
     implodingReplacesEK.value = actionPayload.replaces;
+    dangerPreset.value = 'custom';
   } else if (actionType === 'ADD_FERAL_CATS') {
     const { slug, qty } = actionPayload;
     const nextCustom = { ...customQuantities.value, [slug]: qty };
@@ -361,6 +430,7 @@ const resetAll = () => {
     startingHandNonDefuse.value = 7;
     customQuantities.value = {};
     excludedCards.value = new Set();
+    handleUpdateDanger(settingsFromPreset('balanced'));
     currentStep.value = 'decks';
   }
 };

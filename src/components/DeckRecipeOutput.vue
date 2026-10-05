@@ -157,6 +157,16 @@
           </div>
         </div>
       </div>
+
+      <!-- Volatility Adjuster: re-allocates bombs / defuses / safe cards live -->
+      <DangerAdjuster
+        v-if="dangerSettings"
+        :recipe="recipe"
+        :settings="dangerSettings"
+        :previews="dangerPreviews"
+        :danger-color="probabilities.dangerColor"
+        @update="s => $emit('update:danger', s)"
+      />
     </div>
 
     <!-- Assembly Steps Grid -->
@@ -229,6 +239,10 @@
           <li v-if="recipe.extraDefusesToInsert > 0">
             <span class="bullet-highlight">{{ recipe.extraDefusesToInsert }}x Extra Defuse(s)</span>
             shuffled into the draw pile.
+          </li>
+          <li v-if="recipe.trimmedCardsTotal > 0">
+            <span class="bullet-highlight">Leave {{ recipe.trimmedCardsTotal }} safe cards in the box</span>
+            (Danger Adjuster): {{ recipe.trimmedCards.map(t => `${t.removed}× ${t.name}`).join(', ') }}.
           </li>
           <li class="result-highlight">
             Total cards in Draw Pile: <strong>{{ recipe.totalDrawPileSize }} cards</strong>.
@@ -440,15 +454,18 @@ import confetti from 'canvas-confetti';
 import CatArtworkModal from './CatArtworkModal.vue';
 import SleeveCalculatorModal from './SleeveCalculatorModal.vue';
 import GameCompanionModal from './GameCompanionModal.vue';
+import DangerAdjuster from './DangerAdjuster.vue';
 import { calculateDeckProbabilities } from '../utils/probabilityEngine.js';
 
 const props = defineProps({
   recipe: { type: Object, required: true },
   catalog: { type: Object, required: true },
-  categories: { type: Array, required: true }
+  categories: { type: Array, required: true },
+  dangerSettings: { type: Object, default: null },
+  dangerPreviews: { type: Object, default: () => ({}) }
 });
 
-defineEmits(['back', 'restart', 'inspect-card']);
+defineEmits(['back', 'restart', 'inspect-card', 'update:danger']);
 
 const checkedItems = ref(new Set());
 const copied = ref(false);
@@ -1608,7 +1625,7 @@ const printRecipe = () => {
   }
 
   .steps-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
     margin-bottom: 24px;
   }
@@ -1640,7 +1657,7 @@ const printRecipe = () => {
   }
 
   .group-items-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 6px;
   }
 

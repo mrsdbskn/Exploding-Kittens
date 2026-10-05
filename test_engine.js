@@ -113,4 +113,44 @@ for (const v of test8.catVariantsBreakdown) {
 }
 console.log('  All 9 cat variants have valid icons, artwork paths, and quantities!');
 
+// Test 9: Danger Adjuster Levers (Bonus EK and Safe Card Trimming)
+import { calculateDeckProbabilities } from './src/utils/probabilityEngine.js';
+import { DANGER_PRESETS, settingsFromPreset } from './src/utils/dangerPresets.js';
+
+console.log('\nTest 9 (Danger Adjuster Volatility Levers):');
+const test9Original = calculateDeckRecipe({
+  ownedDeckIds: ['exploding-kittens-original-edition', 'exploding-kittens-party-pack-edition'],
+  decks: DECKS,
+  catalog: ALL_CARDS_CATALOG,
+  playerCount: 4,
+  bonusExplodingKittens: 0,
+  drawPileSafeRatio: 1
+});
+const probOfficial = calculateDeckProbabilities(test9Original);
+
+// Now apply a high-hazard preset: +2 bonus Exploding Kittens and 60% safe ratio
+const test9HighHazard = calculateDeckRecipe({
+  ownedDeckIds: ['exploding-kittens-original-edition', 'exploding-kittens-party-pack-edition'],
+  decks: DECKS,
+  catalog: ALL_CARDS_CATALOG,
+  playerCount: 4,
+  bonusExplodingKittens: 2,
+  drawPileSafeRatio: 0.6,
+  extraDefusesInDeck: 0
+});
+const probHazard = calculateDeckProbabilities(test9HighHazard);
+
+console.log('  Official EK count:', test9Original.hazardsList.find(h => h.slug === 'exploding-kitten').quantity);
+console.log('  High-Hazard EK count:', test9HighHazard.hazardsList.find(h => h.slug === 'exploding-kitten').quantity, '(Expected +2)');
+console.log('  Official Draw Pile Size:', test9Original.totalDrawPileSize);
+console.log('  High-Hazard Draw Pile Size:', test9HighHazard.totalDrawPileSize, '(Trimmed cards:', test9HighHazard.trimmedCardsTotal, ')');
+console.log('  Official Volatility Score:', probOfficial.volatilityScore);
+console.log('  High-Hazard Volatility Score:', probHazard.volatilityScore);
+
+console.assert(test9HighHazard.bonusEKApplied === 2, 'Should apply 2 bonus Exploding Kittens');
+console.assert(test9HighHazard.trimmedCardsTotal > 0, 'Should trim safe cards from draw pile');
+console.assert(probHazard.volatilityScore > probOfficial.volatilityScore, 'High hazard must increase volatility score');
+console.assert(DANGER_PRESETS.length === 5, 'Must have 5 danger presets');
+console.log('  Danger Adjuster levers and volatility calculations verified!');
+
 console.log('\n All engine tests passed with 100% success!');

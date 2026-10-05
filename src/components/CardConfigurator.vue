@@ -1103,6 +1103,7 @@ const formatCategory = (cat) => {
 
 .deck-accordion-card {
   border-left: 4px solid var(--deck-color, var(--md-sys-color-primary));
+  min-width: 0;
 }
 
 .deck-accordion-header {
@@ -1117,6 +1118,7 @@ const formatCategory = (cat) => {
   display: flex;
   align-items: center;
   gap: 16px;
+  min-width: 0;
 }
 
 .deck-acc-logo {
@@ -1159,7 +1161,7 @@ const formatCategory = (cat) => {
 
 .deck-cards-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 10px;
   margin-top: 16px;
 }
@@ -1168,6 +1170,8 @@ const formatCategory = (cat) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
   padding: 8px 12px;
   background-color: var(--md-sys-color-surface-container-high);
   border-radius: var(--md-shape-md);
@@ -1184,18 +1188,22 @@ const formatCategory = (cat) => {
   gap: 10px;
   cursor: pointer;
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
 }
 
 .row-icon {
   width: 28px;
   height: 28px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .row-info {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
 }
 
 .row-name {
@@ -1218,11 +1226,13 @@ const formatCategory = (cat) => {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .row-pool {
   font-size: 0.75rem;
   color: var(--md-sys-color-outline);
+  white-space: nowrap;
 }
 
 /* Bottom Navigation */
@@ -1304,7 +1314,7 @@ const formatCategory = (cat) => {
     text-align: center;
   }
   .cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
   .card-item {
@@ -1336,7 +1346,37 @@ const formatCategory = (cat) => {
     text-align: center;
   }
   .deck-cards-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .deck-accordion-header {
+    padding: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .deck-acc-left {
+    flex: 1 1 100%;
+    gap: 12px;
+  }
+  .deck-acc-logo {
+    height: 40px;
+    max-width: 64px;
+    flex-shrink: 0;
+  }
+  .deck-acc-name {
+    font-size: 1rem;
+  }
+  .deck-acc-right {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+  .deck-accordion-body {
+    padding: 0 10px 14px 10px;
+  }
+  .deck-card-row {
+    padding: 8px 10px;
+  }
+  .row-pool {
+    display: none;
   }
   .config-bottom-nav {
     flex-direction: column-reverse;
