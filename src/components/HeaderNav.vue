@@ -8,7 +8,7 @@
         </div>
         <div class="brand-text">
           <h1 class="brand-title">Exploding Kittens</h1>
-          <span class="brand-subtitle">Deck Builder & Recipe Engine</span>
+          <span class="brand-subtitle">{{ isGerman ? 'Deck-Architekt & Balance-Harmonisierer' : 'Deck Builder & Recipe Engine' }}</span>
         </div>
       </div>
 
@@ -31,44 +31,53 @@
 
       <!-- Quick Actions -->
       <div class="header-actions">
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-companion')" title="Launch Table Game Companion & Timer">
+        <!-- Language Switcher Toggle Button -->
+        <button 
+          class="m3-btn m3-btn-tonal btn-sm lang-btn" 
+          @click="$emit('toggle-lang')" 
+          :title="isGerman ? 'Switch to English' : 'Auf Deutsch umschalten'"
+        >
+          <span class="lang-flag">{{ isGerman ? '🇩🇪 DE' : '🇬🇧 EN' }}</span>
+        </button>
+
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-companion')" :title="isGerman ? 'Spielabend-Begleiter & Timer starten' : 'Launch Table Game Companion & Timer'">
           <span class="btn-emoji-icon">🎮</span>
-          <span class="hide-mobile">Companion</span>
+          <span class="hide-mobile">{{ isGerman ? 'Begleiter' : 'Companion' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-codex')" title="Browse All 45 Cards Lore & Rules Codex">
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-codex')" :title="isGerman ? 'Karten-Kodex & Lore durchsuchen' : 'Browse All Cards Lore & Rules Codex'">
           <span class="btn-emoji-icon">📖</span>
-          <span class="hide-mobile">Codex</span>
+          <span class="hide-mobile">{{ isGerman ? 'Kodex' : 'Codex' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-custom-studio')" title="Custom Recipe Studio & Saved Bookmarks">
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-custom-studio')" :title="isGerman ? 'Eigene Rezepte & Vorlagen' : 'Custom Recipe Studio & Saved Bookmarks'">
           <span class="btn-emoji-icon">🧪</span>
-          <span class="hide-mobile">Studio</span>
+          <span class="hide-mobile">{{ isGerman ? 'Studio' : 'Studio' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-instructions')" title="View Embedded Rulebooks">
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-instructions')" :title="isGerman ? 'Offizielle Regelbücher ansehen' : 'View Embedded Rulebooks'">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
           </svg>
-          <span class="hide-mobile">Rules</span>
+          <span class="hide-mobile">{{ isGerman ? 'Regeln' : 'Rules' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-presets')" title="Load Official Recipes">
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('open-presets')" :title="isGerman ? 'Offizielle Rezepte laden' : 'Load Official Recipes'">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
             <path d="M6 6h10"/>
             <path d="M6 10h10"/>
           </svg>
-          <span class="hide-mobile">Recipes</span>
+          <span class="hide-mobile">{{ isGerman ? 'Rezepte' : 'Recipes' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('reset-all')" title="Reset to defaults">
+        <button class="m3-btn m3-btn-tonal btn-sm" @click="$emit('reset-all')" :title="isGerman ? 'Auf Standard zurücksetzen' : 'Reset to defaults'">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
             <path d="M3 3v5h5"/>
           </svg>
-          <span class="hide-mobile">Reset</span>
+          <span class="hide-mobile">{{ isGerman ? 'Reset' : 'Reset' }}</span>
         </button>
       </div>
     </div>
@@ -106,39 +115,44 @@ const props = defineProps({
   recipeComplete: {
     type: Boolean,
     default: false
+  },
+  currentLang: {
+    type: String,
+    default: 'en'
   }
 });
 
-defineEmits(['update:step', 'open-presets', 'reset-all']);
+defineEmits(['update:step', 'open-presets', 'reset-all', 'toggle-lang', 'open-companion', 'open-codex', 'open-custom-studio', 'open-instructions']);
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const steps = computed(() => [
   {
     id: 'decks',
     number: '1',
-    title: 'My Decks',
+    title: isGerman.value ? 'Meine Decks' : 'My Decks',
     badge: props.ownedCount > 0 ? `${props.ownedCount}` : null,
     badgeClass: 'm3-badge-primary'
   },
   {
     id: 'cards',
     number: '2',
-    title: 'Cards & Players',
+    title: isGerman.value ? 'Karten & Spieler' : 'Cards & Players',
     badge: props.excludedCount > 0 ? `-${props.excludedCount}` : null,
     badgeClass: 'm3-badge-warning'
   },
   {
     id: 'synergies',
     number: '3',
-    title: 'Synergies & Rules',
+    title: isGerman.value ? 'Synergien & Regeln' : 'Synergies & Rules',
     badge: props.suggestionsCount > 0 ? `${props.suggestionsCount}` : null,
     badgeClass: props.hasErrors ? 'm3-badge-danger' : 'm3-badge-primary'
   },
   {
     id: 'recipe',
     number: '4',
-    title: 'Assembly Guide',
+    title: isGerman.value ? 'Bauanleitung' : 'Assembly Guide',
     badge: props.recipeComplete ? '✓' : null,
-    badgeClass: 'm3-badge-success'
   }
 ]);
 </script>
@@ -268,6 +282,26 @@ const steps = computed(() => [
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.lang-btn {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  padding: 6px 10px;
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: var(--md-sys-color-primary);
+}
+
+.lang-flag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .btn-sm {

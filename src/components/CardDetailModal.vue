@@ -23,8 +23,8 @@
           <span class="m3-badge m3-badge-primary cat-badge">
             {{ formatCategory(card.category) }}
           </span>
-          <h2 class="modal-card-name">{{ card.name }}</h2>
-          <p class="modal-short-desc">{{ card.shortDesc }}</p>
+          <h2 class="modal-card-name">{{ getCardDisplayName(card.slug, card.name, currentLang) }}</h2>
+          <p class="modal-short-desc">{{ getCardDisplayDesc(card.slug, card.shortDesc, currentLang) }}</p>
         </div>
       </div>
 
@@ -32,7 +32,7 @@
       <div class="modal-body">
         <!-- Decks Providing this Card -->
         <div class="detail-section">
-          <h4 class="section-title">📦 Featured in Decks</h4>
+          <h4 class="section-title">📦 {{ isGerman ? 'Enthalten in diesen Decks' : 'Featured in Decks' }}</h4>
           <div class="decks-list-chips">
             <span 
               v-for="deckSlug in (card.decks || [])" 
@@ -46,20 +46,20 @@
 
         <!-- Official Mechanics & Rules -->
         <div class="detail-section">
-          <h4 class="section-title">📜 Official Rules & Mechanics</h4>
+          <h4 class="section-title">📜 {{ isGerman ? 'Offizielle Regeln & Mechanik' : 'Official Rules & Mechanics' }}</h4>
           <div class="mechanics-content">
             <p v-if="card.mechanics" class="mechanics-text">
-              {{ card.mechanics }}
+              {{ getCardDisplayMechanics(card.slug, card.mechanics, currentLang) }}
             </p>
             <p v-else class="mechanics-text">
-              Follow instructions printed on the face of the card during your turn before drawing.
+              {{ isGerman ? 'Befolge die Anweisungen auf der Karte während deines Zuges vor dem Nachziehen.' : 'Follow instructions printed on the face of the card during your turn before drawing.' }}
             </p>
           </div>
         </div>
 
         <!-- Strategic Tips & Combinations -->
         <div class="detail-section" v-if="getSynergyTip(card.slug)">
-          <h4 class="section-title">💡 Strategic Synergy Tip</h4>
+          <h4 class="section-title">💡 {{ isGerman ? 'Strategischer Kombo-Tipp' : 'Strategic Synergy Tip' }}</h4>
           <div class="synergy-tip-box">
             {{ getSynergyTip(card.slug) }}
           </div>
@@ -73,11 +73,11 @@
           class="m3-btn m3-btn-tonal"
           @click="isCatGalleryOpen = true"
         >
-          🎨 View 18 Cat Artworks Archive
+          {{ isGerman ? '🎨 Alle 18 Katzen-Artworks' : '🎨 View 18 Cat Artworks Archive' }}
         </button>
 
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
-          Close Rules
+          {{ isGerman ? 'Schließen' : 'Close Rules' }}
         </button>
       </div>
     </div>
@@ -93,15 +93,18 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import CatArtworkModal from './CatArtworkModal.vue';
+import { getCardDisplayName, getCardDisplayDesc, getCardDisplayMechanics, getCategoryDisplayName } from '../data/translations.js';
 
 const props = defineProps({
-  card: { type: Object, default: null }
+  card: { type: Object, default: null },
+  currentLang: { type: String, default: 'en' }
 });
 
 defineEmits(['close']);
 
+const isGerman = computed(() => props.currentLang === 'de');
 const activeIconIndex = ref(0);
 const isCatGalleryOpen = ref(false);
 
@@ -110,16 +113,7 @@ watch(() => props.card, () => {
 });
 
 const formatCategory = (cat) => {
-  const map = {
-    hazards: '💥 Hazard & Elimination',
-    lifesavers: '🛡️ Defuse & Resurrection',
-    attacks: '⚔️ Attack & Turn Action',
-    vision: '🔮 Intel & Future Manipulation',
-    stealing: '😼 Card Stealing & Combos',
-    chaos: '🌪️ Deck Chaos & Special',
-    defense: '🚫 Nope & Interrupts'
-  };
-  return map[cat] || cat;
+  return getCategoryDisplayName(cat, cat, props.currentLang);
 };
 
 const formatDeckName = (slug) => {

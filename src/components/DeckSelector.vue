@@ -3,34 +3,35 @@
     <!-- Section Header -->
     <div class="section-hero">
       <div class="hero-content">
-        <h2 class="hero-title">Step 1: Which Decks Do You Own?</h2>
+        <h2 class="hero-title">{{ isGerman ? 'Schritt 1: Welche Decks besitzt du?' : 'Step 1: Which Decks Do You Own?' }}</h2>
         <p class="hero-desc">
-          Select all the Exploding Kittens core games and expansions you physically have in your collection.
-          The deck builder will automatically pool all their available cards and mechanics.
+          {{ isGerman 
+            ? 'Wähle alle Exploding Kittens Grundspiele und Erweiterungen aus, die du physisch besitzt. Der Deck-Architekt bündelt alle Karten und Mechaniken deiner Sammlung.' 
+            : 'Select all the Exploding Kittens core games and expansions you physically have in your collection. The deck builder will automatically pool all their available cards and mechanics.' }}
         </p>
       </div>
 
       <!-- Quick Action Presets -->
       <div class="quick-presets">
-        <span class="preset-label">Quick Presets:</span>
+        <span class="preset-label">{{ isGerman ? 'Schnell-Auswahl:' : 'Quick Presets:' }}</span>
         <div class="preset-chips">
           <button class="m3-chip" @click="selectPreset('all')">
-            <span>Select All (11)</span>
+            <span>{{ isGerman ? 'Alle auswählen (11)' : 'Select All (11)' }}</span>
           </button>
           <button class="m3-chip" @click="selectPreset('classic-expansions')">
-            <span>Classic + 3 Expansions</span>
+            <span>{{ isGerman ? 'Klassiker + 3 Erweiterungen' : 'Classic + 3 Expansions' }}</span>
           </button>
           <button class="m3-chip" @click="selectPreset('recipes')">
-            <span>Recipes for Disaster</span>
+            <span>{{ isGerman ? 'Rezepte für die Katastrophe' : 'Recipes for Disaster' }}</span>
           </button>
           <button class="m3-chip" @click="selectPreset('party')">
             <span>Party Pack</span>
           </button>
           <button class="m3-chip" @click="selectPreset('zombie')">
-            <span>Zombie Kittens</span>
+            <span>{{ isGerman ? 'Zombie Kätzchen' : 'Zombie Kittens' }}</span>
           </button>
           <button class="m3-chip" @click="selectPreset('clear')">
-            <span>Clear All</span>
+            <span>{{ isGerman ? 'Alle abwählen' : 'Clear All' }}</span>
           </button>
         </div>
       </div>
@@ -52,9 +53,9 @@
       </div>
 
       <div class="collection-summary-pill">
-        <span class="summary-highlight">{{ ownedDeckIds.length }}</span> of {{ decks.length }} decks selected
+        <span class="summary-highlight">{{ ownedDeckIds.length }}</span> {{ isGerman ? 'von' : 'of' }} {{ decks.length }} {{ isGerman ? 'Decks ausgewählt' : 'decks selected' }}
         <span class="separator">•</span>
-        <span class="summary-highlight">{{ totalCardsPool }}</span> total cards pool
+        <span class="summary-highlight">{{ totalCardsPool }}</span> {{ isGerman ? 'Gesamtkarten im Pool' : 'total cards pool' }}
       </div>
     </div>
 
@@ -74,7 +75,7 @@
         <!-- Top Row: Badge & Checkbox -->
         <div class="deck-top-row">
           <span class="m3-badge" :class="deck.type === 'Standalone' ? 'm3-badge-primary' : 'm3-badge-warning'">
-            {{ deck.type }}
+            {{ deck.type === 'Standalone' ? (isGerman ? 'Eigenständig' : 'Standalone') : (isGerman ? 'Erweiterung' : 'Expansion') }}
           </span>
 
           <div class="deck-checkbox" :class="{ checked: isOwned(deck.id) }">
@@ -106,22 +107,22 @@
                 <line x1="8" x2="16" y1="6" y2="6"/>
                 <line x1="8" x2="16" y1="10" y2="10"/>
               </svg>
-              {{ deck.totalCards }} cards
+              {{ deck.totalCards }} {{ isGerman ? 'Karten' : 'cards' }}
             </span>
             <span class="deck-unique-types">
-              {{ deck.cards.length }} card types
+              {{ deck.cards.length }} {{ isGerman ? 'Kartentypen' : 'card types' }}
             </span>
           </div>
 
           <p class="deck-description">
-            {{ deck.description || 'Includes complete standalone or expansion card set with unique mechanics.' }}
+            {{ deck.description || (isGerman ? 'Enthält vollständiges eigenständiges Spiel oder Erweiterungs-Set mit einzigartigen Mechaniken.' : 'Includes complete standalone or expansion card set with unique mechanics.') }}
           </p>
         </div>
 
         <!-- Card Peek Drawer Button -->
         <div class="deck-footer" @click.stop>
           <button class="peek-cards-btn" @click="toggleCardPeek(deck.id)">
-            <span>{{ expandedDeckId === deck.id ? 'Hide Cards' : 'View Included Cards' }}</span>
+            <span>{{ expandedDeckId === deck.id ? (isGerman ? 'Karten ausblenden' : 'Hide Cards') : (isGerman ? 'Enthaltene Karten ansehen' : 'View Included Cards') }}</span>
             <svg 
               width="14" 
               height="14" 
@@ -144,11 +145,11 @@
               :key="c.slug" 
               class="peek-item"
               @click="$emit('inspect-card', c.slug)"
-              title="Click for full card rules"
+              :title="isGerman ? 'Klicken für vollständige Regeln' : 'Click for full card rules'"
             >
               <img v-if="c.icons && c.icons[0]" :src="c.icons[0]" :alt="c.name" class="peek-icon" />
               <div class="peek-info">
-                <span class="peek-name">{{ c.name }}</span>
+                <span class="peek-name">{{ formatCardTitle(c.slug, c.name) }}</span>
                 <span class="peek-count">{{ c.quantity }}x</span>
               </div>
             </div>
@@ -157,12 +158,12 @@
       </div>
     </div>
 
-    <!-- Bottom Floating Action Bar -->
+    <!-- Bottom Action Bar (in flow, non-colliding) -->
     <div class="floating-next-bar">
       <div class="floating-container">
         <div class="floating-stat">
           <span class="stat-count">{{ ownedDeckIds.length }}</span>
-          <span class="stat-label">Decks Chosen ({{ totalCardsPool }} cards)</span>
+          <span class="stat-label">{{ isGerman ? 'Decks gewählt' : 'Decks Chosen' }} ({{ totalCardsPool }} {{ isGerman ? 'Karten' : 'cards' }})</span>
           <span class="stat-label-mobile">Decks ({{ totalCardsPool }})</span>
         </div>
 
@@ -171,8 +172,8 @@
           :disabled="ownedDeckIds.length === 0"
           @click="$emit('continue')"
         >
-          <span class="btn-text-desktop">Configure Cards & Players</span>
-          <span class="btn-text-mobile">Configure Cards</span>
+          <span class="btn-text-desktop">{{ isGerman ? 'Karten & Spieler konfigurieren' : 'Configure Cards & Players' }}</span>
+          <span class="btn-text-mobile">{{ isGerman ? 'Karten konfigurieren' : 'Configure Cards' }}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -185,6 +186,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { getCardDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   decks: {
@@ -194,19 +196,30 @@ const props = defineProps({
   ownedDeckIds: {
     type: Array,
     required: true
+  },
+  currentLang: {
+    type: String,
+    default: 'en'
   }
 });
 
 const emit = defineEmits(['update:owned-decks', 'continue', 'inspect-card']);
 
+const isGerman = computed(() => props.currentLang === 'de');
+
 const activeFilter = ref('all');
 const expandedDeckId = ref(null);
 
-const filterOptions = [
-  { id: 'all', label: 'All Decks' },
-  { id: 'standalone', label: 'Standalone Games' },
-  { id: 'expansion', label: 'Expansions' }
-];
+const filterOptions = computed(() => [
+  { id: 'all', label: isGerman.value ? 'Alle Decks' : 'All Decks' },
+  { id: 'standalone', label: isGerman.value ? 'Eigenständige Spiele' : 'Standalone Games' },
+  { id: 'expansion', label: isGerman.value ? 'Erweiterungen' : 'Expansions' }
+]);
+
+const formatCardTitle = (slug, defaultName) => {
+  return getCardDisplayName(slug, defaultName, props.currentLang);
+};
+
 
 const isOwned = (id) => props.ownedDeckIds.includes(id);
 

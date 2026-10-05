@@ -5,15 +5,16 @@
       class="bot-fab-btn"
       :class="{ 'is-open': isOpen }"
       @click="toggleDrawer"
-      title="Ask the Rules Bot"
+      :title="isGerman ? 'Kätzchen Schiedsrichter fragen' : 'Ask the Rules Bot'"
     >
       <span class="bot-emoji">🤖😼</span>
-      <span class="bot-fab-label">Rules Bot</span>
+      <span class="bot-fab-label">{{ isGerman ? 'Regel-Bot' : 'Rules Bot' }}</span>
       <span v-if="!isOpen" class="bot-pulse-ring"></span>
     </button>
 
     <!-- Slide-in Chat Drawer / Modal -->
-    <div v-if="isOpen" class="bot-drawer-backdrop" @click.self="isOpen = false">
+    <Teleport to="body">
+      <div v-if="isOpen" class="bot-drawer-backdrop" @click.self="isOpen = false">
       <div class="m3-card bot-drawer-card animate-pop-in">
         <!-- Drawer Header -->
         <div class="drawer-header">
@@ -22,16 +23,16 @@
               <span>⚖️🐱</span>
             </div>
             <div>
-              <h3 class="bot-title">Kitten Rules Referee</h3>
-              <span class="bot-subtitle">Official Rulebooks & Card Mechanics Assistant</span>
+              <h3 class="bot-title">{{ isGerman ? 'Kätzchen Schiedsrichter' : 'Kitten Rules Referee' }}</h3>
+              <span class="bot-subtitle">{{ isGerman ? 'Offizieller Regel- & Mechanik-Assistent' : 'Official Rulebooks & Card Mechanics Assistant' }}</span>
             </div>
           </div>
 
           <div class="header-actions">
-            <button class="icon-action-btn" @click="$emit('open-instructions')" title="View Embedded Rulebooks">
+            <button class="icon-action-btn" @click="$emit('open-instructions')" :title="isGerman ? 'Regelbücher anzeigen' : 'View Embedded Rulebooks'">
               📖
             </button>
-            <button class="icon-action-btn" @click="clearMessages" title="Clear Conversation">
+            <button class="icon-action-btn" @click="clearMessages" :title="isGerman ? 'Verlauf leeren' : 'Clear Conversation'">
               🗑️
             </button>
             <button class="icon-action-btn close-x" @click="isOpen = false">
@@ -69,7 +70,7 @@
                     class="m3-chip chip-xs"
                     @click="$emit('inspect-card', cardSlug)"
                   >
-                    🃏 Inspect {{ formatCardName(cardSlug) }}
+                    🃏 {{ isGerman ? 'Ansehen: ' : 'Inspect ' }}{{ formatCardName(cardSlug) }}
                   </button>
                 </div>
               </div>
@@ -78,7 +79,7 @@
 
           <!-- Suggested Followup Questions -->
           <div v-if="latestFollowups.length > 0" class="suggested-questions-row">
-            <span class="suggestions-label">Suggested Questions:</span>
+            <span class="suggestions-label">{{ isGerman ? 'Vorgeschlagene Fragen:' : 'Suggested Questions:' }}</span>
             <div class="suggested-chips">
               <button 
                 v-for="(q, qIdx) in latestFollowups" 
@@ -97,7 +98,7 @@
           <input 
             v-model="inputQuery" 
             type="text" 
-            placeholder="Ask a rule question (e.g. Can you Nope a Defuse?)..."
+            :placeholder="isGerman ? 'Stelle eine Regelfrage (z.B. Kann man ein Nö! auf eine Entschärfung spielen?)...' : 'Ask a rule question (e.g. Can you Nope a Defuse?)...'"
             class="bot-input"
             @keyup.enter="handleSend"
           />
@@ -114,26 +115,46 @@
         </div>
       </div>
     </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { queryRulesEngine } from '../utils/rulesBotEngine.js';
+import { getCardDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   // When a fixed bottom action bar is visible (Step 1), lift the FAB above it on phones
-  liftAboveBar: { type: Boolean, default: false }
+  liftAboveBar: { type: Boolean, default: false },
+  currentLang: { type: String, default: 'en' }
 });
 
 const emit = defineEmits(['open-instructions', 'inspect-card']);
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const isOpen = ref(false);
 const inputQuery = ref('');
 const messagesContainer = ref(null);
 
-const messages = ref([
-  {
+const getInitialGreeting = (lang) => {
+  if (lang === 'de') {
+    return {
+      sender: 'bot',
+      text: "Miau! Ich bin dein **Exploding Kittens Schiedsrichter**.\nFrag mich alles über Regeln, Kartentiming, Nö!-Karten, Entschärfungen, Kombos oder Erweiterungsregeln während deines Spiels!",
+      reference: "Offizielle Exploding Kittens Regelbücher",
+      relatedCards: ['nope', 'defuse', 'exploding-kitten'],
+      suggestedQuestions: [
+        "Kann man eine Entschärfung mit Nö! abwehren?",
+        "Kann man ein Nö! auf ein Nö! spielen?",
+        "Was passiert, wenn jemand mein Explodierendes Kätzchen stiehlt?",
+        "Addieren sich Angriffskarten?",
+        "Wie funktionieren Katzenkarten-Kombos?"
+      ]
+    };
+  }
+  return {
     sender: 'bot',
     text: "Meow! I am your **Exploding Kittens Rules Referee**.\nAsk me any question about card timing, Nopes, Defuses, combos, or expansion rules during your game!",
     reference: "Official Exploding Kittens Rulebooks",
@@ -145,8 +166,17 @@ const messages = ref([
       "Do Attack cards stack turns?",
       "How do Cat Card combos work?"
     ]
+  };
+};
+
+const messages = ref([getInitialGreeting(props.currentLang)]);
+
+// If language changes and conversation is at initial greeting, update it
+watch(() => props.currentLang, (newLang) => {
+  if (messages.value.length === 1 && messages.value[0].sender === 'bot') {
+    messages.value = [getInitialGreeting(newLang)];
   }
-]);
+});
 
 const toggleDrawer = () => {
   isOpen.value = !isOpen.value;
@@ -173,9 +203,9 @@ const handleSend = () => {
   inputQuery.value = '';
   scrollToBottom();
 
-  // Query engine
+  // Query engine with language context
   setTimeout(() => {
-    const res = queryRulesEngine(q);
+    const res = queryRulesEngine(q, props.currentLang);
     messages.value.push({
       sender: 'bot',
       text: res.answer,
@@ -193,20 +223,37 @@ const sendPresetQuestion = (questionText) => {
 };
 
 const clearMessages = () => {
-  messages.value = [
-    {
-      sender: 'bot',
-      text: "Conversation cleared. Ask me any rule or card question!",
-      reference: null,
-      relatedCards: [],
-      suggestedQuestions: [
-        "Can you Nope a Defuse?",
-        "Can you Nope a Barking Kitten?",
-        "What is the 5-card combo?",
-        "How do dead players work in Zombie Kittens?"
-      ]
-    }
-  ];
+  if (isGerman.value) {
+    messages.value = [
+      {
+        sender: 'bot',
+        text: "Verlauf geleert. Stelle mir eine beliebige Regel- oder Kartenfrage!",
+        reference: null,
+        relatedCards: [],
+        suggestedQuestions: [
+          "Kann man eine Entschärfung mit Nö! abwehren?",
+          "Kann ein Barking Kitten mit Nö! abgewehrt werden?",
+          "Was ist die 5-Karten-Kombo?",
+          "Wie funktionieren tote Spieler in Zombie Kittens?"
+        ]
+      }
+    ];
+  } else {
+    messages.value = [
+      {
+        sender: 'bot',
+        text: "Conversation cleared. Ask me any rule or card question!",
+        reference: null,
+        relatedCards: [],
+        suggestedQuestions: [
+          "Can you Nope a Defuse?",
+          "Can you Nope a Barking Kitten?",
+          "What is the 5-card combo?",
+          "How do dead players work in Zombie Kittens?"
+        ]
+      }
+    ];
+  }
 };
 
 const scrollToBottom = () => {
@@ -226,18 +273,19 @@ const formatMessageText = (text) => {
 };
 
 const formatCardName = (slug) => {
-  return slug
+  const defaultFormatted = slug
     .replace(/-/g, ' ')
     .replace(/\b\w/g, l => l.toUpperCase());
+  return getCardDisplayName(slug, defaultFormatted, props.currentLang);
 };
 </script>
 
+
 <style scoped>
 .rules-bot-wrapper {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 150;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Floating Action Button */
@@ -280,7 +328,7 @@ const formatCardName = (slug) => {
 .bot-drawer-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 160;
+  z-index: 250;
   background-color: rgba(10, 13, 20, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);

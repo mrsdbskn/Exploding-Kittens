@@ -3,10 +3,11 @@
     <!-- Header -->
     <div class="synergy-header">
       <div class="header-left">
-        <h2 class="synergy-title">Step 3: Card Synergies & Rule Harmonizer</h2>
+        <h2 class="synergy-title">{{ isGerman ? 'Schritt 3: Synergien & Regel-Harmonisierer' : 'Step 3: Card Synergies & Rule Harmonizer' }}</h2>
         <p class="synergy-desc">
-          Exploding Kittens has intricate card mechanics. The harmonizer detects cards that require specific pairs,
-          counterparts, or rule adjustments (such as Barking Kittens, Armageddon & Godcat, Streaking Kittens, and Zombie revival).
+          {{ isGerman
+            ? 'Exploding Kittens hat komplexe Kartenmechaniken. Der Harmonisierer prüft Karten, die bestimmte Gegenstücke, Paare oder Regelanpassungen erfordern (wie Barking Kittens, Armageddon & Gottkatze, Streaking Kittens und Zombie-Wiederbelebung).'
+            : 'Exploding Kittens has intricate card mechanics. The harmonizer detects cards that require specific pairs, counterparts, or rule adjustments (such as Barking Kittens, Armageddon & Godcat, Streaking Kittens, and Zombie revival).' }}
         </p>
       </div>
 
@@ -16,7 +17,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Auto-Harmonize All ({{ actionableSuggestions.length }})</span>
+          <span>{{ isGerman ? 'Alle automatisch beheben' : 'Auto-Harmonize All' }} ({{ actionableSuggestions.length }})</span>
         </button>
       </div>
     </div>
@@ -38,19 +39,19 @@
 
       <div class="banner-text-col">
         <h3 class="banner-headline">
-          <span v-if="hasErrors">Rule Conflicts Detected</span>
-          <span v-else-if="hasWarnings">{{ suggestions.length }} Synergies & Recommendations</span>
-          <span v-else>Deck Harmony Complete!</span>
+          <span v-if="hasErrors">{{ isGerman ? 'Regel-Konflikte erkannt' : 'Rule Conflicts Detected' }}</span>
+          <span v-else-if="hasWarnings">{{ suggestions.length }} {{ isGerman ? 'Synergien & Empfehlungen' : 'Synergies & Recommendations' }}</span>
+          <span v-else>{{ isGerman ? 'Deck-Harmonie perfekt!' : 'Deck Harmony Complete!' }}</span>
         </h3>
         <p class="banner-subtext">
           <span v-if="hasErrors">
-            Some cards in your active pool are missing required partner cards and cannot be played as intended.
+            {{ isGerman ? 'Einigen Karten in deinem aktiven Pool fehlen erforderliche Partnerkarten und sie können nicht wie vorgesehen gespielt werden.' : 'Some cards in your active pool are missing required partner cards and cannot be played as intended.' }}
           </span>
           <span v-else-if="hasWarnings">
-            Review the suggestions below to balance your card ratios, variants, and expansion mechanics.
+            {{ isGerman ? 'Überprüfe die folgenden Vorschläge, um Kartenverhältnisse, Varianten und Erweiterungsmechaniken auszugleichen.' : 'Review the suggestions below to balance your card ratios, variants, and expansion mechanics.' }}
           </span>
           <span v-else>
-            All active cards have valid pairs, prerequisites, and correct hazard ratios for {{ playerCount }} players.
+            {{ isGerman ? 'Alle aktiven Karten haben gültige Paare, Voraussetzungen und korrekte Gefahrenverhältnisse für' : 'All active cards have valid pairs, prerequisites, and correct hazard ratios for' }} {{ playerCount }} {{ isGerman ? 'Spieler.' : 'players.' }}
           </span>
         </p>
       </div>
@@ -68,7 +69,7 @@
           <div class="sugg-title-group">
             <span class="sugg-indicator"></span>
             <span class="m3-badge" :class="getBadgeClass(s.type)">
-              {{ s.type === 'error' ? 'Critical Conflict' : (s.type === 'warning' ? 'Dependency Warning' : 'Synergy Tip') }}
+              {{ s.type === 'error' ? (isGerman ? 'Kritischer Konflikt' : 'Critical Conflict') : (s.type === 'warning' ? (isGerman ? 'Abhängigkeits-Warnung' : 'Dependency Warning') : (isGerman ? 'Synergie-Tipp' : 'Synergy Tip')) }}
             </span>
             <h4 class="sugg-title">{{ s.title }}</h4>
           </div>
@@ -80,7 +81,7 @@
               :alt="s.cardSlug" 
               class="sugg-card-icon"
             />
-            <span>{{ catalog[s.cardSlug].name }}</span>
+            <span>{{ formatCardTitle(s.cardSlug, catalog[s.cardSlug].name) }}</span>
           </div>
         </div>
 
@@ -106,15 +107,16 @@
 
     <!-- Additional Exploding Kittens Mechanics Knowledge Pills -->
     <div class="mechanics-reference-panel m3-card">
-      <h3 class="ref-title">📖 Core Exploding Kittens Rule Mechanics</h3>
+      <h3 class="ref-title">{{ isGerman ? '📖 Grundlegende Exploding Kittens Mechaniken' : '📖 Core Exploding Kittens Rule Mechanics' }}</h3>
       <div class="rules-grid">
         <div class="rule-box">
           <span class="rule-icon">💥</span>
           <div class="rule-content">
-            <span class="rule-name">Exploding Kittens Count</span>
+            <span class="rule-name">{{ isGerman ? 'Anzahl Explodierender Kätzchen' : 'Exploding Kittens Count' }}</span>
             <p class="rule-detail">
-              Always equal to <strong>Number of Players - 1</strong>, ensuring exactly one player survives.
-              If <strong>Streaking Kitten</strong> is in play, add 1 extra Exploding Kitten (Total = Players).
+              {{ isGerman
+                ? 'Immer gleich Anzahl der Spieler minus 1, damit genau 1 Spieler überlebt. Wenn Streaking Kitten im Spiel ist, kommt 1 zusätzliche Bombe hinein (Gesamt = Spieler).'
+                : 'Always equal to Number of Players - 1, ensuring exactly one player survives. If Streaking Kitten is in play, add 1 extra Exploding Kitten (Total = Players).' }}
             </p>
           </div>
         </div>
@@ -122,10 +124,11 @@
         <div class="rule-box">
           <span class="rule-icon">🛡️</span>
           <div class="rule-content">
-            <span class="rule-name">Defuses & Starting Hands</span>
+            <span class="rule-name">{{ isGerman ? 'Entschärfungen & Start-Hände' : 'Defuses & Starting Hands' }}</span>
             <p class="rule-detail">
-              Deal <strong>1 Defuse</strong> (or Zombie Kitten) and <strong>7 cards</strong> to each player.
-              Place remaining Defuses into the draw pile.
+              {{ isGerman
+                ? 'Teile 1 Entschärfung (oder Zombie Kätzchen) und 7 Karten an jeden Spieler aus. Die restlichen Entschärfungen kommen in den Nachziehstapel.'
+                : 'Deal 1 Defuse (or Zombie Kitten) and 7 cards to each player. Place remaining Defuses into the draw pile.' }}
             </p>
           </div>
         </div>
@@ -133,9 +136,11 @@
         <div class="rule-box">
           <span class="rule-icon">🐶</span>
           <div class="rule-content">
-            <span class="rule-name">Barking Kittens Twin Rule</span>
+            <span class="rule-name">{{ isGerman ? 'Barking Kittens Zwillings-Regel' : 'Barking Kittens Twin Rule' }}</span>
             <p class="rule-detail">
-              Barking Kittens must be in the game as a <strong>pair of 2</strong>. Playing one forces the holder of the other to explode (or defuse).
+              {{ isGerman
+                ? 'Barking Kittens müssen als Paar von 2 im Spiel sein. Wird eines gespielt, muss der Besitzer des anderen entschärfen oder explodieren.'
+                : 'Barking Kittens must be in the game as a pair of 2. Playing one forces the holder of the other to explode (or defuse).' }}
             </p>
           </div>
         </div>
@@ -143,10 +148,11 @@
         <div class="rule-box">
           <span class="rule-icon">👑</span>
           <div class="rule-content">
-            <span class="rule-name">Good vs Evil Armageddon</span>
+            <span class="rule-name">{{ isGerman ? 'Good vs Evil Armageddon' : 'Good vs Evil Armageddon' }}</span>
             <p class="rule-detail">
-              Armageddon initiates the showdown where two face-down cards (including Godcat or Devilcat) are drawn.
-              Godcat must be in play to activate Armageddon.
+              {{ isGerman
+                ? 'Armageddon startet das Duell, bei dem Gottkatze und Teufelskatze verdeckt gezogen werden. Gottkatze muss im Spiel sein, um Armageddon zu aktivieren.'
+                : 'Armageddon initiates the showdown where two face-down cards (including Godcat or Devilcat) are drawn. Godcat must be in play to activate Armageddon.' }}
             </p>
           </div>
         </div>
@@ -156,13 +162,13 @@
     <!-- Bottom Navigation -->
     <div class="synergy-bottom-nav">
       <button class="m3-btn m3-btn-tonal" @click="$emit('back')">
-        <span class="btn-text-desktop">← Back to Card Selection</span>
-        <span class="btn-text-mobile">← Back to Selection</span>
+        <span class="btn-text-desktop">{{ isGerman ? '← Zurück zur Kartenauswahl' : '← Back to Card Selection' }}</span>
+        <span class="btn-text-mobile">{{ isGerman ? '← Zurück' : '← Back' }}</span>
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('continue')">
-        <span class="btn-text-desktop">Generate Assembly Recipe Guide →</span>
-        <span class="btn-text-mobile">Generate Recipe Guide →</span>
+        <span class="btn-text-desktop">{{ isGerman ? 'Bauanleitung erstellen →' : 'Generate Assembly Recipe Guide →' }}</span>
+        <span class="btn-text-mobile">{{ isGerman ? 'Rezept erstellen →' : 'Generate Recipe Guide →' }}</span>
       </button>
     </div>
   </div>
@@ -170,14 +176,22 @@
 
 <script setup>
 import { computed } from 'vue';
+import { getCardDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   suggestions: { type: Array, required: true },
   catalog: { type: Object, required: true },
-  playerCount: { type: Number, required: true }
+  playerCount: { type: Number, required: true },
+  currentLang: { type: String, default: 'en' }
 });
 
 defineEmits(['apply-action', 'resolve-all', 'inspect-card', 'back', 'continue']);
+
+const isGerman = computed(() => props.currentLang === 'de');
+
+const formatCardTitle = (slug, defaultName) => {
+  return getCardDisplayName(slug, defaultName, props.currentLang);
+};
 
 const hasErrors = computed(() => {
   return props.suggestions.some(s => s.type === 'error');

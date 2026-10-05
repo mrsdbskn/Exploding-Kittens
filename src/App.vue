@@ -9,6 +9,8 @@
       :suggestions-count="deckRecipe.suggestions.length"
       :has-errors="hasErrors"
       :recipe-complete="isRecipeComplete"
+      :current-lang="currentLang"
+      @toggle-lang="toggleLang"
       @update:step="setStep"
       @open-instructions="showInstructionsModal = true"
       @open-presets="showPresetModal = true"
@@ -25,6 +27,7 @@
         v-if="currentStep === 'decks'"
         :decks="DECKS"
         :owned-deck-ids="ownedDeckIds"
+        :current-lang="currentLang"
         @update:owned-decks="handleUpdateOwnedDecks"
         @continue="setStep('cards')"
         @inspect-card="inspectCard"
@@ -48,6 +51,7 @@
         :total-draw-pile-size="deckRecipe.totalDrawPileSize"
         :exploding-kittens-needed="deckRecipe.explodingKittensNeeded"
         :suggestions-count="deckRecipe.suggestions.length"
+        :current-lang="currentLang"
         @update:player-count="p => playerCount = p"
         @update:hand-size="h => startingHandNonDefuse = h"
         @update:custom-quantities="q => customQuantities = q"
@@ -65,6 +69,7 @@
         :suggestions="deckRecipe.suggestions"
         :catalog="ALL_CARDS_CATALOG"
         :player-count="playerCount"
+        :current-lang="currentLang"
         @apply-action="handleApplySuggestionAction"
         @resolve-all="resolveAllSuggestions"
         @inspect-card="inspectCard"
@@ -80,6 +85,7 @@
         :categories="CATEGORIES"
         :danger-settings="dangerSettings"
         :danger-previews="dangerPreviews"
+        :current-lang="currentLang"
         @update:danger="handleUpdateDanger"
         @inspect-card="inspectCard"
         @back="setStep('synergies')"
@@ -91,6 +97,7 @@
     <CardDetailModal 
       v-if="inspectedCard"
       :card="inspectedCard"
+      :current-lang="currentLang"
       @close="inspectedCardSlug = null"
     />
 
@@ -142,12 +149,22 @@
       @load-custom-recipe="handleLoadCustomRecipe"
     />
 
-    <!-- Interactive Kitten Rules Referee Chatbot -->
-    <RulesBotDrawer 
-      :lift-above-bar="currentStep === 'decks'"
-      @open-instructions="showInstructionsModal = true"
-      @inspect-card="inspectCard"
-    />
+    <!-- Floating Bottom Navigation Dock: Fast Step Pill + Rules Bot -->
+    <div class="bottom-floating-dock" :class="{ 'is-lifted': currentStep === 'decks' }">
+      <QuickStepBar 
+        :current-step="currentStep"
+        :suggestions-count="deckRecipe.suggestions.length"
+        :has-errors="hasErrors"
+        :recipe-complete="isRecipeComplete"
+        :current-lang="currentLang"
+        @update:step="setStep"
+      />
+      <RulesBotDrawer 
+        :current-lang="currentLang"
+        @open-instructions="showInstructionsModal = true"
+        @inspect-card="inspectCard"
+      />
+    </div>
   </div>
 </template>
 
@@ -167,12 +184,26 @@ import CardDetailModal from './components/CardDetailModal.vue';
 import PresetModal from './components/PresetModal.vue';
 import InstructionsModal from './components/InstructionsModal.vue';
 import RulesBotDrawer from './components/RulesBotDrawer.vue';
+import QuickStepBar from './components/QuickStepBar.vue';
 import GameCompanionModal from './components/GameCompanionModal.vue';
 import CardLoreCodexModal from './components/CardLoreCodexModal.vue';
 import CustomRecipeModal from './components/CustomRecipeModal.vue';
 
 // Navigation state
 const currentStep = ref('decks');
+
+// Language state ('en' | 'de')
+const currentLang = ref(localStorage.getItem('ek_lang') || 'en');
+
+const toggleLang = () => {
+  currentLang.value = currentLang.value === 'en' ? 'de' : 'en';
+  try {
+    localStorage.setItem('ek_lang', currentLang.value);
+    document.documentElement.lang = currentLang.value;
+  } catch (e) {
+    // LocalStorage error ignore
+  }
+};
 
 // Configuration state
 const ownedDeckIds = ref(['exploding-kittens-original-edition']);
@@ -214,6 +245,7 @@ const handleLoadCustomRecipe = (recipe) => {
 // LocalStorage persistence
 onMounted(() => {
   try {
+    document.documentElement.lang = currentLang.value;
     const saved = localStorage.getItem('ek_saved_config');
     if (saved) {
       const parsed = JSON.parse(saved);
@@ -486,5 +518,33 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
+}
+
+/* Floating Bottom Navigation Dock: Fast Step Pill + Rules Bot */
+.bottom-floating-dock {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 150;
+  pointer-events: none;
+  transition: bottom 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.bottom-floating-dock > * {
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .bottom-floating-dock {
+    bottom: max(10px, env(safe-area-inset-bottom, 10px));
+    right: 8px;
+    gap: 6px;
+  }
+  .bottom-floating-dock.is-lifted {
+    bottom: calc(66px + max(10px, env(safe-area-inset-bottom, 10px)));
+  }
 }
 </style>

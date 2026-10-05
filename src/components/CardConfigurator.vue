@@ -8,8 +8,8 @@
           <div class="block-label">
             <span class="icon-label">👥</span>
             <div>
-              <span class="title">Player Count</span>
-              <span class="subtitle">{{ playerCount }} Players (needs {{ explodingKittensNeeded }} Exploding Kittens)</span>
+              <span class="title">{{ isGerman ? 'Spieleranzahl' : 'Player Count' }}</span>
+              <span class="subtitle">{{ playerCount }} {{ isGerman ? 'Spieler (benötigt' : 'Players (needs' }} {{ explodingKittensNeeded }} {{ isGerman ? 'Bomben)' : 'Exploding Kittens)' }}</span>
             </div>
           </div>
 
@@ -31,8 +31,8 @@
           <div class="block-label">
             <span class="icon-label">🃏</span>
             <div>
-              <span class="title">Starting Hand Size</span>
-              <span class="subtitle">1 Defuse + {{ startingHandNonDefuse }} cards</span>
+              <span class="title">{{ isGerman ? 'Start-Handgröße' : 'Starting Hand Size' }}</span>
+              <span class="subtitle">1 {{ isGerman ? 'Entschärfung' : 'Defuse' }} + {{ startingHandNonDefuse }} {{ isGerman ? 'Karten' : 'cards' }}</span>
             </div>
           </div>
 
@@ -49,7 +49,7 @@
               :class="{ active: startingHandNonDefuse === 4 }"
               @click="$emit('update:hand-size', 4)"
             >
-              Quick Game (4+1)
+              {{ isGerman ? 'Kurzes Spiel (4+1)' : 'Quick Game (4+1)' }}
             </button>
           </div>
         </div>
@@ -60,21 +60,21 @@
         <div class="validation-status">
           <span class="status-icon">{{ canDealFullHands ? '✅' : '⚠️' }}</span>
           <span v-if="canDealFullHands">
-            Total active cards: <strong>{{ totalActiveCardsCount }}</strong> • 
-            Starting hands require <strong>{{ starterHandTotalCards + starterDefusesNeeded }}</strong> cards • 
-            Draw pile will have <strong>{{ totalDrawPileSize }}</strong> cards.
+            {{ isGerman ? 'Aktive Karten:' : 'Total active cards:' }} <strong>{{ totalActiveCardsCount }}</strong> • 
+            {{ isGerman ? 'Start-Hände benötigen' : 'Starting hands require' }} <strong>{{ starterHandTotalCards + starterDefusesNeeded }}</strong> {{ isGerman ? 'Karten' : 'cards' }} • 
+            {{ isGerman ? 'Nachziehstapel hat' : 'Draw pile will have' }} <strong>{{ totalDrawPileSize }}</strong> {{ isGerman ? 'Karten.' : 'cards.' }}
           </span>
           <span v-else>
-            Card shortage! You need at least <strong>{{ cardsShortage }}</strong> more cards to deal {{ startingHandNonDefuse }}+1 cards to {{ playerCount }} players. Enable more decks or lower hand size.
+            {{ isGerman ? 'Kartenmangel! Du benötigst mindestens' : 'Card shortage! You need at least' }} <strong>{{ cardsShortage }}</strong> {{ isGerman ? 'weitere Karten, um' : 'more cards to deal' }} {{ startingHandNonDefuse }}+1 {{ isGerman ? 'Karten an' : 'cards to' }} {{ playerCount }} {{ isGerman ? 'Spieler auszuteilen.' : 'players.' }}
           </span>
         </div>
 
         <div class="quick-bulk-actions">
           <button class="m3-btn m3-btn-tonal btn-xs" @click="$emit('include-all')">
-            Include All
+            {{ isGerman ? 'Alle einbeziehen' : 'Include All' }}
           </button>
           <button class="m3-btn m3-btn-tonal btn-xs" @click="$emit('toggle-cat-cards')">
-            {{ isCatExcluded ? 'Include Cat Cards' : 'Exclude Cat Cards' }}
+            {{ isCatExcluded ? (isGerman ? 'Katzenkarten einbeziehen' : 'Include Cat Cards') : (isGerman ? 'Katzenkarten ausschließen' : 'Exclude Cat Cards') }}
           </button>
         </div>
       </div>
@@ -91,7 +91,7 @@
         <input 
           v-model="searchQuery" 
           type="text" 
-          placeholder="Search card name, mechanic, or effect..."
+          :placeholder="isGerman ? 'Karten nach Name, Kategorie oder Mechanik suchen...' : 'Search card name, mechanic, or effect...'"
           class="search-input"
         />
         <button v-if="searchQuery" class="clear-search" @click="searchQuery = ''">✕</button>
@@ -105,7 +105,7 @@
           :title="`Current sort: ${currentSortOption.label}. Click to cycle sorting.`"
         >
           <span class="sort-icon">{{ currentSortOption.icon }}</span>
-          <span class="sort-label">Sort: {{ currentSortOption.label }}</span>
+          <span class="sort-label">{{ isGerman ? 'Sortierung:' : 'Sort:' }} {{ currentSortOption.label }}</span>
           <span class="sort-cycle-hint">🔄</span>
         </button>
       </div>
@@ -116,17 +116,17 @@
           class="mode-btn" 
           :class="{ active: viewMode === 'unified' }"
           @click="viewMode = 'unified'"
-          title="Unified catalog across all owned decks"
+          :title="isGerman ? 'Gesamter Kartenkatalog aller Decks' : 'Unified catalog across all owned decks'"
         >
-          Unified Pool ({{ unifiedCardList.length }})
+          {{ isGerman ? 'Gesamter Pool' : 'Unified Pool' }} ({{ unifiedCardList.length }})
         </button>
         <button 
           class="mode-btn" 
           :class="{ active: viewMode === 'by-deck' }"
           @click="viewMode = 'by-deck'"
-          title="Group cards by each owned deck"
+          :title="isGerman ? 'Karten nach Herkunfts-Deck gruppiert' : 'Group cards by each owned deck'"
         >
-          By Deck ({{ ownedDecks.length }})
+          {{ isGerman ? 'Nach Deck' : 'By Deck' }} ({{ ownedDecks.length }})
         </button>
       </div>
     </div>
@@ -141,7 +141,7 @@
         :style="{ '--cat-accent': cat.color }"
         @click="selectedCategory = cat.id"
       >
-        <span>{{ cat.name }}</span>
+        <span>{{ formatCategoryName(cat.id, cat.name) }}</span>
         <span class="chip-count">({{ getCategoryCount(cat.id) }})</span>
       </button>
     </div>
@@ -163,7 +163,7 @@
             <img 
               v-if="card.icons && card.icons[0]" 
               :src="card.icons[0]" 
-              :alt="card.name" 
+              :alt="formatCardName(card.slug, card.name)" 
               class="card-img" 
               loading="lazy"
             />
@@ -173,12 +173,12 @@
           <div class="card-header-info">
             <div class="card-name-row">
               <h4 class="card-name" @click="$emit('inspect-card', card.slug)">
-                {{ card.name }}
+                {{ formatCardName(card.slug, card.name) }}
               </h4>
               <button 
                 class="info-icon-btn" 
                 @click="$emit('inspect-card', card.slug)"
-                title="View full official rules & mechanics"
+                :title="isGerman ? 'Vollständige offizielle Regeln & Mechaniken ansehen' : 'View full official rules & mechanics'"
               >
                 ℹ️
               </button>
@@ -186,13 +186,13 @@
             
             <div class="card-tags">
               <span class="m3-badge m3-badge-primary cat-badge">
-                {{ formatCategory(card.category) }}
+                {{ formatCategoryName(card.category, formatCategory(card.category)) }}
               </span>
               <span v-if="card.slug === 'cat-card'" class="m3-badge m3-badge-warning">
-                18 Artwork Styles Catalog
+                {{ isGerman ? '18 Illustrations-Stile' : '18 Artwork Styles Catalog' }}
               </span>
               <span v-else-if="card.icons && card.icons.length > 1" class="m3-badge m3-badge-warning">
-                {{ card.icons.length }} artwork styles
+                {{ card.icons.length }} {{ isGerman ? 'Illustrations-Stile' : 'artwork styles' }}
               </span>
             </div>
           </div>
@@ -200,13 +200,13 @@
 
         <!-- Description Tagline -->
         <p class="card-short-desc">
-          {{ card.shortDesc || 'Special card mechanics and strategic options.' }}
+          {{ formatCardDesc(card.slug, card.shortDesc) }}
         </p>
 
         <!-- Cat Card Variants Quick Strip -->
         <div v-if="card.slug === 'cat-card'" class="cat-variants-strip">
           <div class="cat-variants-strip-left">
-            <span class="strip-label">Artworks in your decks:</span>
+            <span class="strip-label">{{ isGerman ? 'Illustrationen in deinen Decks:' : 'Artworks in your decks:' }}</span>
             <div class="strip-icons">
               <img 
                 v-for="(icon, idx) in card.icons.slice(0, 8)" 
@@ -219,13 +219,13 @@
             </div>
           </div>
           <button class="m3-btn m3-btn-tonal btn-xs browse-art-btn" @click.stop="openCatGallery">
-            🎨 View 18 Artworks
+            🎨 {{ isGerman ? '18 Artworks ansehen' : 'View 18 Artworks' }}
           </button>
         </div>
 
         <!-- Deck Sources Badges -->
         <div class="deck-sources-bar">
-          <span class="sources-label">From:</span>
+          <span class="sources-label">{{ isGerman ? 'Aus:' : 'From:' }}</span>
           <div class="sources-chips">
             <span 
               v-for="src in card.deckSources" 
@@ -313,21 +313,21 @@
               :class="{ 'is-excluded': isCardExcluded(c.slug) }"
             >
               <div class="row-left" @click="$emit('inspect-card', c.slug)">
-                <img v-if="c.icons && c.icons[0]" :src="c.icons[0]" :alt="c.name" class="row-icon" />
+                <img v-if="c.icons && c.icons[0]" :src="c.icons[0]" :alt="formatCardName(c.slug, c.name)" class="row-icon" />
                 <div class="row-info">
-                  <span class="row-name">{{ c.name }}</span>
-                  <span class="row-desc">{{ c.shortDesc }}</span>
+                  <span class="row-name">{{ formatCardName(c.slug, c.name) }}</span>
+                  <span class="row-desc">{{ formatCardDesc(c.slug, c.shortDesc) }}</span>
                 </div>
               </div>
 
               <div class="row-right">
-                <span class="row-pool">Deck has: {{ c.quantity }}</span>
+                <span class="row-pool">{{ isGerman ? 'Im Deck:' : 'Deck has:' }} {{ c.quantity }}</span>
                 <button 
                   class="m3-chip"
                   :class="{ active: !isCardExcluded(c.slug) }"
                   @click="toggleCardExclude(c.slug, availablePool[c.slug]?.totalAvailable || c.quantity)"
                 >
-                  {{ isCardExcluded(c.slug) ? 'Excluded' : 'Active' }}
+                  {{ isCardExcluded(c.slug) ? (isGerman ? 'Ausgeschlossen' : 'Excluded') : (isGerman ? 'Aktiv' : 'Active') }}
                 </button>
               </div>
             </div>
@@ -339,12 +339,12 @@
     <!-- Bottom Navigation Bar -->
     <div class="config-bottom-nav">
       <button class="m3-btn m3-btn-tonal" @click="$emit('back')">
-        ← Back to Decks
+        {{ isGerman ? '← Zurück zu Decks' : '← Back to Decks' }}
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('continue')">
-        <span class="btn-text-desktop">Review Synergies & Rules ({{ suggestionsCount }}) →</span>
-        <span class="btn-text-mobile">Review Synergies ({{ suggestionsCount }}) →</span>
+        <span class="btn-text-desktop">{{ isGerman ? 'Synergien & Regeln prüfen' : 'Review Synergies & Rules' }} ({{ suggestionsCount }}) →</span>
+        <span class="btn-text-mobile">{{ isGerman ? 'Synergien prüfen' : 'Review Synergies' }} ({{ suggestionsCount }}) →</span>
       </button>
     </div>
 
@@ -360,6 +360,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import CatArtworkModal from './CatArtworkModal.vue';
+import { getCardDisplayName, getCardDisplayDesc, getCategoryDisplayName } from '../data/translations.js';
 
 const isCatModalOpen = ref(false);
 const openCatGallery = () => {
@@ -381,7 +382,8 @@ const props = defineProps({
   starterDefusesNeeded: { type: Number, required: true },
   totalDrawPileSize: { type: Number, required: true },
   explodingKittensNeeded: { type: Number, required: true },
-  suggestionsCount: { type: Number, default: 0 }
+  suggestionsCount: { type: Number, default: 0 },
+  currentLang: { type: String, default: 'en' }
 });
 
 const emit = defineEmits([
@@ -395,6 +397,12 @@ const emit = defineEmits([
   'back',
   'continue'
 ]);
+
+const isGerman = computed(() => props.currentLang === 'de');
+
+const formatCardName = (slug, defaultName) => getCardDisplayName(slug, defaultName, props.currentLang);
+const formatCardDesc = (slug, defaultDesc) => getCardDisplayDesc(slug, defaultDesc, props.currentLang);
+const formatCategoryName = (catId, defaultName) => getCategoryDisplayName(catId, defaultName, props.currentLang);
 
 const searchQuery = ref('');
 const selectedCategory = ref('all');
@@ -430,44 +438,46 @@ const isCatExcluded = computed(() => {
 
 const sortMode = ref('name-asc'); // ALWAYS default to 'name-asc' (A-Z)
 
-const sortOptions = [
-  { id: 'name-asc', label: 'Name (A → Z)', icon: '🔤' },
-  { id: 'name-desc', label: 'Name (Z → A)', icon: '🔤' },
-  { id: 'category', label: 'Category', icon: '🏷️' },
-  { id: 'qty-desc', label: 'Qty (High-Low)', icon: '🔢' }
-];
+const sortOptions = computed(() => [
+  { id: 'name-asc', label: isGerman.value ? 'Name (A → Z)' : 'Name (A → Z)', icon: '🔤' },
+  { id: 'name-desc', label: isGerman.value ? 'Name (Z → A)' : 'Name (Z → A)', icon: '🔤' },
+  { id: 'category', label: isGerman.value ? 'Kategorie' : 'Category', icon: '🏷️' },
+  { id: 'qty-desc', label: isGerman.value ? 'Menge (Viel-Wenig)' : 'Qty (High-Low)', icon: '🔢' }
+]);
 
 const currentSortOption = computed(() => {
-  return sortOptions.find(o => o.id === sortMode.value) || sortOptions[0];
+  return sortOptions.value.find(o => o.id === sortMode.value) || sortOptions.value[0];
 });
 
 const cycleSortMode = () => {
-  const currentIndex = sortOptions.findIndex(o => o.id === sortMode.value);
-  const nextIndex = (currentIndex + 1) % sortOptions.length;
-  sortMode.value = sortOptions[nextIndex].id;
+  const currentIndex = sortOptions.value.findIndex(o => o.id === sortMode.value);
+  const nextIndex = (currentIndex + 1) % sortOptions.value.length;
+  sortMode.value = sortOptions.value[nextIndex].id;
 };
 
 const sortCardList = (list) => {
   return [...list].sort((a, b) => {
+    const nameA = formatCardName(a.slug, a.name);
+    const nameB = formatCardName(b.slug, b.name);
     if (sortMode.value === 'name-asc') {
-      return a.name.localeCompare(b.name);
+      return nameA.localeCompare(nameB);
     }
     if (sortMode.value === 'name-desc') {
-      return b.name.localeCompare(a.name);
+      return nameB.localeCompare(nameA);
     }
     if (sortMode.value === 'qty-desc') {
       const qtyA = a.totalAvailable !== undefined ? a.totalAvailable : (a.quantity || 0);
       const qtyB = b.totalAvailable !== undefined ? b.totalAvailable : (b.quantity || 0);
       if (qtyA !== qtyB) return qtyB - qtyA;
-      return a.name.localeCompare(b.name);
+      return nameA.localeCompare(nameB);
     }
     if (sortMode.value === 'category') {
       if (a.category !== b.category) {
         return (a.category || '').localeCompare(b.category || '');
       }
-      return a.name.localeCompare(b.name);
+      return nameA.localeCompare(nameB);
     }
-    return a.name.localeCompare(b.name);
+    return 0;
   });
 };
 

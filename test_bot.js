@@ -17,10 +17,30 @@ const testQuestions = [
 
 for (const q of testQuestions) {
   const res = queryRulesEngine(q);
-  console.log(`\nQ: "${q}"`);
+  console.log(`\nQ (EN): "${q}"`);
   console.log(`Reference: ${res.reference}`);
-  console.log(`Answer: ${res.answer.slice(0, 120)}...`);
+  console.log(`Answer: ${res.answer.slice(0, 100)}...`);
   console.assert(res.answer && res.answer.length > 20, `Answer should be substantive for "${q}"`);
 }
 
-console.log('\nAll Rules Bot queries tested successfully!');
+console.log('\n--- Testing German Rules Bot Queries ---');
+const germanQuestions = [
+  "Kann man eine Entschärfung mit Nö! abwehren?",
+  "Kann man ein Nö! auf ein Nö! spielen?",
+  "Addieren sich Angriffskarten?",
+  "Wie funktionieren Katzenkarten-Kombos?",
+  "Was passiert, wenn jemand mein Explodierendes Kätzchen stiehlt?",
+  "Kann das Implodierende Kätzchen entschärft werden?",
+  "Wie funktioniert die Entschärfung?",
+  "Gottkatze Regeln"
+];
+
+for (const q of germanQuestions) {
+  const res = queryRulesEngine(q, 'de');
+  console.log(`\nQ (DE): "${q}"`);
+  console.log(`Reference: ${res.reference}`);
+  console.log(`Answer: ${res.answer.slice(0, 100)}...`);
+  console.assert(res.answer && res.answer.length > 20, `Answer should be substantive for German "${q}"`);
+}
+
+console.log('\nAll English & German Rules Bot queries tested successfully!');

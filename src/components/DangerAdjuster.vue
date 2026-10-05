@@ -2,8 +2,8 @@
   <section class="danger-adjuster" :style="{ '--adj-color': dangerColor }" aria-labelledby="danger-adjuster-title">
     <div class="adj-header">
       <div class="adj-title-block">
-        <h4 id="danger-adjuster-title" class="adj-title">🎚️ Volatility Adjuster</h4>
-        <p class="adj-sub">Pick a level. Bombs, Defuses and safe cards get re-allocated right away, and your assembly steps and checklist update with them.</p>
+        <h4 id="danger-adjuster-title" class="adj-title">{{ isGerman ? '🎚️ Volatilitäts-Regler' : '🎚️ Volatility Adjuster' }}</h4>
+        <p class="adj-sub">{{ isGerman ? 'Wähle einen Pegel. Bomben, Entschärfungen und sichere Karten werden dynamisch neu verteilt.' : 'Pick a level. Bombs, Defuses and safe cards get re-allocated right away, and your assembly steps and checklist update with them.' }}</p>
       </div>
       <button
         v-if="settings.preset !== 'balanced'"
@@ -11,14 +11,14 @@
         class="adj-reset-btn"
         @click="applyPreset('balanced')"
       >
-        ↺ Official
+        {{ isGerman ? '↺ Offiziell' : '↺ Official' }}
       </button>
     </div>
 
     <!-- Preset level track -->
     <div class="preset-track" role="radiogroup" aria-label="Danger level presets">
       <button
-        v-for="p in presets"
+        v-for="p in localizedPresets"
         :id="`danger-preset-${p.id}`"
         :key="p.id"
         class="preset-btn"
@@ -45,7 +45,7 @@
       :aria-expanded="showFineTune"
       @click="showFineTune = !showFineTune"
     >
-      <span>⚙️ Fine-tune manually</span>
+      <span>{{ isGerman ? '⚙️ Manuell feinjustieren' : '⚙️ Fine-tune manually' }}</span>
       <span class="ft-chevron" :class="{ open: showFineTune }">▾</span>
     </button>
 
@@ -53,8 +53,8 @@
       <!-- Spare Defuses -->
       <div class="lever-row">
         <div class="lever-info">
-          <span class="lever-name">🛡️ Spare Defuses in pile</span>
-          <span class="lever-hint">You own {{ recipe.extraDefusesMax }} spare</span>
+          <span class="lever-name">{{ isGerman ? '🛡️ Zusätzliche Entschärfungen' : '🛡️ Spare Defuses in pile' }}</span>
+          <span class="lever-hint">{{ isGerman ? `Du besitzt ${recipe.extraDefusesMax} zusätzliche` : `You own ${recipe.extraDefusesMax} spare` }}</span>
         </div>
         <div class="lever-stepper">
           <button
@@ -78,9 +78,9 @@
       <!-- Bonus Exploding Kittens -->
       <div class="lever-row">
         <div class="lever-info">
-          <span class="lever-name">💣 Bonus Exploding Kittens</span>
+          <span class="lever-name">{{ isGerman ? '💣 Zusätzliche Bomben' : '💣 Bonus Exploding Kittens' }}</span>
           <span class="lever-hint">
-            {{ recipe.bonusEKMax > 0 ? `Up to ${recipe.bonusEKMax} more from your boxes` : 'All your Exploding Kittens are already in use' }}
+            {{ recipe.bonusEKMax > 0 ? (isGerman ? `Bis zu ${recipe.bonusEKMax} weitere aus deinen Boxen` : `Up to ${recipe.bonusEKMax} more from your boxes`) : (isGerman ? 'Alle deine Bomben sind bereits im Einsatz' : 'All your Exploding Kittens are already in use') }}
           </span>
         </div>
         <div class="lever-stepper">
@@ -105,9 +105,9 @@
       <!-- Safe card ratio -->
       <div class="lever-row lever-row-stack">
         <div class="lever-info">
-          <span class="lever-name">🃏 Safe cards kept in pile</span>
+          <span class="lever-name">{{ isGerman ? '🃏 Sichere Karten im Nachziehstapel' : '🃏 Safe cards kept in pile' }}</span>
           <span class="lever-hint">
-            {{ recipe.safeCardsInDrawPile }} of {{ recipe.untrimmedSafeDrawPile }} cards: fewer safe cards means bombs come up sooner
+            {{ recipe.safeCardsInDrawPile }} {{ isGerman ? 'von' : 'of' }} {{ recipe.untrimmedSafeDrawPile }} {{ isGerman ? 'Karten: weniger sichere Karten bedeuten schnellere Bomben' : 'cards: fewer safe cards means bombs come up sooner' }}
           </span>
         </div>
         <div class="slider-wrap">
@@ -130,8 +130,8 @@
       <!-- Imploding mode -->
       <div v-if="hasImploding" class="lever-row">
         <div class="lever-info">
-          <span class="lever-name">🌀 Imploding Kitten</span>
-          <span class="lever-hint">{{ settings.implodingReplacesEK ? 'Replaces one Exploding Kitten' : 'Added as an extra hazard' }}</span>
+          <span class="lever-name">{{ isGerman ? '🌀 Implodierendes Kätzchen' : '🌀 Imploding Kitten' }}</span>
+          <span class="lever-hint">{{ settings.implodingReplacesEK ? (isGerman ? 'Ersetzt 1 Explodierendes Kätzchen' : 'Replaces one Exploding Kitten') : (isGerman ? 'Als zusätzliche Gefahr hinzugefügt' : 'Added as an extra hazard') }}</span>
         </div>
         <button
           id="lever-imploding-toggle"
@@ -139,35 +139,35 @@
           :class="{ active: !settings.implodingReplacesEK }"
           @click="emitCustom({ implodingReplacesEK: !settings.implodingReplacesEK })"
         >
-          {{ settings.implodingReplacesEK ? 'Replace' : 'Extra' }}
+          {{ settings.implodingReplacesEK ? (isGerman ? 'Ersetzen' : 'Replace') : (isGerman ? 'Zusätzlich' : 'Extra') }}
         </button>
       </div>
     </div>
 
     <!-- Allocation diff vs official -->
     <div v-if="hasChanges" class="allocation-diff">
-      <span class="diff-title">Changes vs. the official setup</span>
+      <span class="diff-title">{{ isGerman ? 'Änderungen gegenüber dem offiziellen Setup' : 'Changes vs. the official setup' }}</span>
       <div class="diff-chips">
         <span v-if="recipe.extraDefusesToInsert !== officialDefuses" class="diff-chip" :class="recipe.extraDefusesToInsert > officialDefuses ? 'is-safer' : 'is-riskier'">
-          🛡️ Spare Defuses {{ officialDefuses }} → {{ recipe.extraDefusesToInsert }}
+          🛡️ {{ isGerman ? 'Zusätzliche Entschärfungen' : 'Spare Defuses' }} {{ officialDefuses }} → {{ recipe.extraDefusesToInsert }}
         </span>
         <span v-if="recipe.bonusEKApplied > 0" class="diff-chip is-riskier">
-          💣 +{{ recipe.bonusEKApplied }} Exploding Kitten{{ recipe.bonusEKApplied > 1 ? 's' : '' }}
+          💣 +{{ recipe.bonusEKApplied }} {{ isGerman ? 'Explodierende(s) Kätzchen' : `Exploding Kitten${recipe.bonusEKApplied > 1 ? 's' : ''}` }}
         </span>
         <span v-if="recipe.trimmedCardsTotal > 0" class="diff-chip is-riskier">
-          ✂️ {{ recipe.trimmedCardsTotal }} safe cards left out
+          ✂️ {{ recipe.trimmedCardsTotal }} {{ isGerman ? 'sichere Karten in Schachtel gelassen' : 'safe cards left out' }}
         </span>
         <span v-if="hasImploding && !settings.implodingReplacesEK" class="diff-chip is-riskier">
-          🌀 Imploding as extra hazard
+          🌀 {{ isGerman ? 'Implodierendes Kätzchen als Extra-Gefahr' : 'Imploding as extra hazard' }}
         </span>
       </div>
 
       <div v-if="recipe.trimmedCards.length > 0" class="trimmed-list">
-        <span class="trimmed-label">Keep these in the box:</span>
+        <span class="trimmed-label">{{ isGerman ? 'In der Spielschachtel lassen:' : 'Keep these in the box:' }}</span>
         <div class="trimmed-chips">
           <span v-for="t in recipe.trimmedCards" :key="t.slug" class="trimmed-chip">
             <img v-if="t.icons && t.icons[0]" :src="t.icons[0]" :alt="t.name" class="trimmed-icon" />
-            {{ t.removed }}× {{ t.name }}
+            {{ t.removed }}× {{ formatCardTitle(t.slug, t.name) }}
           </span>
         </div>
       </div>
@@ -178,24 +178,50 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { DANGER_PRESETS } from '../utils/dangerPresets.js';
+import { getCardDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   recipe: { type: Object, required: true },
   settings: { type: Object, required: true },
   previews: { type: Object, default: () => ({}) },
-  dangerColor: { type: String, default: '#ffb4a0' }
+  dangerColor: { type: String, default: '#ffb4a0' },
+  currentLang: { type: String, default: 'en' }
 });
 
 const emit = defineEmits(['update']);
 
-const presets = DANGER_PRESETS;
+const isGerman = computed(() => props.currentLang === 'de');
+
+const formatCardTitle = (slug, defaultName) => {
+  return getCardDisplayName(slug, defaultName, props.currentLang);
+};
+
+const localizedPresets = computed(() => {
+  const deLabels = {
+    chill: { label: 'Entspannt', desc: 'Fehlerverzeihend: 4 Extra-Entschärfungen, 100% sichere Karten. Super für Einsteiger.' },
+    casual: { label: 'Locker', desc: 'Ausgewogenes Partytempo: 3 Extra-Entschärfungen, viele Rettungschancen.' },
+    balanced: { label: 'Offiziell', desc: 'Standard-Verhältnis: Spieler minus 1 Bomben, 2 Extra-Entschärfungen.' },
+    spicy: { label: 'Scharf', desc: '+1 Bombe, reduzierter Puffer. Schnelle Ausscheidungsrunden.' },
+    mayhem: { label: 'Reines Chaos', desc: '+2 Bomben, 0 Extra-Entschärfungen, kompakter Stapel. Hohe Tödlichkeit!' }
+  };
+  return DANGER_PRESETS.map(p => ({
+    ...p,
+    label: isGerman.value && deLabels[p.id] ? deLabels[p.id].label : p.label,
+    desc: isGerman.value && deLabels[p.id] ? deLabels[p.id].desc : p.desc
+  }));
+});
+
 const showFineTune = ref(props.settings.preset === 'custom');
 
-const activePreset = computed(() => presets.find(p => p.id === props.settings.preset));
-const activePresetLabel = computed(() => activePreset.value ? `${activePreset.value.emoji} ${activePreset.value.label}` : '🛠️ Custom');
-const activePresetDesc = computed(() => activePreset.value
-  ? activePreset.value.desc
-  : 'Your own mix of bombs, Defuses and safe cards.');
+const activePreset = computed(() => localizedPresets.value.find(p => p.id === props.settings.preset));
+const activePresetLabel = computed(() => {
+  if (activePreset.value) return `${activePreset.value.emoji} ${activePreset.value.label}`;
+  return isGerman.value ? '🛠️ Benutzerdefiniert' : '🛠️ Custom';
+});
+const activePresetDesc = computed(() => {
+  if (activePreset.value) return activePreset.value.desc;
+  return isGerman.value ? 'Deine eigene Mischung aus Bomben, Entschärfungen und sicheren Karten.' : 'Your own mix of bombs, Defuses and safe cards.';
+});
 
 const hasImploding = computed(() => (props.recipe.hazardsList || []).some(h => h.slug === 'imploding-kitten'));
 const officialDefuses = computed(() => Math.min(2, props.recipe.extraDefusesMax || 0));

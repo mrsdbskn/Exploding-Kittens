@@ -3,10 +3,11 @@
     <!-- Top Hero Banner -->
     <div class="recipe-hero">
       <div class="hero-left">
-        <h2 class="recipe-title">Step 4: Physical Deck Assembly Guide</h2>
+        <h2 class="recipe-title">{{ isGerman ? 'Schritt 4: Physische Deck-Bauanleitung' : 'Step 4: Physical Deck Assembly Guide' }}</h2>
         <p class="recipe-desc">
-          Follow these exact step-by-step instructions to assemble your physical deck from your game boxes.
-          Tick off each card on the interactive checklist below as you pull it from your collection.
+          {{ isGerman
+            ? 'Befolge diese Schritt-für-Schritt-Anleitung, um dein physisches Deck aus deinen Spielschachteln zusammenzustellen. Hake jede Karte beim Heraussuchen ab.'
+            : 'Follow these exact step-by-step instructions to assemble your physical deck from your game boxes. Tick off each card on the interactive checklist below as you pull it from your collection.' }}
         </p>
       </div>
 
@@ -17,7 +18,7 @@
             <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
             <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
           </svg>
-          <span>{{ copied ? 'Copied to Clipboard!' : 'Copy Recipe' }}</span>
+          <span>{{ copied ? (isGerman ? 'In die Zwischenablage kopiert!' : 'Copied to Clipboard!') : (isGerman ? 'Rezept kopieren' : 'Copy Recipe') }}</span>
         </button>
 
         <button class="m3-btn m3-btn-tonal" @click="downloadRecipeJson">
@@ -26,15 +27,15 @@
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          <span>Export JSON</span>
+          <span>{{ isGerman ? 'JSON exportieren' : 'Export JSON' }}</span>
         </button>
 
-        <button class="m3-btn m3-btn-tonal" @click="showSleeveModal = true" title="Card Sleeving & Box Fit Guide">
-          🎴 Sleeves & Box
+        <button class="m3-btn m3-btn-tonal" @click="showSleeveModal = true" :title="isGerman ? 'Kartenhüllen & Schachtel-Passform' : 'Card Sleeving & Box Fit Guide'">
+          {{ isGerman ? '🎴 Hüllen & Box' : '🎴 Sleeves & Box' }}
         </button>
 
-        <button class="m3-btn m3-btn-primary" @click="showCompanionModal = true" title="Launch Game Night Companion & Timer">
-          🎮 Game Companion
+        <button class="m3-btn m3-btn-primary" @click="showCompanionModal = true" :title="isGerman ? 'Spielabend-Begleiter & Timer starten' : 'Launch Game Night Companion & Timer'">
+          {{ isGerman ? '🎮 Spielbegleiter' : '🎮 Game Companion' }}
         </button>
 
         <button class="m3-btn m3-btn-primary" @click="printRecipe">
@@ -43,7 +44,7 @@
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
             <rect width="12" height="8" x="6" y="14"/>
           </svg>
-          <span>Print</span>
+          <span>{{ isGerman ? 'Drucken' : 'Print' }}</span>
         </button>
       </div>
     </div>
@@ -54,7 +55,7 @@
         <span class="stat-icon">👥</span>
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.playerCount }}</span>
-          <span class="stat-lbl">Players</span>
+          <span class="stat-lbl">{{ isGerman ? 'Spieler' : 'Players' }}</span>
         </div>
       </div>
 
@@ -62,7 +63,7 @@
         <span class="stat-icon">🃏</span>
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.totalGameCards }}</span>
-          <span class="stat-lbl">Total Game Cards</span>
+          <span class="stat-lbl">{{ isGerman ? 'Karten gesamt' : 'Total Game Cards' }}</span>
         </div>
       </div>
 
@@ -70,7 +71,7 @@
         <span class="stat-icon">🖐️</span>
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.starterDefusesNeeded + recipe.starterHandTotalCards }}</span>
-          <span class="stat-lbl">Dealt to Hands</span>
+          <span class="stat-lbl">{{ isGerman ? 'Start-Handkarten' : 'Dealt to Hands' }}</span>
         </div>
       </div>
 
@@ -78,7 +79,7 @@
         <span class="stat-icon">📚</span>
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.totalDrawPileSize }}</span>
-          <span class="stat-lbl">Draw Pile Cards</span>
+          <span class="stat-lbl">{{ isGerman ? 'Nachziehstapel' : 'Draw Pile Cards' }}</span>
         </div>
       </div>
 
@@ -86,7 +87,7 @@
         <span class="stat-icon">💥</span>
         <div class="stat-meta">
           <span class="stat-val">{{ totalHazardsCount }}</span>
-          <span class="stat-lbl">Hazards (Bombs)</span>
+          <span class="stat-lbl">{{ isGerman ? 'Gefahren (Bomben)' : 'Hazards (Bombs)' }}</span>
         </div>
       </div>
 
@@ -94,7 +95,7 @@
         <span class="stat-icon">🛡️</span>
         <div class="stat-meta">
           <span class="stat-val">{{ recipe.starterDefusesNeeded }} + {{ recipe.extraDefusesToInsert }}</span>
-          <span class="stat-lbl">Defuses (Hand + Deck)</span>
+          <span class="stat-lbl">{{ isGerman ? 'Entschärfungen (Hand+Deck)' : 'Defuses (Hand + Deck)' }}</span>
         </div>
       </div>
     </div>
@@ -106,7 +107,7 @@
           <span class="danger-icon">🎯</span>
           <div>
             <div class="danger-title-row">
-              <h3 class="danger-title">Danger Meter & Hazard Volatility</h3>
+              <h3 class="danger-title">{{ isGerman ? 'Gefahren-Messer & Volatilität' : 'Danger Meter & Hazard Volatility' }}</h3>
               <span class="danger-badge" :style="{ backgroundColor: probabilities.dangerColor }">
                 {{ probabilities.dangerLevel }}
               </span>
@@ -117,29 +118,29 @@
 
         <div class="volatility-score-box">
           <span class="volatility-num">{{ probabilities.volatilityScore }}<small>/100</small></span>
-          <span class="volatility-lbl">Volatility Score</span>
+          <span class="volatility-lbl">{{ isGerman ? 'Gefahren-Index' : 'Volatility Score' }}</span>
         </div>
       </div>
 
       <!-- Probability Metrics -->
       <div class="danger-metrics-row">
         <div class="metric-pill">
-          <span class="metric-lbl">Turn 1 Bomb Odds</span>
+          <span class="metric-lbl">{{ isGerman ? 'Explosionschance Runde 1' : 'Turn 1 Bomb Odds' }}</span>
           <span class="metric-val">{{ probabilities.turn1HazardChance }}%</span>
         </div>
         <div class="metric-pill">
-          <span class="metric-lbl">Avg Turn to 1st Bomb</span>
-          <span class="metric-val">Turn {{ probabilities.firstBombExpectedTurn }}</span>
+          <span class="metric-lbl">{{ isGerman ? 'Ø Runde bis zur 1. Bombe' : 'Avg Turn to 1st Bomb' }}</span>
+          <span class="metric-val">{{ isGerman ? 'Runde' : 'Turn' }} {{ probabilities.firstBombExpectedTurn }}</span>
         </div>
         <div class="metric-pill">
-          <span class="metric-lbl">Draw Pile Hazard Density</span>
-          <span class="metric-val">{{ probabilities.hazardCount }} in {{ probabilities.drawPileSize }} cards</span>
+          <span class="metric-lbl">{{ isGerman ? 'Bombendichte im Nachziehstapel' : 'Draw Pile Hazard Density' }}</span>
+          <span class="metric-val">{{ probabilities.hazardCount }} {{ isGerman ? 'in' : 'in' }} {{ probabilities.drawPileSize }} {{ isGerman ? 'Karten' : 'cards' }}</span>
         </div>
       </div>
 
       <!-- Turn-by-Turn Hazard Cumulative Curve -->
       <div class="hazard-curve-wrapper">
-        <span class="curve-title">Cumulative Explosion Probability Across Turns 1 - 10:</span>
+        <span class="curve-title">{{ isGerman ? 'Kumulative Explosionswahrscheinlichkeit über die Runden 1 - 10:' : 'Cumulative Explosion Probability Across Turns 1 - 10:' }}</span>
         <div class="curve-bars-grid">
           <div 
             v-for="pt in probabilities.survivalCurve" 
@@ -153,7 +154,7 @@
               ></div>
             </div>
             <span class="bar-val">{{ pt.cumulativeExplosionChance }}%</span>
-            <span class="bar-turn">T{{ pt.turn }}</span>
+            <span class="bar-turn">{{ isGerman ? 'R' : 'T' }}{{ pt.turn }}</span>
           </div>
         </div>
       </div>
@@ -165,6 +166,7 @@
         :settings="dangerSettings"
         :previews="dangerPreviews"
         :danger-color="probabilities.dangerColor"
+        :current-lang="currentLang"
         @update="s => $emit('update:danger', s)"
       />
     </div>
@@ -175,23 +177,23 @@
       <div class="m3-card step-card">
         <div class="step-badge-row">
           <span class="step-badge-number">1</span>
-          <h3 class="step-card-title">Deal Starting Hands</h3>
+          <h3 class="step-card-title">{{ isGerman ? 'Start-Handkarten austeilen' : 'Deal Starting Hands' }}</h3>
         </div>
         <p class="step-card-desc">
-          Deal cards face down to each of the <strong>{{ recipe.playerCount }}</strong> players:
+          {{ isGerman ? `Teile jedem der ${recipe.playerCount} Spieler verdeckt Karten aus:` : `Deal cards face down to each of the ${recipe.playerCount} players:` }}
         </p>
 
         <ul class="step-instruction-list">
           <li>
-            <span class="bullet-highlight">1x {{ recipe.isZombieDeckMode ? 'Zombie Kitten' : 'Defuse' }}</span>
-            to each player ({{ recipe.starterDefusesNeeded }} cards total).
+            <span class="bullet-highlight">1x {{ recipe.isZombieDeckMode ? 'Zombie Kitten' : (isGerman ? 'Entschärfung' : 'Defuse') }}</span>
+            {{ isGerman ? `an jeden Spieler (${recipe.starterDefusesNeeded} Karten gesamt).` : `to each player (${recipe.starterDefusesNeeded} cards total).` }}
           </li>
           <li>
-            <span class="bullet-highlight">{{ recipe.starterHandNonDefuse }}x Action/Cat Cards</span>
-            from the safe card pool to each player ({{ recipe.starterHandTotalCards }} cards total).
+            <span class="bullet-highlight">{{ recipe.starterHandNonDefuse }}x {{ isGerman ? 'Aktions-/Katzenkarten' : 'Action/Cat Cards' }}</span>
+            {{ isGerman ? `vom sicheren Kartenpool an jeden Spieler (${recipe.starterHandTotalCards} Karten gesamt).` : `from the safe card pool to each player (${recipe.starterHandTotalCards} cards total).` }}
           </li>
           <li class="result-highlight">
-            Each player now holds exactly <strong>{{ recipe.starterHandNonDefuse + 1 }} cards</strong> in hand.
+            {{ isGerman ? `Jeder Spieler hält nun genau ${recipe.starterHandNonDefuse + 1} Handkarten.` : `Each player now holds exactly ${recipe.starterHandNonDefuse + 1} cards in hand.` }}
           </li>
         </ul>
       </div>
@@ -200,20 +202,20 @@
       <div class="m3-card step-card" :class="{ 'is-muted': recipe.tableStashList.length === 0 }">
         <div class="step-badge-row">
           <span class="step-badge-number">2</span>
-          <h3 class="step-card-title">Table Stash & Special Cards</h3>
+          <h3 class="step-card-title">{{ isGerman ? 'Tisch-Ablage & Sonderkarten' : 'Table Stash & Special Cards' }}</h3>
         </div>
         <p class="step-card-desc">
-          Set aside cards placed outside the main draw pile:
+          {{ isGerman ? 'Lege Karten bereit, die außerhalb des Nachziehstapels liegen:' : 'Set aside cards placed outside the main draw pile:' }}
         </p>
 
         <ul class="step-instruction-list" v-if="recipe.tableStashList.length > 0">
           <li v-for="stash in recipe.tableStashList" :key="stash.slug">
-            <span class="bullet-highlight">{{ stash.quantity }}x {{ stash.name }}</span>:
+            <span class="bullet-highlight">{{ stash.quantity }}x {{ getCardDisplayName(stash.slug, stash.name, currentLang) }}</span>:
             {{ stash.ruleNote }}
           </li>
         </ul>
         <p v-else class="empty-stash-note">
-          No special playmat stashes required for this configuration (standard play).
+          {{ isGerman ? 'Keine speziellen Tisch-Ablagen für diese Konfiguration erforderlich (Standardspiel).' : 'No special playmat stashes required for this configuration (standard play).' }}
         </p>
       </div>
 
@@ -221,31 +223,31 @@
       <div class="m3-card step-card">
         <div class="step-badge-row">
           <span class="step-badge-number">3</span>
-          <h3 class="step-card-title">Assemble the Draw Pile</h3>
+          <h3 class="step-card-title">{{ isGerman ? 'Nachziehstapel zusammenbauen' : 'Assemble the Draw Pile' }}</h3>
         </div>
         <p class="step-card-desc">
-          Insert hazards and remaining defuses into the remaining safe cards:
+          {{ isGerman ? 'Mische Gefahren und verbleibende Entschärfungen unter die restlichen sicheren Karten:' : 'Insert hazards and remaining defuses into the remaining safe cards:' }}
         </p>
 
         <ul class="step-instruction-list">
           <li>
-            <span class="bullet-highlight">{{ recipe.safeCardsInDrawPile }}x Safe Cards</span>:
-            All remaining action and cat cards.
+            <span class="bullet-highlight">{{ recipe.safeCardsInDrawPile }}x {{ isGerman ? 'Sichere Karten' : 'Safe Cards' }}</span>:
+            {{ isGerman ? 'Alle verbleibenden Aktions- und Katzenkarten.' : 'All remaining action and cat cards.' }}
           </li>
           <li v-for="h in recipe.hazardsList" :key="h.slug">
-            <span class="bullet-highlight">{{ h.quantity }}x {{ h.name }}</span>:
-            {{ h.ruleNote }}
+            <span class="bullet-highlight">{{ h.quantity }}x {{ getCardDisplayName(h.slug, h.name, currentLang) }}</span>:
+            {{ isGerman && h.slug === 'exploding-kitten' ? `Mische ${h.quantity}x Explodierende Kätzchen (Spieler − 1) in den Stapel.` : h.ruleNote }}
           </li>
           <li v-if="recipe.extraDefusesToInsert > 0">
-            <span class="bullet-highlight">{{ recipe.extraDefusesToInsert }}x Extra Defuse(s)</span>
-            shuffled into the draw pile.
+            <span class="bullet-highlight">{{ recipe.extraDefusesToInsert }}x {{ isGerman ? 'Zusätzliche Entschärfung(en)' : 'Extra Defuse(s)' }}</span>
+            {{ isGerman ? 'in den Nachziehstapel gemischt.' : 'shuffled into the draw pile.' }}
           </li>
           <li v-if="recipe.trimmedCardsTotal > 0">
-            <span class="bullet-highlight">Leave {{ recipe.trimmedCardsTotal }} safe cards in the box</span>
-            (Danger Adjuster): {{ recipe.trimmedCards.map(t => `${t.removed}× ${t.name}`).join(', ') }}.
+            <span class="bullet-highlight">{{ isGerman ? `Lasse ${recipe.trimmedCardsTotal} sichere Karten in der Schachtel` : `Leave ${recipe.trimmedCardsTotal} safe cards in the box` }}</span>
+            ({{ isGerman ? 'Gefahren-Regler' : 'Danger Adjuster' }}): {{ recipe.trimmedCards.map(t => `${t.removed}× ${getCardDisplayName(t.slug, t.name, currentLang)}`).join(', ') }}.
           </li>
           <li class="result-highlight">
-            Total cards in Draw Pile: <strong>{{ recipe.totalDrawPileSize }} cards</strong>.
+            {{ isGerman ? 'Karten gesamt im Nachziehstapel:' : 'Total cards in Draw Pile:' }} <strong>{{ recipe.totalDrawPileSize }} {{ isGerman ? 'Karten' : 'cards' }}</strong>.
           </li>
         </ul>
       </div>
@@ -254,17 +256,17 @@
       <div class="m3-card step-card highlight-step">
         <div class="step-badge-row">
           <span class="step-badge-number">4</span>
-          <h3 class="step-card-title">Shuffle & Play!</h3>
+          <h3 class="step-card-title">{{ isGerman ? 'Mischen & Losspielen!' : 'Shuffle & Play!' }}</h3>
         </div>
         <p class="step-card-desc">
-          You are ready to begin the chaos!
+          {{ isGerman ? 'Du bist bereit für das Chaos!' : 'You are ready to begin the chaos!' }}
         </p>
 
         <ul class="step-instruction-list">
-          <li>Shuffle the assembled Draw Pile thoroughly.</li>
-          <li>Place the Draw Pile face down in the center of the table.</li>
-          <li>Establish discard pile area.</li>
-          <li>Choose a player to go first. Play proceeds clockwise!</li>
+          <li>{{ isGerman ? 'Mische den zusammengestellten Nachziehstapel gründlich.' : 'Shuffle the assembled Draw Pile thoroughly.' }}</li>
+          <li>{{ isGerman ? 'Platziere den Nachziehstapel verdeckt in der Tischmitte.' : 'Place the Draw Pile face down in the center of the table.' }}</li>
+          <li>{{ isGerman ? 'Richte einen Bereich für den Ablagestapel ein.' : 'Establish discard pile area.' }}</li>
+          <li>{{ isGerman ? 'Bestimmt einen Startspieler. Es wird im Uhrzeigersinn gespielt!' : 'Choose a player to go first. Play proceeds clockwise!' }}</li>
         </ul>
       </div>
     </div>
@@ -275,18 +277,20 @@
         <div class="cat-header-left">
           <span class="cat-badge-emoji">😼</span>
           <div>
-            <h3 class="cat-spotlight-title">Cat Cards Artwork Breakdown</h3>
+            <h3 class="cat-spotlight-title">{{ isGerman ? 'Katzenkarten-Artworks Übersicht' : 'Cat Cards Artwork Breakdown' }}</h3>
             <p class="cat-spotlight-sub">
-              Exploding Kittens has 18 unique cat artwork styles. Based on your owned decks, add these exact artwork cards:
+              {{ isGerman
+                ? 'Exploding Kittens bietet 18 einzigartige Katzen-Artwork-Stile. Füge anhand deiner Spielschachteln genau diese Artworks hinzu:'
+                : 'Exploding Kittens has 18 unique cat artwork styles. Based on your owned decks, add these exact artwork cards:' }}
             </p>
           </div>
         </div>
         <div class="cat-header-actions">
           <div class="cat-total-badge">
-            {{ totalCatCards }} Total Cat Cards ({{ recipe.catVariantsBreakdown.length }} Artwork Styles)
+            {{ totalCatCards }} {{ isGerman ? 'Katzenkarten gesamt' : 'Total Cat Cards' }} ({{ recipe.catVariantsBreakdown.length }} {{ isGerman ? 'Artwork-Stile' : 'Artwork Styles' }})
           </div>
           <button class="m3-btn m3-btn-tonal btn-sm" @click="openCatGallery(null)">
-            🎨 Browse All 18 Styles
+            {{ isGerman ? '🎨 Alle 18 Stile ansehen' : '🎨 Browse All 18 Styles' }}
           </button>
         </div>
       </div>
@@ -308,12 +312,12 @@
               {{ v.deckSources?.map(d => d.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') }}
             </span>
           </div>
-          <button class="cat-preview-btn" title="View Full Card Artwork" @click.stop="openCatGallery(v.slug)">
+          <button class="cat-preview-btn" :title="isGerman ? 'Vollständiges Artwork ansehen' : 'View Full Card Artwork'" @click.stop="openCatGallery(v.slug)">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <span>Artwork</span>
+            <span>{{ isGerman ? 'Artwork' : 'Artwork' }}</span>
           </button>
         </div>
       </div>
@@ -323,16 +327,18 @@
     <div class="checklist-section m3-card">
       <div class="checklist-header">
         <div>
-          <h3 class="checklist-title">Physical Cards Checklist</h3>
+          <h3 class="checklist-title">{{ isGerman ? 'Physische Karten-Checkliste' : 'Physical Cards Checklist' }}</h3>
           <p class="checklist-subtitle">
-            Gather these cards from your boxes. Check them off as you find them!
+            {{ isGerman
+              ? 'Suche diese Karten aus deinen Boxen heraus. Hake sie beim Finden einfach ab!'
+              : 'Gather these cards from your boxes. Check them off as you find them!' }}
           </p>
         </div>
 
         <!-- Assembly Progress -->
         <div class="progress-container">
           <div class="progress-labels">
-            <span class="progress-text">{{ checkedCount }} of {{ totalChecklistCards }} cards assembled</span>
+            <span class="progress-text">{{ checkedCount }} {{ isGerman ? `von ${totalChecklistCards} Karten zusammengestellt` : `of ${totalChecklistCards} cards assembled` }}</span>
             <span class="progress-percent">{{ progressPercentage }}%</span>
           </div>
           <div class="progress-bar-bg">
@@ -349,11 +355,11 @@
       <div v-if="progressPercentage === 100" class="complete-celebration animate-pop-in">
         <span class="celebrate-emoji">🎉💥😼</span>
         <div class="celebrate-text">
-          <h4>Deck Assembly Complete!</h4>
-          <p>All {{ totalChecklistCards }} cards are gathered and ready on the table. Have an explosive game!</p>
+          <h4>{{ isGerman ? 'Deck-Zusammenstellung abgeschlossen!' : 'Deck Assembly Complete!' }}</h4>
+          <p>{{ isGerman ? `Alle ${totalChecklistCards} Karten sind gesammelt und spielbereit auf dem Tisch. Viel Spaß!` : `All ${totalChecklistCards} cards are gathered and ready on the table. Have an explosive game!` }}</p>
         </div>
         <button class="m3-btn m3-btn-primary btn-sm" @click="triggerCelebration">
-          Trigger Confetti Again! 🎊
+          {{ isGerman ? 'Nochmal Konfetti! 🎊' : 'Trigger Confetti Again! 🎊' }}
         </button>
       </div>
 
@@ -366,7 +372,7 @@
         >
           <div class="group-header" :style="{ '--group-color': group.color }">
             <span class="group-title">{{ group.categoryName }}</span>
-            <span class="group-count">({{ group.totalCardsInGroup }} cards)</span>
+            <span class="group-count">({{ group.totalCardsInGroup }} {{ isGerman ? 'Karten' : 'cards' }})</span>
           </div>
 
           <div class="group-items-list">
@@ -392,9 +398,9 @@
                     v-if="item.isCatVariant" 
                     class="cat-art-tag-btn" 
                     @click.stop="openCatGallery(item.variantSlug)"
-                    title="View Full Artwork"
+                    :title="isGerman ? 'Vollständiges Artwork ansehen' : 'View Full Artwork'"
                   >
-                    🎨 View Artwork
+                    🎨 {{ isGerman ? 'Artwork' : 'View Artwork' }}
                   </button>
                 </div>
                 <span class="check-card-role">{{ item.role }}</span>
@@ -412,13 +418,13 @@
     <!-- Bottom Actions -->
     <div class="recipe-bottom-nav">
       <button class="m3-btn m3-btn-tonal" @click="$emit('back')">
-        <span class="btn-text-desktop">← Back to Synergies</span>
-        <span class="btn-text-mobile">← Synergies</span>
+        <span class="btn-text-desktop">{{ isGerman ? '← Zurück zu Synergien' : '← Back to Synergies' }}</span>
+        <span class="btn-text-mobile">{{ isGerman ? '← Synergien' : '← Synergies' }}</span>
       </button>
 
       <button class="m3-btn m3-btn-primary" @click="$emit('restart')">
-        <span class="btn-text-desktop">Build Another Deck ↺</span>
-        <span class="btn-text-mobile">Build New Deck ↺</span>
+        <span class="btn-text-desktop">{{ isGerman ? 'Neues Deck bauen ↺' : 'Build Another Deck ↺' }}</span>
+        <span class="btn-text-mobile">{{ isGerman ? 'Neues Deck ↺' : 'Build New Deck ↺' }}</span>
       </button>
     </div>
 
@@ -456,16 +462,20 @@ import SleeveCalculatorModal from './SleeveCalculatorModal.vue';
 import GameCompanionModal from './GameCompanionModal.vue';
 import DangerAdjuster from './DangerAdjuster.vue';
 import { calculateDeckProbabilities } from '../utils/probabilityEngine.js';
+import { t, getCardDisplayName, getCategoryDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   recipe: { type: Object, required: true },
   catalog: { type: Object, required: true },
   categories: { type: Array, required: true },
   dangerSettings: { type: Object, default: null },
-  dangerPreviews: { type: Object, default: () => ({}) }
+  dangerPreviews: { type: Object, default: () => ({}) },
+  currentLang: { type: String, default: 'en' }
 });
 
 defineEmits(['back', 'restart', 'inspect-card', 'update:danger']);
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const checkedItems = ref(new Set());
 const copied = ref(false);
@@ -504,10 +514,10 @@ const checklistItems = computed(() => {
     items.push({
       key: 'starter-defuse',
       slug,
-      name: isZombie ? 'Zombie Kitten' : 'Defuse',
+      name: isGerman.value ? (isZombie ? 'Zombie Kitten' : 'Entschärfung') : (isZombie ? 'Zombie Kitten' : 'Defuse'),
       quantity: props.recipe.starterDefusesNeeded,
-      category: 'lifesavers',
-      role: 'Hand Deal: 1x to each player',
+      category: 'defense',
+      role: isGerman.value ? 'Start-Hand: 1x an jeden Spieler' : 'Hand Deal: 1x to each player',
       icon: props.catalog[slug]?.icons?.[0] || './cards/defuse/defuse.png'
     });
   }
@@ -519,10 +529,10 @@ const checklistItems = computed(() => {
     items.push({
       key: 'extra-defuse',
       slug,
-      name: isZombie ? 'Zombie Kitten (Extra)' : 'Defuse (Extra in Deck)',
+      name: isGerman.value ? (isZombie ? 'Zombie Kitten (Extra)' : 'Entschärfung (Extra im Deck)') : (isZombie ? 'Zombie Kitten (Extra)' : 'Defuse (Extra in Deck)'),
       quantity: props.recipe.extraDefusesToInsert,
-      category: 'lifesavers',
-      role: 'Draw Pile: Insert extra defuses into deck',
+      category: 'defense',
+      role: isGerman.value ? 'Nachziehstapel: Zusätzliche Entschärfungen in den Stapel mischen' : 'Draw Pile: Insert extra defuses into deck',
       icon: props.catalog[slug]?.icons?.[0] || './cards/defuse/defuse.png'
     });
   }
@@ -532,10 +542,10 @@ const checklistItems = computed(() => {
     items.push({
       key: `hazard-${h.slug}`,
       slug: h.slug,
-      name: h.name,
+      name: getCardDisplayName(h.slug, h.name, props.currentLang),
       quantity: h.quantity,
       category: 'hazards',
-      role: `Draw Pile: ${h.quantity} inserted after deal`,
+      role: isGerman.value ? `Nachziehstapel: ${h.quantity} nach dem Austeilen einmischen` : `Draw Pile: ${h.quantity} inserted after deal`,
       icon: h.icons?.[0] || props.catalog[h.slug]?.icons?.[0]
     });
   }
@@ -545,10 +555,10 @@ const checklistItems = computed(() => {
     items.push({
       key: `stash-${s.slug}`,
       slug: s.slug,
-      name: s.name,
+      name: getCardDisplayName(s.slug, s.name, props.currentLang),
       quantity: s.quantity,
       category: s.category || 'chaos',
-      role: 'Playmat Stash: Place face up on table',
+      role: isGerman.value ? 'Tisch-Ablage: Offen auf den Tisch legen' : 'Playmat Stash: Place face up on table',
       icon: s.icons?.[0] || props.catalog[s.slug]?.icons?.[0]
     });
   }
@@ -558,15 +568,15 @@ const checklistItems = computed(() => {
     if (c.slug === 'cat-card' && c.variantsBreakdown && c.variantsBreakdown.length > 0) {
       // Expand each cat variant into its own checklist item with its icon!
       for (const v of c.variantsBreakdown) {
-        const deckLabel = v.deckSources?.map(s => s.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') || 'owned deck';
+        const deckLabel = v.deckSources?.map(s => s.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') || (isGerman.value ? 'eigene Box' : 'owned deck');
         items.push({
           key: `cat-variant-${v.slug}`,
           slug: 'cat-card',
           variantSlug: v.slug,
-          name: `${v.name} (Cat Card)`,
+          name: `${v.name} (${isGerman.value ? 'Katzenkarte' : 'Cat Card'})`,
           quantity: v.quantity,
-          category: 'stealing',
-          role: `Combo Pair: Insert ${v.quantity}x (${deckLabel})`,
+          category: 'cats',
+          role: isGerman.value ? `Kombopaar: ${v.quantity}x einfügen (${deckLabel})` : `Combo Pair: Insert ${v.quantity}x (${deckLabel})`,
           icon: v.icon,
           art: v.art,
           isCatVariant: true
@@ -576,10 +586,10 @@ const checklistItems = computed(() => {
       items.push({
         key: `safe-${c.slug}`,
         slug: c.slug,
-        name: c.name,
+        name: getCardDisplayName(c.slug, c.name, props.currentLang),
         quantity: c.quantity,
         category: c.category || 'chaos',
-        role: 'Action Pool: Dealt to hands + Draw pile',
+        role: isGerman.value ? 'Aktionspool: Für Hände & Nachziehstapel' : 'Action Pool: Dealt to hands + Draw pile',
         pawDetailNote: c.pawDetailNote,
         icon: c.icons?.[0] || props.catalog[c.slug]?.icons?.[0]
       });
@@ -615,7 +625,7 @@ const categorizedChecklist = computed(() => {
     if (cat.id === 'all') continue;
     groups[cat.id] = {
       categoryId: cat.id,
-      categoryName: cat.name,
+      categoryName: getCategoryDisplayName(cat.id, cat.name, props.currentLang),
       color: cat.color,
       items: [],
       totalCardsInGroup: 0
@@ -627,7 +637,7 @@ const categorizedChecklist = computed(() => {
     if (!groups[catId]) {
       groups[catId] = {
         categoryId: catId,
-        categoryName: 'Special & Twists',
+        categoryName: getCategoryDisplayName(catId, 'Special & Twists', props.currentLang),
         color: '#ffd248',
         items: [],
         totalCardsInGroup: 0

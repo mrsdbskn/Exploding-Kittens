@@ -275,3 +275,103 @@ export const RULES_FAQS = [
     category: 'chaos'
   }
 ];
+
+export const RULES_FAQS_DE = [
+  {
+    id: 'nope-defuse',
+    question: 'Kann man eine Entschärfung mit Nö! abwehren?',
+    answer: 'NEIN. Entschärfungen (Defuse) und Explodierende Kätzchen können NIEMALS mit einer Nö!-Karte abgewehrt werden. Sobald eine Entschärfung ausgespielt wird, ist sie sofort gültig und kann nicht verhindert werden.',
+    relatedCards: ['nope', 'defuse', 'exploding-kitten'],
+    ruleDeck: 'Original Edition',
+    category: 'defense'
+  },
+  {
+    id: 'nope-a-nope',
+    question: 'Kann man ein Nö! auf ein Nö! spielen?',
+    answer: 'JA! Du kannst ein Nö! auf das Nö! eines anderen Spielers spielen (oft "Doch!" genannt). Dies hebt das gegnerische Nö! auf und die ursprüngliche Kartenaktion wird normal ausgeführt. Nö!-Ketten können beliebig lang fortgesetzt werden, solange Spieler Nö!-Karten haben.',
+    relatedCards: ['nope'],
+    ruleDeck: 'Original Edition',
+    category: 'defense'
+  },
+  {
+    id: 'attack-stacking',
+    question: 'Addieren sich Angriffskarten (Angriff stacken)?',
+    answer: 'JA! Wenn ein angegriffener Spieler selbst eine Angriffskarte ausspielt, beendet er sofort seine aktuellen Züge, ohne eine Karte zu ziehen. Der nächste Spieler muss dann ALLE verbleibenden Züge PLUS die Züge der neuen Angriffskarte übernehmen (z.B. 2 + 2 = 4 Züge, dann 6 Züge, usw.).',
+    relatedCards: ['attack-2x', 'targeted-attack-2x', 'personal-attack-3x'],
+    ruleDeck: 'Original Edition',
+    category: 'attacks'
+  },
+  {
+    id: 'cat-combo-steals',
+    question: 'Wie funktionieren Katzenkarten-Kombos? Kann man 2 verschiedene Katzen spielen?',
+    answer: 'Katzenkarten haben alleine keine Anweisung, aber sie entfalten mächtige Effekte in Kombos:\n• 2 GLEICHE Katzen: Ziehe 1 zufällige Karte aus der Hand eines beliebigen Spielers.\n• 3 GLEICHE Katzen: Verlange eine bestimmte Karte (z.B. "Entschärfung"); hat der Spieler sie, muss er sie dir geben.\n• 5 VERSCHIEDENE Karten: Nimm eine BELIEBIGE Karte deiner Wahl aus dem Ablagestapel auf die Hand!\nWilde Katzen (Feral Cat) gelten als Joker für jede Katzenkarte.',
+    relatedCards: ['cat-card', 'feral-cat'],
+    ruleDeck: 'Original Edition',
+    category: 'stealing'
+  },
+  {
+    id: 'streaking-stolen-ek',
+    question: 'Was passiert, wenn jemand mein Explodierendes Kätzchen stiehlt, während ich Streaking Kitten habe?',
+    answer: 'ER EXPLODIERT! Wenn ein Spieler blind eine Karte aus deiner Hand zieht (durch Gefallen/Huldige der Katze, Katzen-Pärchen etc.) und das Explodierende Kätzchen erwischt, hält er ein Explodierendes Kätzchen OHNE Streaking Kitten und muss sofort eine Entschärfung spielen oder scheidet aus!',
+    relatedCards: ['streaking-kitten', 'exploding-kitten', 'defuse'],
+    ruleDeck: 'Streaking Kittens Erweiterung',
+    category: 'hazards'
+  },
+  {
+    id: 'barking-kitten-nope',
+    question: 'Kann ein Barking Kitten (Kläffendes Kätzchen) mit Nö! abgewehrt werden?',
+    answer: 'NEIN. Wie alle Kätzchen-Karten (Explodierendes Kätzchen, Implodierendes Kätzchen, Streaking Kitten, Barking Kitten) kann das Barking Kitten NICHT mit Nö! abgewehrt werden. Das Duell wird sofort ausgeführt.',
+    relatedCards: ['barking-kitten', 'nope'],
+    ruleDeck: 'Barking Kittens Erweiterung',
+    category: 'chaos'
+  },
+  {
+    id: 'super-skip-attacks',
+    question: 'Beendet Super-Aussetzen alle Züge, wenn man mehrfach angegriffen wurde?',
+    answer: 'JA! Im Gegensatz zu einem normalen Aussetzen (das nur 1 Zug beendet), beendet Super-Aussetzen SOFORT ALLE deine noch verbleibenden Züge, ohne dass du eine Karte ziehen musst.',
+    relatedCards: ['super-skip', 'skip', 'attack-2x'],
+    ruleDeck: 'Rezepte für die Katastrophe / Barking Kittens',
+    category: 'attacks'
+  },
+  {
+    id: 'imploding-kitten-defuse',
+    question: 'Kann das Implodierende Kätzchen entschärft werden?',
+    answer: 'NEIN! Wenn das Implodierende Kätzchen OFFEN (Bildseite nach oben) gezogen wird, kann es durch KEINE Entschärfung oder Zombie-Kätzchen abgewendet werden und kann nicht mit Nö! blockiert werden. Du explodierst sofort und scheidest aus.',
+    relatedCards: ['imploding-kitten', 'defuse'],
+    ruleDeck: 'Imploding Kittens Erweiterung',
+    category: 'hazards'
+  },
+  {
+    id: 'godcat-nope',
+    question: 'Kann die Gottkatze als Nö!-Karte gespielt werden?',
+    answer: 'NEIN. Die offiziellen Regeln besagen ausdrücklich: "Gottkatze kann als jede beliebige Karte im Spiel eingesetzt werden, AUSSER als Nö!-Karte." Auch kann Gottkatze nicht als Nö! agieren.',
+    relatedCards: ['godcat', 'nope', 'armageddon'],
+    ruleDeck: 'Good vs. Evil',
+    category: 'chaos'
+  },
+  {
+    id: 'dead-player-zombie-turns',
+    question: 'Können tote Spieler in Zombie Kittens noch Karten spielen?',
+    answer: 'JA, aber nur bestimmte Karten! Tote Spieler behalten ihre Handkarten. Sie führen keine regulären Züge aus, dürfen aber "SOFORT"-Karten (wie Mischen SOFORT oder Verändere die Zukunft SOFORT) spielen und können von Effekten wie "Angriff der Toten", "Füttert die Toten" und "Grabräuber" betroffen werden.',
+    relatedCards: ['zombie-kitten', 'attack-of-the-dead', 'feed-the-dead'],
+    ruleDeck: 'Zombie Kittens',
+    category: 'lifesavers'
+  },
+  {
+    id: 'bury-timing',
+    question: 'Wie funktioniert die Vergraben-Karte (Bury)?',
+    answer: 'Wenn du Vergraben spielst, beendest du deinen Zug, indem du heimlich die oberste Karte des Nachziehstapels anschaust. Stecke sie danach geheim an eine BELIEBIGE Stelle im Nachziehstapel zurück (genau wie beim Entschärfen). Ist es ein Explodierendes Kätzchen, bist du ihm entkommen, ohne eine Entschärfung zu verbrauchen!',
+    relatedCards: ['bury', 'draw-from-the-bottom'],
+    ruleDeck: 'Rezepte für die Katastrophe / Barking Kittens',
+    category: 'chaos'
+  },
+  {
+    id: 'catomic-bomb-order',
+    question: 'Was ist der genaue Ablauf bei der Catomic Bomb (Katzenbombe)?',
+    answer: '1. Nimm alle Explodierenden Kätzchen aus dem Nachziehstapel und zeige sie allen Spielern.\n2. Mische den restlichen Nachziehstapel gründlich.\n3. Lege alle Explodierenden Kätzchen verdeckt OBEN AUF den Nachziehstapel.\n4. Dein Zug endet sofort, ohne dass du eine Karte ziehst!',
+    relatedCards: ['catomic-bomb', 'exploding-kitten', 'see-the-future-3x'],
+    ruleDeck: 'Streaking Kittens Erweiterung',
+    category: 'chaos'
+  }
+];
+
