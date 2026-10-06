@@ -150,7 +150,7 @@
     />
 
     <!-- Floating Bottom Navigation Dock: Fast Step Pill + Rules Bot -->
-    <div class="bottom-floating-dock" :class="{ 'is-lifted': currentStep === 'decks' }">
+    <div class="bottom-floating-dock">
       <QuickStepBar 
         :current-step="currentStep"
         :suggestions-count="deckRecipe.suggestions.length"
@@ -520,17 +520,19 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
   overflow-x: hidden;
 }
 
-/* Floating Bottom Navigation Dock: Fast Step Pill + Rules Bot */
+/* Floating Bottom Navigation Dock: Material 3 Expressive Pill + Circle Button (Centered) */
 .bottom-floating-dock {
   position: fixed;
   bottom: max(16px, env(safe-area-inset-bottom, 16px));
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 10px;
   z-index: 150;
   pointer-events: none;
-  transition: bottom 0.25s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .bottom-floating-dock > * {
@@ -539,12 +541,10 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
 
 @media (max-width: 640px) {
   .bottom-floating-dock {
-    bottom: max(10px, env(safe-area-inset-bottom, 10px));
-    right: 8px;
-    gap: 6px;
-  }
-  .bottom-floating-dock.is-lifted {
-    bottom: calc(66px + max(10px, env(safe-area-inset-bottom, 10px)));
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    gap: 8px;
+    width: auto;
+    max-width: calc(100vw - 16px);
   }
 }
 </style>

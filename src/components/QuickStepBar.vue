@@ -8,13 +8,32 @@
       :title="s.fullName"
       @click="onSelectStep(s.id)"
     >
-      <!-- Step Icon -->
-      <span class="step-icon">{{ s.icon }}</span>
+      <!-- Active Icon: Only rendered for the active step, matching the reference design -->
+      <span v-if="currentStep === s.id" class="step-active-icon">
+        <svg v-if="s.id === 'decks'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 2 7l10 5 10-5-10-5Z"/>
+          <path d="m2 17 10 5 10-5"/>
+          <path d="m2 12 10 5 10-5"/>
+        </svg>
 
-      <!-- Step Number (on compact/mobile inactive states) -->
-      <span class="step-num">{{ s.number }}</span>
+        <svg v-else-if="s.id === 'cards'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="12" height="16" x="6" y="4" rx="2"/>
+          <path d="M4 8v10a2 2 0 0 0 2 2h10"/>
+        </svg>
 
-      <!-- Step Label (visible on desktop or active on mobile) -->
+        <svg v-else-if="s.id === 'synergies'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+
+        <svg v-else-if="s.id === 'recipe'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </span>
+
+      <!-- Step Label: Clean typography on both active and inactive -->
       <span class="step-label">{{ s.label }}</span>
 
       <!-- Step 3 Synergy Warning / Error Badge -->
@@ -70,29 +89,21 @@ const steps = computed(() => {
   return [
     {
       id: 'decks',
-      number: '1',
-      icon: '📦',
       label: isDe ? 'Decks' : 'Decks',
       fullName: isDe ? 'Schritt 1: Decks auswählen' : 'Step 1: Choose Decks'
     },
     {
       id: 'cards',
-      number: '2',
-      icon: '🃏',
       label: isDe ? 'Karten' : 'Cards',
       fullName: isDe ? 'Schritt 2: Kartenpool & Spieler' : 'Step 2: Cards & Players'
     },
     {
       id: 'synergies',
-      number: '3',
-      icon: '⚡',
       label: isDe ? 'Synergien' : 'Synergies',
       fullName: isDe ? 'Schritt 3: Synergien prüfen' : 'Step 3: Review Synergies'
     },
     {
       id: 'recipe',
-      number: '4',
-      icon: '📜',
       label: isDe ? 'Rezept' : 'Recipe',
       fullName: isDe ? 'Schritt 4: Deck-Rezept & Anleitung' : 'Step 4: Deck Recipe'
     }
@@ -105,50 +116,71 @@ const onSelectStep = (stepId) => {
 </script>
 
 <style scoped>
+/* Outer dark pill matching Google Photos Material 3 Expressive pill */
 .quick-step-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 5px 6px;
-  background: rgba(22, 27, 39, 0.90);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  gap: 2px;
+  padding: 4px;
+  background: #17161a;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--md-shape-full, 9999px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  border-radius: 9999px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
   user-select: none;
+  height: 54px;
+  box-sizing: border-box;
   transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .step-pill-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: var(--md-shape-full, 9999px);
+  justify-content: center;
+  gap: 7px;
+  height: 100%;
+  padding: 0 16px;
+  border-radius: 9999px;
   border: none;
   background: transparent;
-  color: var(--md-sys-color-on-surface-variant, #cac4d0);
+  color: #c9c5cf;
   font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
   position: relative;
   white-space: nowrap;
   outline: none;
 }
 
-.step-icon {
-  font-size: 0.95rem;
-  line-height: 1;
+/* Inactive button hover */
+.step-pill-btn:hover:not(.is-active) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.step-num {
-  display: none;
-  font-size: 0.78rem;
-  font-weight: 700;
-  opacity: 0.75;
+/* ACTIVE ITEM: Lighter charcoal capsule inside pill (Collections style) */
+.step-pill-btn.is-active {
+  background: #39383e;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.step-active-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  animation: fadeInIcon 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes fadeInIcon {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .step-label {
@@ -156,26 +188,13 @@ const onSelectStep = (stepId) => {
   line-height: 1.2;
 }
 
-.step-pill-btn:hover:not(.is-active) {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-
-.step-pill-btn.is-active {
-  background: linear-gradient(135deg, #ff7559 0%, #ff5449 100%);
-  color: #ffffff;
-  box-shadow: 0 2px 10px rgba(255, 84, 73, 0.4);
-  font-weight: 700;
-}
-
 /* Badges */
 .step-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 17px;
-  height: 17px;
+  min-width: 16px;
+  height: 16px;
   padding: 0 4px;
   border-radius: 999px;
   font-size: 0.65rem;
@@ -206,46 +225,44 @@ const onSelectStep = (stepId) => {
   50% { transform: scale(1.18); }
 }
 
-/* Responsive Mobile Layout: keeps pill super compact next to the chatbot */
+/* Responsive Mobile Layout */
 @media (max-width: 640px) {
   .quick-step-pill {
-    padding: 3px 4px;
-    gap: 3px;
+    height: 48px;
+    padding: 3px;
+    gap: 1px;
   }
 
   .step-pill-btn {
-    padding: 6px 9px;
-    gap: 4px;
-    font-size: 0.75rem;
+    padding: 0 10px;
+    font-size: 0.82rem;
+    gap: 5px;
   }
 
-  /* On mobile inactive steps: show icon + number */
-  .step-pill-btn:not(.is-active) .step-label {
-    display: none;
+  .step-pill-btn.is-active {
+    padding: 0 13px;
   }
 
-  .step-pill-btn:not(.is-active) .step-num {
-    display: inline-block;
-  }
-
-  /* On mobile active step: show icon + label */
-  .step-pill-btn.is-active .step-num {
-    display: none;
-  }
-
-  .step-pill-btn.is-active .step-label {
-    display: inline-block;
-  }
-
-  .step-icon {
-    font-size: 0.85rem;
+  .step-active-icon svg {
+    width: 15px;
+    height: 15px;
   }
 
   .step-badge {
-    min-width: 15px;
-    height: 15px;
-    font-size: 0.6rem;
+    min-width: 14px;
+    height: 14px;
+    font-size: 0.58rem;
     padding: 0 3px;
+  }
+}
+
+@media (max-width: 380px) {
+  .step-pill-btn {
+    padding: 0 7px;
+    font-size: 0.77rem;
+  }
+  .step-pill-btn.is-active {
+    padding: 0 10px;
   }
 }
 </style>

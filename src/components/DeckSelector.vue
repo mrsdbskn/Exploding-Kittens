@@ -601,16 +601,12 @@ const handleImgError = (e) => {
   margin-left: 4px;
 }
 
-/* Bottom Floating Bar */
+/* Bottom Action Bar (in flow, non-colliding) */
 .floating-next-bar {
-  position: fixed;
-  bottom: max(16px, env(safe-area-inset-bottom, 16px));
-  left: 0;
-  right: 0;
-  z-index: 90;
+  margin-top: 36px;
+  margin-bottom: 96px;
   display: flex;
   justify-content: center;
-  pointer-events: none;
   padding: 0 16px;
 }
 
@@ -681,7 +677,8 @@ const handleImgError = (e) => {
     gap: 14px;
   }
   .floating-next-bar {
-    bottom: max(10px, env(safe-area-inset-bottom, 10px));
+    margin-top: 24px;
+    margin-bottom: 90px;
     padding: 0 8px;
   }
   .floating-container {

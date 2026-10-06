@@ -1,14 +1,21 @@
 <template>
   <div class="rules-bot-wrapper" :class="{ 'is-lifted': liftAboveBar && !isOpen }">
-    <!-- Floating Action Button Trigger -->
+    <!-- Floating Action Button Trigger: Matches circular button in reference image -->
     <button 
       class="bot-fab-btn"
       :class="{ 'is-open': isOpen }"
       @click="toggleDrawer"
-      :title="isGerman ? 'Kätzchen Schiedsrichter fragen' : 'Ask the Rules Bot'"
+      :title="isGerman ? 'Kätzchen Schiedsrichter fragen (Regel-Bot)' : 'Ask Kitten Rules Referee (Rules Bot)'"
+      :aria-label="isGerman ? 'Regel-Bot' : 'Rules Bot'"
     >
-      <span class="bot-emoji">🤖😼</span>
-      <span class="bot-fab-label">{{ isGerman ? 'Regel-Bot' : 'Rules Bot' }}</span>
+      <span class="bot-fab-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a2 2 0 0 1 2 2v1h2a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h2V4a2 2 0 0 1 2-2z"/>
+          <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+          <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+          <path d="M9.5 15.5c1.5 1 3.5 1 5 0"/>
+        </svg>
+      </span>
       <span v-if="!isOpen" class="bot-pulse-ring"></span>
     </button>
 
@@ -288,39 +295,53 @@ const formatCardName = (slug) => {
   align-items: center;
 }
 
-/* Floating Action Button */
+/* Floating Action Button: Circular button matching reference design */
 .bot-fab-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 22px;
-  border-radius: var(--md-shape-full);
-  background: linear-gradient(135deg, #ff7559 0%, #ff5449 100%);
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #17161a;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  font-family: var(--font-display);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  box-shadow: 0 6px 20px rgba(255, 117, 89, 0.45);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
   transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
   position: relative;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .bot-fab-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 26px rgba(255, 117, 89, 0.6);
+  background: #28272d;
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-.bot-emoji {
-  font-size: 1.3rem;
-  line-height: 1;
+.bot-fab-btn.is-open {
+  background: #39383e;
+  border-color: rgba(255, 117, 89, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.bot-fab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
 .bot-pulse-ring {
   position: absolute;
-  inset: -4px;
-  border-radius: var(--md-shape-full);
-  border: 2px solid rgba(255, 117, 89, 0.6);
-  animation: pulseGlow 2s infinite;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 117, 89, 0.5);
+  animation: pulseGlow 2.4s infinite;
   pointer-events: none;
 }
 
@@ -598,27 +619,9 @@ const formatCardName = (slug) => {
 }
 
 @media (max-width: 640px) {
-  .rules-bot-wrapper {
-    bottom: max(16px, env(safe-area-inset-bottom, 16px));
-    right: 14px;
-  }
-  .rules-bot-wrapper.is-lifted {
-    bottom: calc(max(10px, env(safe-area-inset-bottom, 10px)) + 78px);
-  }
-  /* Compact circular FAB on phones so it never hides content or buttons */
   .bot-fab-btn {
-    width: 54px;
-    height: 54px;
-    padding: 0;
-    justify-content: center;
-    gap: 0;
-  }
-  .bot-fab-label {
-    display: none;
-  }
-  .bot-emoji {
-    font-size: 1.15rem;
-    letter-spacing: -0.15em;
+    width: 48px;
+    height: 48px;
   }
   .bot-drawer-backdrop {
     padding: 0;
