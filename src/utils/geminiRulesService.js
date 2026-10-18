@@ -2,13 +2,12 @@ import { RULEBOOKS, RULES_FAQS } from '../data/rulesKnowledge.js';
 
 const STORAGE_KEY_API_KEY = 'ek_gemini_api_key';
 const STORAGE_KEY_MODEL = 'ek_gemini_model';
-export const DEFAULT_MODEL = 'gemini-flash-latest';
+export const DEFAULT_MODEL = 'gemini-flash-lite-latest';
 
 export const SUPPORTED_GEMINI_MODELS = [
-  { id: 'gemini-flash-latest', name: 'Gemini Flash (Latest & Recommended)', description: 'Fast, intelligent, grounded rulings' },
-  { id: 'gemini-pro-latest', name: 'Gemini Pro (Deep Reasoning)', description: 'Best for complex multi-card dispute analysis' },
-  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Next-gen balanced flash model' },
-  { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash Lite', description: 'Ultra-low latency quick answers' }
+  { id: 'gemini-flash-lite-latest', name: 'Gemini Flash Lite (Ultra-Fast & Recommended ⚡)', description: 'Sub-second answers (<1s) for instant rulings' },
+  { id: 'gemini-flash-latest', name: 'Gemini Flash (Balanced)', description: 'Detailed grounded rulings' },
+  { id: 'gemini-pro-latest', name: 'Gemini Pro (Deep Reasoning)', description: 'Complex multi-card dispute analysis' }
 ];
 
 // Auto-import API key from URL parameter if present (?gemini_key=... or ?gemini=...)
@@ -155,7 +154,8 @@ export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
         ],
         generationConfig: {
           maxOutputTokens: 150,
-          temperature: 0.1
+          temperature: 0.1,
+          thinkingConfig: { thinkingBudget: 0 }
         }
       })
     });
@@ -211,8 +211,9 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     },
     contents,
     generationConfig: {
-      temperature: 0.3,
-      maxOutputTokens: 2000
+      temperature: 0.2,
+      maxOutputTokens: 1500,
+      thinkingConfig: { thinkingBudget: 0 }
     }
   };
 
