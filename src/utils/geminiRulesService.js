@@ -51,6 +51,23 @@ export function markModelQuotaExhausted(model) {
   quotaExhaustedModels.set(model, Date.now());
 }
 
+/**
+ * Build generationConfig tailored to each model.
+ * Only models with thinking capability (e.g. gemini-3.8-flash) accept thinkingConfig.
+ * Lite models (gemini-3.5-flash-lite, gemini-flash-lite-latest) reject thinkingConfig with 400 INVALID_ARGUMENT.
+ */
+function buildGenerationConfig(model, maxTokens = 1500) {
+  const config = {
+    temperature: 0.2,
+    maxOutputTokens: maxTokens
+  };
+  const m = String(model).toLowerCase();
+  if (m.includes('3.8') || m.includes('thinking')) {
+    config.thinkingConfig = { thinkingBudget: 0 };
+  }
+  return config;
+}
+
 // Auto-import API key from URL parameter if present (?gemini_key=... or ?gemini=...)
 export function autoImportKeyFromUrl() {
   if (typeof window === 'undefined' || !window.location) return;
@@ -200,13 +217,9 @@ export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [
-            { role: 'user', parts: [{ text: 'OK' }] }
+            { role: 'user', parts: [{ text: 'Respond with exactly: OK' }] }
           ],
-          generationConfig: {
-            maxOutputTokens: 20,
-            temperature: 0.1,
-            thinkingConfig: { thinkingBudget: 0 }
-          }
+          generationConfig: buildGenerationConfig(m, 20)
         })
       });
 
@@ -227,10 +240,10 @@ export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
         if (quotaExhaustedOnPrimary) {
           return {
             ok: true,
-            message: `Verbunden! (${model} hat sein 20-RPD-Limit erreicht; automatisches Backup auf 3.5 Flash Lite ist aktiv ⚡)`
+            message: `Verbunden! (${model} hat sein 20-RPD-Tageslimit erreicht; automatisches Backup auf 3.5 Flash Lite ist aktiv ⚡)`
           };
         }
-        return { ok: true, message: `Verbunden mit ${m} erfolgreich!` };
+        return { ok: true, message: `Verbunden mit ${m} erfolgreich! ⚡` };
       }
     } catch (err) {
       return { ok: false, error: err.message || 'Netzwerkfehler zur Google API.' };
@@ -283,18 +296,6 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
   // Append current query
   contents.push({ role: 'user', parts: [{ text: userQuery }] });
 
-  const payload = {
-    system_instruction: {
-      parts: [{ text: getSystemInstruction(lang) }]
-    },
-    contents,
-    generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 1500,
-      thinkingConfig: { thinkingBudget: 0 }
-    }
-  };
-
   let responseText = null;
   let activeModelUsed = selectedModel;
   let isBackupUsed = false;
@@ -304,6 +305,14 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     try {
       const modelPath = modelToTry.startsWith('models/') ? modelToTry : `models/${modelToTry}`;
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
+
+      const payload = {
+        system_instruction: {
+          parts: [{ text: getSystemInstruction(lang) }]
+        },
+        contents,
+        generationConfig: buildGenerationConfig(modelToTry, 1500)
+      };
 
       const response = await fetch(endpoint, {
         method: 'POST',
