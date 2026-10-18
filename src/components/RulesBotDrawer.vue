@@ -1,11 +1,11 @@
-<template>
+﻿<template>
   <div class="rules-bot-wrapper" :class="{ 'is-lifted': liftAboveBar && !isOpen }">
     <!-- Floating Action Button Trigger: Matches circular button in reference image -->
     <button 
       class="bot-fab-btn"
       :class="{ 'is-open': isOpen }"
       @click="toggleDrawer"
-      :title="isGerman ? 'Kätzchen Schiedsrichter fragen (Regel-Bot)' : 'Ask Kitten Rules Referee (Rules Bot)'"
+      :title="isGerman ? 'KÃ¤tzchen Schiedsrichter fragen (Regel-Bot)' : 'Ask Kitten Rules Referee (Rules Bot)'"
       :aria-label="isGerman ? 'Regel-Bot' : 'Rules Bot'"
     >
       <span class="bot-fab-icon">
@@ -27,11 +27,11 @@
         <div class="drawer-header">
           <div class="header-bot-info">
             <div class="bot-avatar">
-              <span>🤖😼</span>
+              <span>ðŸ¤–ðŸ˜¼</span>
             </div>
             <div>
               <div class="bot-title-row">
-                <h3 class="bot-title">{{ isGerman ? 'Kätzchen Schiedsrichter' : 'Kitten Rules Referee' }}</h3>
+                <h3 class="bot-title">{{ isGerman ? 'KÃ¤tzchen Schiedsrichter' : 'Kitten Rules Referee' }}</h3>
                 <span 
                   class="gemini-status-pill" 
                   :class="isGeminiActive ? 'is-gemini' : 'is-offline'"
@@ -59,14 +59,14 @@
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
             </button>
-            <button class="icon-action-btn" @click="$emit('open-instructions')" :title="isGerman ? 'Regelbücher anzeigen' : 'View Embedded Rulebooks'">
-              📖
+            <button class="icon-action-btn" @click="$emit('open-instructions')" :title="isGerman ? 'RegelbÃ¼cher anzeigen' : 'View Embedded Rulebooks'">
+              ðŸ“–
             </button>
             <button class="icon-action-btn" @click="clearMessages" :title="isGerman ? 'Verlauf leeren' : 'Clear Conversation'">
-              🗑️
+              ðŸ—‘ï¸
             </button>
             <button class="icon-action-btn close-x" @click="isOpen = false">
-              ✕
+              âœ•
             </button>
           </div>
         </div>
@@ -77,7 +77,7 @@
             <h4>{{ isGerman ? 'Google Gemini AI Integration' : 'Google Gemini AI Integration' }}</h4>
             <p class="settings-desc">
               {{ isGerman
-                ? 'Verbinde deinen Google Gemini API-Schlüssel, um dynamische KI-Schiedsrichter-Antworten zu erhalten, die strikt auf den offiziellen Exploding Kittens Regelbüchern basieren.'
+                ? 'Verbinde deinen Google Gemini API-SchlÃ¼ssel, um dynamische KI-Schiedsrichter-Antworten zu erhalten, die strikt auf den offiziellen Exploding Kittens RegelbÃ¼chern basieren.'
                 : 'Connect your Google Gemini API key to enable dynamic, conversational referee rulings strictly grounded in official Exploding Kittens rulebooks.' }}
             </p>
           </div>
@@ -85,7 +85,7 @@
           <div class="settings-form">
             <!-- API Key Input -->
             <div class="setting-field">
-              <label class="setting-label">{{ isGerman ? 'Google Gemini API-Schlüssel' : 'Google Gemini API Key' }}</label>
+              <label class="setting-label">{{ isGerman ? 'Google Gemini API-SchlÃ¼ssel' : 'Google Gemini API Key' }}</label>
               <div class="api-key-input-wrapper">
                 <input 
                   :type="showApiKeyText ? 'text' : 'password'" 
@@ -101,14 +101,14 @@
                   @click="showApiKeyText = !showApiKeyText"
                   :title="showApiKeyText ? 'Hide' : 'Show'"
                 >
-                  {{ showApiKeyText ? '👁️' : '🔒' }}
+                  {{ showApiKeyText ? 'ðŸ‘ï¸' : 'ðŸ”’' }}
                 </button>
               </div>
               <span class="setting-hint">
                 {{ isGerman 
-                  ? 'Wird sicher lokal in deinem Browser gespeichert (localStorage). Kostenlosen Schlüssel bei ' 
+                  ? 'Wird sicher lokal in deinem Browser gespeichert (localStorage). Kostenlosen SchlÃ¼ssel bei ' 
                   : 'Saved securely in your browser (localStorage). Get a free key from ' }}
-                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio â†—</a>
               </span>
             </div>
 
@@ -116,15 +116,13 @@
             <div class="setting-field">
               <label class="setting-label">{{ isGerman ? 'Gemini Modell' : 'Gemini Model' }}</label>
               <select v-model="selectedModel" class="bot-select">
-                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast &amp; Recommended)</option>
-                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Next-Gen)</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning)</option>
+                <option value="gemini-flash-latest">Gemini Flash (Latest &amp; Recommended)</option>`n                <option value="gemini-pro-latest">Gemini Pro (Deep Reasoning)</option>`n                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>`n                <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
               </select>
             </div>
 
             <!-- Test Connection Feedback Banner -->
             <div v-if="testResult" class="test-result-banner" :class="testResult.ok ? 'is-success' : 'is-error'">
-              <span>{{ testResult.ok ? '✅' : '❌' }}</span>
+              <span>{{ testResult.ok ? 'âœ…' : 'âŒ' }}</span>
               <span>{{ testResult.message || testResult.error }}</span>
             </div>
 
@@ -150,18 +148,18 @@
                 v-if="hasSavedKey" 
                 class="m3-btn btn-sm btn-danger-ghost" 
                 @click="handleRemoveKey"
-                :title="isGerman ? 'Schlüssel löschen & Offline-Modus nutzen' : 'Remove key & use offline mode'"
+                :title="isGerman ? 'SchlÃ¼ssel lÃ¶schen & Offline-Modus nutzen' : 'Remove key & use offline mode'"
               >
-                {{ isGerman ? 'Löschen (Offline)' : 'Remove Key' }}
+                {{ isGerman ? 'LÃ¶schen (Offline)' : 'Remove Key' }}
               </button>
             </div>
 
             <!-- Hybrid Info Banner -->
             <div class="hybrid-info-note">
-              <span>💡</span>
+              <span>ðŸ’¡</span>
               <p>
                 {{ isGerman
-                  ? 'Automatischer Hybrid-Modus: Ist der API-Schlüssel hinterlegt, antwortet Gemini. Bei Netzwerkproblemen oder fehlendem Schlüssel springt automatisch das Offline-Regelwerk ein.'
+                  ? 'Automatischer Hybrid-Modus: Ist der API-SchlÃ¼ssel hinterlegt, antwortet Gemini. Bei Netzwerkproblemen oder fehlendem SchlÃ¼ssel springt automatisch das Offline-Regelwerk ein.'
                   : 'Smart Hybrid Mode: When configured, Gemini generates dynamic answers. If offline or if the API limit is hit, the referee seamlessly falls back to the local rulebook engine.' }}
               </p>
             </div>
@@ -169,7 +167,7 @@
 
           <div class="settings-footer">
             <button class="m3-btn m3-btn-tonal btn-sm" @click="showSettings = false">
-              ← {{ isGerman ? 'Zurück zum Chat' : 'Back to Chat' }}
+              â† {{ isGerman ? 'ZurÃ¼ck zum Chat' : 'Back to Chat' }}
             </button>
           </div>
         </div>
@@ -185,7 +183,7 @@
             <div class="chat-bubble">
               <!-- Bot Avatar in bubble -->
               <span v-if="msg.sender === 'bot'" class="bubble-mini-avatar">
-                {{ msg.isGemini ? '🤖' : '😼' }}
+                {{ msg.isGemini ? 'ðŸ¤–' : 'ðŸ˜¼' }}
               </span>
 
               <div class="bubble-content">
@@ -194,7 +192,7 @@
 
                 <!-- Reference Badge -->
                 <div v-if="msg.reference" class="reference-badge">
-                  <span>{{ msg.isGemini ? '✨ ' : '📖 ' }}{{ msg.reference }}</span>
+                  <span>{{ msg.isGemini ? 'âœ¨ ' : 'ðŸ“– ' }}{{ msg.reference }}</span>
                 </div>
 
                 <!-- Related Cards Chips -->
@@ -205,7 +203,7 @@
                     class="m3-chip chip-xs"
                     @click="$emit('inspect-card', cardSlug)"
                   >
-                    🃏 {{ isGerman ? 'Ansehen: ' : 'Inspect ' }}{{ formatCardName(cardSlug) }}
+                    ðŸƒ {{ isGerman ? 'Ansehen: ' : 'Inspect ' }}{{ formatCardName(cardSlug) }}
                   </button>
                 </div>
               </div>
@@ -215,13 +213,13 @@
           <!-- Typing Indicator -->
           <div v-if="isGenerating" class="chat-bubble-row is-bot animate-fade-in">
             <div class="chat-bubble typing-bubble">
-              <span class="bubble-mini-avatar">🤖</span>
+              <span class="bubble-mini-avatar">ðŸ¤–</span>
               <div class="typing-indicator">
                 <span class="dot"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
               </div>
-              <span class="typing-text">{{ isGerman ? 'Kätzchen-Schiedsrichter konsultiert Regeln...' : 'Kitten Referee consulting rules...' }}</span>
+              <span class="typing-text">{{ isGerman ? 'KÃ¤tzchen-Schiedsrichter konsultiert Regeln...' : 'Kitten Referee consulting rules...' }}</span>
             </div>
           </div>
 
@@ -246,7 +244,7 @@
           <input 
             v-model="inputQuery" 
             type="text" 
-            :placeholder="isGerman ? 'Stelle eine Regelfrage (z.B. Kann man ein Nö! auf eine Entschärfung spielen?)...' : 'Ask a rule question (e.g. Can you Nope a Defuse?)...'"
+            :placeholder="isGerman ? 'Stelle eine Regelfrage (z.B. Kann man ein NÃ¶! auf eine EntschÃ¤rfung spielen?)...' : 'Ask a rule question (e.g. Can you Nope a Defuse?)...'"
             class="bot-input"
             :disabled="isGenerating"
             @keyup.enter="handleSend"
@@ -299,7 +297,7 @@ const messagesContainer = ref(null);
 // Settings state
 const showSettings = ref(false);
 const apiKeyInput = ref('');
-const selectedModel = ref('gemini-1.5-flash');
+const selectedModel = ref('gemini-flash-latest');
 const showApiKeyText = ref(false);
 const isTesting = ref(false);
 const testResult = ref(null);
@@ -355,7 +353,7 @@ const handleRemoveKey = () => {
   testResult.value = {
     ok: true,
     message: isGerman.value 
-      ? 'Schlüssel entfernt. Der Bot nutzt nun das lokale Offline-Regelwerk.' 
+      ? 'SchlÃ¼ssel entfernt. Der Bot nutzt nun das lokale Offline-Regelwerk.' 
       : 'Key removed. The bot is now in local offline mode.'
   };
 };
@@ -364,13 +362,13 @@ const getInitialGreeting = (lang) => {
   if (lang === 'de') {
     return {
       sender: 'bot',
-      text: "Miau! Ich bin dein **Exploding Kittens Schiedsrichter**.\nFrag mich alles über Regeln, Kartentiming, Nö!-Karten, Entschärfungen, Kombos oder Erweiterungsregeln während deines Spiels!",
-      reference: "Offizielle Exploding Kittens Regelbücher",
+      text: "Miau! Ich bin dein **Exploding Kittens Schiedsrichter**.\nFrag mich alles Ã¼ber Regeln, Kartentiming, NÃ¶!-Karten, EntschÃ¤rfungen, Kombos oder Erweiterungsregeln wÃ¤hrend deines Spiels!",
+      reference: "Offizielle Exploding Kittens RegelbÃ¼cher",
       relatedCards: ['nope', 'defuse', 'exploding-kitten'],
       suggestedQuestions: [
-        "Kann man eine Entschärfung mit Nö! abwehren?",
-        "Kann man ein Nö! auf ein Nö! spielen?",
-        "Was passiert, wenn jemand mein Explodierendes Kätzchen stiehlt?",
+        "Kann man eine EntschÃ¤rfung mit NÃ¶! abwehren?",
+        "Kann man ein NÃ¶! auf ein NÃ¶! spielen?",
+        "Was passiert, wenn jemand mein Explodierendes KÃ¤tzchen stiehlt?",
         "Addieren sich Angriffskarten?",
         "Wie funktionieren Katzenkarten-Kombos?"
       ]
@@ -492,8 +490,8 @@ const clearMessages = () => {
         reference: null,
         relatedCards: [],
         suggestedQuestions: [
-          "Kann man eine Entschärfung mit Nö! abwehren?",
-          "Kann ein Barking Kitten mit Nö! abgewehrt werden?",
+          "Kann man eine EntschÃ¤rfung mit NÃ¶! abwehren?",
+          "Kann ein Barking Kitten mit NÃ¶! abgewehrt werden?",
           "Was ist die 5-Karten-Kombo?",
           "Wie funktionieren tote Spieler in Zombie Kittens?"
         ]
@@ -542,7 +540,7 @@ const formatMessageText = (text) => {
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code class="bot-inline-code">$1</code>')
-    .replace(/^(\s*)[•\*\-]\s+(.+)$/gm, '<li class="bot-li">$2</li>')
+    .replace(/^(\s*)[â€¢\*\-]\s+(.+)$/gm, '<li class="bot-li">$2</li>')
     .replace(/(\n|<br\/>)/g, '<br/>');
 };
 

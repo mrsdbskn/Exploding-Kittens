@@ -1,27 +1,38 @@
-import { RULEBOOKS, RULES_FAQS, RULES_FAQS_DE } from '../data/rulesKnowledge.js';
+import { RULEBOOKS, RULES_FAQS } from '../data/rulesKnowledge.js';
 
 const STORAGE_KEY_API_KEY = 'ek_gemini_api_key';
 const STORAGE_KEY_MODEL = 'ek_gemini_model';
-const DEFAULT_MODEL = 'gemini-1.5-flash';
+export const DEFAULT_MODEL = 'gemini-flash-latest';
+
+export const SUPPORTED_GEMINI_MODELS = [
+  { id: 'gemini-flash-latest', name: 'Gemini Flash (Latest & Recommended)', description: 'Fast, intelligent, grounded rulings' },
+  { id: 'gemini-pro-latest', name: 'Gemini Pro (Deep Reasoning)', description: 'Best for complex multi-card dispute analysis' },
+  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Next-gen balanced flash model' },
+  { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash Lite', description: 'Ultra-low latency quick answers' }
+];
 
 // Retrieve active API key (from localStorage or environment)
 export function getGeminiApiKey() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY_API_KEY);
-    if (saved && saved.trim()) return saved.trim();
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY_API_KEY);
+      if (saved && saved.trim()) return saved.trim();
+    }
   } catch (e) {
     // localStorage might not be accessible in rare sandbox modes
   }
-  return import.meta.env?.VITE_GEMINI_API_KEY?.trim() || '';
+  return (import.meta.env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env?.VITE_GEMINI_API_KEY : '') || '').trim();
 }
 
 // Store API key
 export function setGeminiApiKey(key) {
   try {
-    if (key && key.trim()) {
-      localStorage.setItem(STORAGE_KEY_API_KEY, key.trim());
-    } else {
-      localStorage.removeItem(STORAGE_KEY_API_KEY);
+    if (typeof localStorage !== 'undefined') {
+      if (key && key.trim()) {
+        localStorage.setItem(STORAGE_KEY_API_KEY, key.trim());
+      } else {
+        localStorage.removeItem(STORAGE_KEY_API_KEY);
+      }
     }
   } catch (e) {
     console.error('Failed to save API key to localStorage', e);
@@ -31,8 +42,10 @@ export function setGeminiApiKey(key) {
 // Retrieve selected model
 export function getGeminiModel() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY_MODEL);
-    if (saved && saved.trim()) return saved.trim();
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY_MODEL);
+      if (saved && saved.trim()) return saved.trim();
+    }
   } catch (e) {}
   return DEFAULT_MODEL;
 }
@@ -40,7 +53,9 @@ export function getGeminiModel() {
 // Store selected model
 export function setGeminiModel(model) {
   try {
-    localStorage.setItem(STORAGE_KEY_MODEL, model || DEFAULT_MODEL);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY_MODEL, model || DEFAULT_MODEL);
+    }
   } catch (e) {}
 }
 
@@ -74,8 +89,6 @@ function buildGroundingContext() {
 const GROUNDING_CONTEXT = buildGroundingContext();
 
 function getSystemInstruction(lang = 'en') {
-  const isDe = lang === 'de';
-
   return `You are the official "Kitten Rules Referee" (Kätzchen-Schiedsrichter) for the card game Exploding Kittens.
 Your mission is to provide 100% accurate, authoritative, and unambiguous rulings on card interactions, turn timing, expansion mechanics, combos, and edge cases.
 
@@ -103,7 +116,8 @@ export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
     return { ok: false, error: 'No API key provided.' };
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
+  const modelPath = model.startsWith('models/') ? model : `models/${model}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey.trim()}`;
 
   try {
     const response = await fetch(endpoint, {
@@ -111,10 +125,10 @@ export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [
-          { role: 'user', parts: [{ text: 'Respond with exactly: "OK"' }] }
+          { role: 'user', parts: [{ text: 'Respond with exactly: OK' }] }
         ],
         generationConfig: {
-          maxOutputTokens: 10,
+          maxOutputTokens: 150,
           temperature: 0.1
         }
       })
@@ -147,7 +161,8 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
   }
 
   const model = getGeminiModel();
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const modelPath = model.startsWith('models/') ? model : `models/${model}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
 
   // Convert previous messages to Gemini format (limit to last 8 turns to conserve context)
   const contents = [];
@@ -171,7 +186,7 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     contents,
     generationConfig: {
       temperature: 0.3,
-      maxOutputTokens: 1000
+      maxOutputTokens: 2000
     }
   };
 
@@ -211,7 +226,7 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
 
   return {
     answer: text,
-    reference: lang === 'de' ? 'Gemini AI • Offizielle Regelbuch-Grounding' : 'Gemini AI • Grounded in Official Rulebooks',
+    reference: lang === 'de' ? `Gemini AI (${model}) • Offizielle Regelbücher Grounding` : `Gemini AI (${model}) • Grounded in Official Rulebooks`,
     relatedCards,
     isGemini: true,
     modelUsed: model
