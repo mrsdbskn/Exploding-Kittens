@@ -195,39 +195,6 @@ import CardLoreCodexModal from './components/CardLoreCodexModal.vue';
 import CustomRecipeModal from './components/CustomRecipeModal.vue';
 
 
-const closeAllModals = () => {
-  inspectedCardSlug.value = null;
-  showPresetModal.value = false;
-  showInstructionsModal.value = false;
-  showCompanionModal.value = false;
-  showCodexModal.value = false;
-  showCustomRecipeModal.value = false;
-};
-
-const hasAnyModalOpen = computed(() => {
-  return !!(
-    inspectedCardSlug.value ||
-    showPresetModal.value ||
-    showInstructionsModal.value ||
-    showCompanionModal.value ||
-    showCodexModal.value ||
-    showCustomRecipeModal.value
-  );
-});
-
-watch(hasAnyModalOpen, (isOpen) => {
-  if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
-  }
-});
-
-const handleGlobalKeydown = (e) => {
-  if (e.key === 'Escape' && hasAnyModalOpen.value) {
-    closeAllModals();
-  }
-};
 
 // Navigation state
 const currentStep = ref('decks');
@@ -267,6 +234,40 @@ const showInstructionsModal = ref(false);
 const showCompanionModal = ref(false);
 const showCodexModal = ref(false);
 const showCustomRecipeModal = ref(false);
+
+const closeAllModals = () => {
+  inspectedCardSlug.value = null;
+  showPresetModal.value = false;
+  showInstructionsModal.value = false;
+  showCompanionModal.value = false;
+  showCodexModal.value = false;
+  showCustomRecipeModal.value = false;
+};
+
+const hasAnyModalOpen = computed(() => {
+  return !!(
+    inspectedCardSlug.value ||
+    showPresetModal.value ||
+    showInstructionsModal.value ||
+    showCompanionModal.value ||
+    showCodexModal.value ||
+    showCustomRecipeModal.value
+  );
+});
+
+watch(hasAnyModalOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+const handleGlobalKeydown = (e) => {
+  if (e.key === 'Escape' && hasAnyModalOpen.value) {
+    closeAllModals();
+  }
+};
 
 const handleLoadCustomRecipe = (recipe) => {
   if (recipe.config) {
