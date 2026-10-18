@@ -27,15 +27,38 @@
         <div class="drawer-header">
           <div class="header-bot-info">
             <div class="bot-avatar">
-              <span>⚖️🐱</span>
+              <span>🤖😼</span>
             </div>
             <div>
-              <h3 class="bot-title">{{ isGerman ? 'Kätzchen Schiedsrichter' : 'Kitten Rules Referee' }}</h3>
+              <div class="bot-title-row">
+                <h3 class="bot-title">{{ isGerman ? 'Kätzchen Schiedsrichter' : 'Kitten Rules Referee' }}</h3>
+                <span 
+                  class="gemini-status-pill" 
+                  :class="isGeminiActive ? 'is-gemini' : 'is-offline'"
+                  :title="isGeminiActive ? (isGerman ? 'Verbunden mit Google Gemini AI' : 'Connected to Google Gemini AI') : (isGerman ? 'Lokale Offline-Regeldatenbank aktiv' : 'Local offline rules database active')"
+                  @click="toggleSettings"
+                >
+                  <span class="status-dot"></span>
+                  {{ isGeminiActive ? 'Gemini AI' : (isGerman ? 'Offline' : 'Offline') }}
+                </span>
+              </div>
               <span class="bot-subtitle">{{ isGerman ? 'Offizieller Regel- & Mechanik-Assistent' : 'Official Rulebooks & Card Mechanics Assistant' }}</span>
             </div>
           </div>
 
           <div class="header-actions">
+            <!-- Settings button for Gemini API -->
+            <button 
+              class="icon-action-btn" 
+              :class="{ 'is-active-tab': showSettings }"
+              @click="toggleSettings" 
+              :title="isGerman ? 'Google Gemini API-Einstellungen' : 'Google Gemini API Settings'"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
             <button class="icon-action-btn" @click="$emit('open-instructions')" :title="isGerman ? 'Regelbücher anzeigen' : 'View Embedded Rulebooks'">
               📖
             </button>
@@ -48,8 +71,111 @@
           </div>
         </div>
 
+        <!-- Settings Panel -->
+        <div v-if="showSettings" class="settings-panel animate-fade-in">
+          <div class="settings-header">
+            <h4>{{ isGerman ? 'Google Gemini AI Integration' : 'Google Gemini AI Integration' }}</h4>
+            <p class="settings-desc">
+              {{ isGerman
+                ? 'Verbinde deinen Google Gemini API-Schlüssel, um dynamische KI-Schiedsrichter-Antworten zu erhalten, die strikt auf den offiziellen Exploding Kittens Regelbüchern basieren.'
+                : 'Connect your Google Gemini API key to enable dynamic, conversational referee rulings strictly grounded in official Exploding Kittens rulebooks.' }}
+            </p>
+          </div>
+
+          <div class="settings-form">
+            <!-- API Key Input -->
+            <div class="setting-field">
+              <label class="setting-label">{{ isGerman ? 'Google Gemini API-Schlüssel' : 'Google Gemini API Key' }}</label>
+              <div class="api-key-input-wrapper">
+                <input 
+                  :type="showApiKeyText ? 'text' : 'password'" 
+                  v-model="apiKeyInput" 
+                  placeholder="AIzaSy..."
+                  class="bot-input api-key-input"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button 
+                  type="button" 
+                  class="toggle-show-btn" 
+                  @click="showApiKeyText = !showApiKeyText"
+                  :title="showApiKeyText ? 'Hide' : 'Show'"
+                >
+                  {{ showApiKeyText ? '👁️' : '🔒' }}
+                </button>
+              </div>
+              <span class="setting-hint">
+                {{ isGerman 
+                  ? 'Wird sicher lokal in deinem Browser gespeichert (localStorage). Kostenlosen Schlüssel bei ' 
+                  : 'Saved securely in your browser (localStorage). Get a free key from ' }}
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a>
+              </span>
+            </div>
+
+            <!-- Model Selection -->
+            <div class="setting-field">
+              <label class="setting-label">{{ isGerman ? 'Gemini Modell' : 'Gemini Model' }}</label>
+              <select v-model="selectedModel" class="bot-select">
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast &amp; Recommended)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Next-Gen)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning)</option>
+              </select>
+            </div>
+
+            <!-- Test Connection Feedback Banner -->
+            <div v-if="testResult" class="test-result-banner" :class="testResult.ok ? 'is-success' : 'is-error'">
+              <span>{{ testResult.ok ? '✅' : '❌' }}</span>
+              <span>{{ testResult.message || testResult.error }}</span>
+            </div>
+
+            <!-- Settings Action Buttons -->
+            <div class="settings-actions">
+              <button 
+                class="m3-btn m3-btn-tonal btn-sm" 
+                :disabled="isTesting || !apiKeyInput.trim()"
+                @click="handleTestConnection"
+              >
+                <span v-if="isTesting" class="spinner-sm"></span>
+                <span>{{ isTesting ? (isGerman ? 'Verbindung testen...' : 'Testing...') : (isGerman ? 'Verbindung testen' : 'Test Key') }}</span>
+              </button>
+
+              <button 
+                class="m3-btn m3-btn-primary btn-sm" 
+                @click="handleSaveSettings"
+              >
+                {{ isGerman ? 'Speichern & Aktivieren' : 'Save & Enable' }}
+              </button>
+
+              <button 
+                v-if="hasSavedKey" 
+                class="m3-btn btn-sm btn-danger-ghost" 
+                @click="handleRemoveKey"
+                :title="isGerman ? 'Schlüssel löschen & Offline-Modus nutzen' : 'Remove key & use offline mode'"
+              >
+                {{ isGerman ? 'Löschen (Offline)' : 'Remove Key' }}
+              </button>
+            </div>
+
+            <!-- Hybrid Info Banner -->
+            <div class="hybrid-info-note">
+              <span>💡</span>
+              <p>
+                {{ isGerman
+                  ? 'Automatischer Hybrid-Modus: Ist der API-Schlüssel hinterlegt, antwortet Gemini. Bei Netzwerkproblemen oder fehlendem Schlüssel springt automatisch das Offline-Regelwerk ein.'
+                  : 'Smart Hybrid Mode: When configured, Gemini generates dynamic answers. If offline or if the API limit is hit, the referee seamlessly falls back to the local rulebook engine.' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="settings-footer">
+            <button class="m3-btn m3-btn-tonal btn-sm" @click="showSettings = false">
+              ← {{ isGerman ? 'Zurück zum Chat' : 'Back to Chat' }}
+            </button>
+          </div>
+        </div>
+
         <!-- Chat Messages Area -->
-        <div class="messages-container" ref="messagesContainer">
+        <div v-show="!showSettings" class="messages-container" ref="messagesContainer">
           <div 
             v-for="(msg, index) in messages" 
             :key="index"
@@ -58,7 +184,9 @@
           >
             <div class="chat-bubble">
               <!-- Bot Avatar in bubble -->
-              <span v-if="msg.sender === 'bot'" class="bubble-mini-avatar">🐾</span>
+              <span v-if="msg.sender === 'bot'" class="bubble-mini-avatar">
+                {{ msg.isGemini ? '🤖' : '😼' }}
+              </span>
 
               <div class="bubble-content">
                 <!-- Message Text with formatting -->
@@ -66,7 +194,7 @@
 
                 <!-- Reference Badge -->
                 <div v-if="msg.reference" class="reference-badge">
-                  <span>📖 {{ msg.reference }}</span>
+                  <span>{{ msg.isGemini ? '✨ ' : '📖 ' }}{{ msg.reference }}</span>
                 </div>
 
                 <!-- Related Cards Chips -->
@@ -84,8 +212,21 @@
             </div>
           </div>
 
+          <!-- Typing Indicator -->
+          <div v-if="isGenerating" class="chat-bubble-row is-bot animate-fade-in">
+            <div class="chat-bubble typing-bubble">
+              <span class="bubble-mini-avatar">🤖</span>
+              <div class="typing-indicator">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <span class="typing-text">{{ isGerman ? 'Kätzchen-Schiedsrichter konsultiert Regeln...' : 'Kitten Referee consulting rules...' }}</span>
+            </div>
+          </div>
+
           <!-- Suggested Followup Questions -->
-          <div v-if="latestFollowups.length > 0" class="suggested-questions-row">
+          <div v-if="latestFollowups.length > 0 && !isGenerating" class="suggested-questions-row">
             <span class="suggestions-label">{{ isGerman ? 'Vorgeschlagene Fragen:' : 'Suggested Questions:' }}</span>
             <div class="suggested-chips">
               <button 
@@ -101,17 +242,18 @@
         </div>
 
         <!-- Input Area -->
-        <div class="drawer-input-row">
+        <div v-show="!showSettings" class="drawer-input-row">
           <input 
             v-model="inputQuery" 
             type="text" 
             :placeholder="isGerman ? 'Stelle eine Regelfrage (z.B. Kann man ein Nö! auf eine Entschärfung spielen?)...' : 'Ask a rule question (e.g. Can you Nope a Defuse?)...'"
             class="bot-input"
+            :disabled="isGenerating"
             @keyup.enter="handleSend"
           />
           <button 
             class="m3-btn m3-btn-primary send-btn"
-            :disabled="!inputQuery.trim()"
+            :disabled="!inputQuery.trim() || isGenerating"
             @click="handleSend"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -127,9 +269,18 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import { queryRulesEngine } from '../utils/rulesBotEngine.js';
 import { getCardDisplayName } from '../data/translations.js';
+import {
+  getGeminiApiKey,
+  setGeminiApiKey,
+  getGeminiModel,
+  setGeminiModel,
+  isGeminiConfigured,
+  testGeminiApiKey,
+  queryGeminiRules
+} from '../utils/geminiRulesService.js';
 
 const props = defineProps({
   // When a fixed bottom action bar is visible (Step 1), lift the FAB above it on phones
@@ -144,6 +295,70 @@ const isGerman = computed(() => props.currentLang === 'de');
 const isOpen = ref(false);
 const inputQuery = ref('');
 const messagesContainer = ref(null);
+
+// Settings state
+const showSettings = ref(false);
+const apiKeyInput = ref('');
+const selectedModel = ref('gemini-1.5-flash');
+const showApiKeyText = ref(false);
+const isTesting = ref(false);
+const testResult = ref(null);
+const isGenerating = ref(false);
+const isGeminiActive = ref(false);
+const hasSavedKey = computed(() => Boolean(getGeminiApiKey()));
+
+onMounted(() => {
+  apiKeyInput.value = getGeminiApiKey();
+  selectedModel.value = getGeminiModel();
+  isGeminiActive.value = isGeminiConfigured();
+});
+
+const toggleSettings = () => {
+  showSettings.value = !showSettings.value;
+  testResult.value = null;
+  if (showSettings.value) {
+    apiKeyInput.value = getGeminiApiKey();
+    selectedModel.value = getGeminiModel();
+  }
+};
+
+const handleTestConnection = async () => {
+  if (!apiKeyInput.value.trim()) return;
+  isTesting.value = true;
+  testResult.value = null;
+  try {
+    const res = await testGeminiApiKey(apiKeyInput.value.trim(), selectedModel.value);
+    testResult.value = res;
+  } catch (err) {
+    testResult.value = { ok: false, error: err.message || 'Connection failed' };
+  } finally {
+    isTesting.value = false;
+  }
+};
+
+const handleSaveSettings = () => {
+  setGeminiApiKey(apiKeyInput.value.trim());
+  setGeminiModel(selectedModel.value);
+  isGeminiActive.value = isGeminiConfigured();
+  testResult.value = {
+    ok: true,
+    message: isGerman.value 
+      ? 'Einstellungen erfolgreich gespeichert! Gemini AI ist nun aktiv.' 
+      : 'Settings saved! Gemini AI is now active.'
+  };
+};
+
+const handleRemoveKey = () => {
+  setGeminiApiKey('');
+  apiKeyInput.value = '';
+  isGeminiActive.value = false;
+  testResult.value = {
+    ok: true,
+    message: isGerman.value 
+      ? 'Schlüssel entfernt. Der Bot nutzt nun das lokale Offline-Regelwerk.' 
+      : 'Key removed. The bot is now in local offline mode.'
+  };
+};
 
 const getInitialGreeting = (lang) => {
   if (lang === 'de') {
@@ -188,6 +403,7 @@ watch(() => props.currentLang, (newLang) => {
 const toggleDrawer = () => {
   isOpen.value = !isOpen.value;
   if (isOpen.value) {
+    isGeminiActive.value = isGeminiConfigured();
     scrollToBottom();
   }
 };
@@ -197,9 +413,9 @@ const latestFollowups = computed(() => {
   return lastBotMsg?.suggestedQuestions || [];
 });
 
-const handleSend = () => {
+const handleSend = async () => {
   const q = inputQuery.value.trim();
-  if (!q) return;
+  if (!q || isGenerating.value) return;
 
   // Add user message
   messages.value.push({
@@ -209,19 +425,57 @@ const handleSend = () => {
 
   inputQuery.value = '';
   scrollToBottom();
+  isGenerating.value = true;
 
-  // Query engine with language context
-  setTimeout(() => {
-    const res = queryRulesEngine(q, props.currentLang);
+  try {
+    if (isGeminiConfigured()) {
+      try {
+        const geminiRes = await queryGeminiRules(q, messages.value, props.currentLang);
+        messages.value.push({
+          sender: 'bot',
+          text: geminiRes.answer,
+          reference: geminiRes.reference,
+          relatedCards: geminiRes.relatedCards,
+          isGemini: true,
+          modelUsed: geminiRes.modelUsed,
+          suggestedQuestions: []
+        });
+        scrollToBottom();
+        return;
+      } catch (geminiErr) {
+        console.warn('Gemini query failed, falling back to offline rules engine:', geminiErr);
+        // Fall back to offline engine
+        const fallbackRes = queryRulesEngine(q, props.currentLang);
+        const notice = isGerman.value
+          ? `\n\n*(Hinweis: Gemini-Anfrage fehlgeschlagen: ${geminiErr.message}. Antwort stammt aus dem Offline-Regelbuch.)*`
+          : `\n\n*(Note: Gemini request failed: ${geminiErr.message}. Answer provided by offline rules database.)*`;
+        messages.value.push({
+          sender: 'bot',
+          text: fallbackRes.answer + notice,
+          reference: fallbackRes.reference,
+          relatedCards: fallbackRes.relatedCards,
+          suggestedQuestions: fallbackRes.suggestedQuestions,
+          isFallback: true
+        });
+        scrollToBottom();
+        return;
+      }
+    }
+
+    // Offline built-in engine
+    const offlineRes = queryRulesEngine(q, props.currentLang);
     messages.value.push({
       sender: 'bot',
-      text: res.answer,
-      reference: res.reference,
-      relatedCards: res.relatedCards,
-      suggestedQuestions: res.suggestedQuestions
+      text: offlineRes.answer,
+      reference: offlineRes.reference,
+      relatedCards: offlineRes.relatedCards,
+      suggestedQuestions: offlineRes.suggestedQuestions,
+      isGemini: false
     });
     scrollToBottom();
-  }, 100);
+  } finally {
+    isGenerating.value = false;
+  }
 };
 
 const sendPresetQuestion = (questionText) => {
@@ -287,7 +541,9 @@ const formatMessageText = (text) => {
   return escaped
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/\n/g, '<br/>');
+    .replace(/`([^`]+)`/g, '<code class="bot-inline-code">$1</code>')
+    .replace(/^(\s*)[•\*\-]\s+(.+)$/gm, '<li class="bot-li">$2</li>')
+    .replace(/(\n|<br\/>)/g, '<br/>');
 };
 
 const formatCardName = (slug) => {
@@ -297,7 +553,6 @@ const formatCardName = (slug) => {
   return getCardDisplayName(slug, defaultFormatted, props.currentLang);
 };
 </script>
-
 
 <style scoped>
 .rules-bot-wrapper {
@@ -356,6 +611,12 @@ const formatCardName = (slug) => {
   pointer-events: none;
 }
 
+@keyframes pulseGlow {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.12); opacity: 0.2; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
 /* Modal / Drawer Backdrop */
 .bot-drawer-backdrop {
   position: fixed;
@@ -389,7 +650,7 @@ const formatCardName = (slug) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px;
+  padding: 16px 20px;
   background-color: var(--md-sys-color-surface-container-high);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
@@ -410,6 +671,13 @@ const formatCardName = (slug) => {
   justify-content: center;
   font-size: 1.25rem;
   border: 1px solid rgba(255, 117, 89, 0.4);
+  flex-shrink: 0;
+}
+
+.bot-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .bot-title {
@@ -417,6 +685,41 @@ const formatCardName = (slug) => {
   font-weight: 700;
   color: #ffffff;
   line-height: 1.2;
+}
+
+.gemini-status-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gemini-status-pill.is-gemini {
+  background: rgba(117, 223, 138, 0.15);
+  color: #75df8a;
+  border: 1px solid rgba(117, 223, 138, 0.35);
+}
+
+.gemini-status-pill.is-offline {
+  background: rgba(255, 210, 72, 0.12);
+  color: #ffd248;
+  border: 1px solid rgba(255, 210, 72, 0.3);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.gemini-status-pill.is-gemini .status-dot {
+  box-shadow: 0 0 6px #75df8a;
 }
 
 .bot-subtitle {
@@ -438,16 +741,195 @@ const formatCardName = (slug) => {
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
-  color: var(--md-sys-color-on-surface);
-  transition: background-color 0.2s ease;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .icon-action-btn:hover {
   background-color: var(--md-sys-color-surface-container-highest);
+  color: #ffffff;
+}
+
+.icon-action-btn.is-active-tab {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  border-color: rgba(128, 180, 255, 0.4);
 }
 
 .close-x {
   font-size: 1rem;
+}
+
+/* Settings Panel */
+.settings-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--md-sys-color-surface-container);
+}
+
+.settings-header h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.settings-desc {
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+}
+
+.api-key-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.api-key-input {
+  width: 100%;
+  padding-right: 42px !important;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+.toggle-show-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px;
+}
+
+.setting-hint {
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+  line-height: 1.4;
+}
+
+.setting-hint a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+}
+
+.bot-select {
+  width: 100%;
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-md);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: #ffffff;
+  outline: none;
+}
+
+.bot-select:focus {
+  border-color: var(--md-sys-color-primary);
+}
+
+.test-result-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--md-shape-md);
+  font-size: 0.8125rem;
+}
+
+.test-result-banner.is-success {
+  background: rgba(117, 223, 138, 0.15);
+  border: 1px solid rgba(117, 223, 138, 0.35);
+  color: #75df8a;
+}
+
+.test-result-banner.is-error {
+  background: rgba(255, 84, 73, 0.15);
+  border: 1px solid rgba(255, 84, 73, 0.35);
+  color: #ff5449;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.btn-danger-ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 84, 73, 0.4);
+  color: #ffb4a9;
+}
+
+.btn-danger-ghost:hover {
+  background: rgba(255, 84, 73, 0.15);
+  border-color: #ff5449;
+}
+
+.spinner-sm {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hybrid-info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--md-shape-md);
+  font-size: 0.775rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+}
+
+.hybrid-info-note p {
+  margin: 0;
+}
+
+.settings-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 
 /* Messages Container */
@@ -505,10 +987,24 @@ const formatCardName = (slug) => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .bubble-text strong {
   color: var(--md-sys-color-primary);
+}
+
+:deep(.bot-li) {
+  margin-left: 18px;
+  list-style-type: disc;
+}
+
+:deep(.bot-inline-code) {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.825rem;
 }
 
 .reference-badge {
@@ -538,6 +1034,42 @@ const formatCardName = (slug) => {
 
 .chip-xs:hover {
   background-color: var(--md-sys-color-primary-container);
+}
+
+/* Typing Indicator */
+.typing-bubble {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-indicator .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary);
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator .dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.typing-text {
+  font-size: 0.75rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-style: italic;
 }
 
 /* Suggested Questions */
@@ -658,10 +1190,10 @@ const formatCardName = (slug) => {
   .messages-container {
     padding: 14px 12px;
   }
-  .drawer-input-bar {
+  .drawer-input-row {
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 10px)) 12px;
   }
-  .followups-chips-row {
+  .suggested-chips {
     overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
