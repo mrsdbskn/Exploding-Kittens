@@ -9,11 +9,22 @@
       :aria-label="isGerman ? 'Regel-Bot' : 'Rules Bot'"
     >
       <span class="bot-fab-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a2 2 0 0 1 2 2v1h2a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h2V4a2 2 0 0 1 2-2z"/>
-          <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
-          <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
-          <path d="M9.5 15.5c1.5 1 3.5 1 5 0"/>
+        <!-- Close icon when drawer is open -->
+        <svg v-if="isOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        <!-- Distinct Exploding Kittens Cat Referee AI icon when closed -->
+        <svg v-else width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 5L7 8C8.5 7.3 10.2 7 12 7C13.8 7 15.5 7.3 17 8L21 5V13C21 17.5 17 21 12 21C7 21 3 17.5 3 13V5Z" fill="rgba(255, 117, 89, 0.25)"/>
+          <circle cx="8.5" cy="13" r="1.5" fill="currentColor"/>
+          <circle cx="15.5" cy="13" r="1.5" fill="currentColor"/>
+          <path d="M10.5 16.5C11.2 17.2 12.8 17.2 13.5 16.5"/>
+          <line x1="1" y1="13" x2="5" y2="13.5"/>
+          <line x1="1" y1="15.5" x2="5" y2="15.5"/>
+          <line x1="19" y1="13.5" x2="23" y2="13"/>
+          <line x1="19" y1="15.5" x2="23" y2="15.5"/>
+          <path d="M19 1L19.7 2.6L21.3 3.3L19.7 4L19 5.6L18.3 4L16.7 3.3L18.3 2.6Z" fill="#ff7559" stroke="none"/>
         </svg>
       </span>
       <span v-if="!isOpen" class="bot-pulse-ring"></span>
@@ -27,7 +38,17 @@
         <div class="drawer-header">
           <div class="header-bot-info">
             <div class="bot-avatar">
-              <span>🤖🐾</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 5L7 8C8.5 7.3 10.2 7 12 7C13.8 7 15.5 7.3 17 8L21 5V13C21 17.5 17 21 12 21C7 21 3 17.5 3 13V5Z" fill="rgba(255, 117, 89, 0.25)"/>
+                <circle cx="8.5" cy="13" r="1.5" fill="currentColor"/>
+                <circle cx="15.5" cy="13" r="1.5" fill="currentColor"/>
+                <path d="M10.5 16.5C11.2 17.2 12.8 17.2 13.5 16.5"/>
+                <line x1="1" y1="13" x2="5" y2="13.5"/>
+                <line x1="1" y1="15.5" x2="5" y2="15.5"/>
+                <line x1="19" y1="13.5" x2="23" y2="13"/>
+                <line x1="19" y1="15.5" x2="23" y2="15.5"/>
+                <path d="M19 1L19.7 2.6L21.3 3.3L19.7 4L19 5.6L18.3 4L16.7 3.3L18.3 2.6Z" fill="#ff7559" stroke="none"/>
+              </svg>
             </div>
             <div>
               <div class="bot-title-row">
@@ -60,7 +81,10 @@
               </svg>
             </button>
             <button class="icon-action-btn" @click="$emit('open-instructions')" :title="isGerman ? 'Regelbücher anzeigen' : 'View Embedded Rulebooks'">
-              📖
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
             </button>
             <button class="icon-action-btn" @click="clearMessages" :title="isGerman ? 'Verlauf leeren' : 'Clear Conversation'">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
