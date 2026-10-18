@@ -11,9 +11,35 @@ export const SUPPORTED_GEMINI_MODELS = [
   { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash Lite', description: 'Ultra-low latency quick answers' }
 ];
 
+// Auto-import API key from URL parameter if present (?gemini_key=... or ?gemini=...)
+export function autoImportKeyFromUrl() {
+  if (typeof window === 'undefined' || !window.location) return;
+  try {
+    const url = new URL(window.location.href);
+    const keyParam = url.searchParams.get('gemini_key') ||
+                     url.searchParams.get('geminiKey') ||
+                     url.searchParams.get('gemini') ||
+                     url.searchParams.get('apiKey');
+    if (keyParam && keyParam.trim().length > 10) {
+      setGeminiApiKey(keyParam.trim());
+      url.searchParams.delete('gemini_key');
+      url.searchParams.delete('geminiKey');
+      url.searchParams.delete('gemini');
+      url.searchParams.delete('apiKey');
+      window.history.replaceState({}, '', url.toString());
+    }
+  } catch (e) {
+    // Ignore URL parsing errors
+  }
+}
+
+// Run auto-import immediately upon script evaluation
+autoImportKeyFromUrl();
+
 // Retrieve active API key (from localStorage or environment)
 export function getGeminiApiKey() {
   try {
+    autoImportKeyFromUrl();
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY_API_KEY);
       if (saved && saved.trim()) return saved.trim();
@@ -226,7 +252,7 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
 
   return {
     answer: text,
-    reference: lang === 'de' ? `Gemini AI (${model}) • Offizielle Regelbücher Grounding` : `Gemini AI (${model}) • Grounded in Official Rulebooks`,
+    reference: lang === "de" ? `Gemini AI (${model}) • Offizielle Regelbücher Grounding` : `Gemini AI (${model}) • Grounded in Official Rulebooks`,
     relatedCards,
     isGemini: true,
     modelUsed: model

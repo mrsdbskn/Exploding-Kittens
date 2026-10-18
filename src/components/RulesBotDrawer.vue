@@ -35,11 +35,11 @@
                 <span 
                   class="gemini-status-pill" 
                   :class="isGeminiActive ? 'is-gemini' : 'is-offline'"
-                  :title="isGeminiActive ? (isGerman ? 'Verbunden mit Google Gemini AI' : 'Connected to Google Gemini AI') : (isGerman ? 'Lokale Offline-Regeldatenbank aktiv' : 'Local offline rules database active')"
+                  :title="isGeminiActive ? (isGerman ? 'Verbunden mit Google Gemini AI' : 'Connected to Google Gemini AI') : (isGerman ? 'Lokale Offline-Regeldatenbank aktiv • Klicken zum Einrichten' : 'Local offline rules database active • Click to setup Gemini')"
                   @click="toggleSettings"
                 >
                   <span class="status-dot"></span>
-                  {{ isGeminiActive ? 'Gemini AI' : (isGerman ? 'Offline' : 'Offline') }}
+                  {{ isGeminiActive ? 'Gemini AI' : (isGerman ? 'Offline (Einrichten ⚙️)' : 'Offline (Setup ⚙️)') }}
                 </span>
               </div>
               <span class="bot-subtitle">{{ isGerman ? 'Offizieller Regel- & Mechanik-Assistent' : 'Official Rulebooks & Card Mechanics Assistant' }}</span>
