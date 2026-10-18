@@ -2428,8 +2428,7 @@ export const DECKS = [
         "withoutPawQty": 1,
         "pawDetailNote": "1 cards",
         "icons": [
-          "./cards/tower-of-power/tower-of-power.png",
-          "./cards/images/tower-of-power.png"
+          "./cards/tower-of-power/tower-of-power.png"
         ],
         "shortDesc": "Anyone who steals a card from you blindly steals from inside the Tower of Power crown instead.",
         "mechanics": "At the start of the game deal out 6 cards and put them on the table. Then put the Tower of Power Crown on top of them. This is the stash. Insert the Tower of Power Card back into the deck and shuffle.\nTo play this card, wear the Tower of Power Crown. Then take the Stash Cards, and without looking, put them inside on top of your head.\nThe Crown protects you against all forms of stealing. If anyone steals cards from you, they blindly take a random card from the Tower of Power Crown instead of your hand (until there are no more Stash Cards left). This applies to Favor Cards, playing pairs, playing 3 of a kind, or any other form of stealing.\nYou may never move Stash Cards from the Tower of Power Crown into your own hand. It only protects you from stealing stealers who want to steal cards from you. Continue wearing the Tower of Power for the rest of the game.",
@@ -3300,8 +3299,7 @@ export const ALL_CARDS_CATALOG = {
     "slug": "tower-of-power",
     "name": "Tower of Power",
     "icons": [
-      "./cards/tower-of-power/tower-of-power.png",
-      "./cards/images/tower-of-power.png"
+      "./cards/tower-of-power/tower-of-power.png"
     ],
     "shortDesc": "Anyone who steals a card from you blindly steals from inside the Tower of Power crown instead.",
     "mechanics": "At the start of the game deal out 6 cards and put them on the table. Then put the Tower of Power Crown on top of them. This is the stash. Insert the Tower of Power Card back into the deck and shuffle.\nTo play this card, wear the Tower of Power Crown. Then take the Stash Cards, and without looking, put them inside on top of your head.\nThe Crown protects you against all forms of stealing. If anyone steals cards from you, they blindly take a random card from the Tower of Power Crown instead of your hand (until there are no more Stash Cards left). This applies to Favor Cards, playing pairs, playing 3 of a kind, or any other form of stealing.\nYou may never move Stash Cards from the Tower of Power Crown into your own hand. It only protects you from stealing stealers who want to steal cards from you. Continue wearing the Tower of Power for the rest of the game.",

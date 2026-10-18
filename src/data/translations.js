@@ -413,6 +413,11 @@ export const CARD_TRANSLATIONS_DE = {
     shortDesc: 'Jeder Spieler (beginnend bei dir) legt 1 Handkarte oben auf den Nachziehstapel.',
     mechanics: 'Jeder Spieler (beginnend mit dir im Uhrzeigersinn) wählt 1 Karte aus seiner Hand und legt sie verdeckt oben auf den Nachziehstapel.'
   },
+  'i-ll-take-that': {
+    name: 'Das nehm ich!',
+    shortDesc: 'Lege diese Karte vor einen Mitspieler. Er muss dir seine nächste gezogene Karte geben.',
+    mechanics: 'Lege diese Karte vor einen Mitspieler. Wenn dieser Spieler das nächste Mal eine Karte vom Nachziehstapel zieht, muss er sie dir geben, ohne sie anzusehen.'
+  },
   'ill-take-that': {
     name: 'Das nehm ich!',
     shortDesc: 'Lege diese Karte vor einen Mitspieler. Er muss dir seine nächste gezogene Karte geben.',
@@ -498,6 +503,51 @@ export const CARD_TRANSLATIONS_DE = {
     shortDesc: 'Starte ein Schicksalsduell zwischen dir und einem Gegner mit Gottkatze und Teufelskatze.',
     mechanics: 'Kann nur gespielt werden, wenn Gottkatze auf der Matte liegt. Nimm Gottkatze und Teufelskatze, mische sie verdeckt und teile je 1 Karte an dich und einen Gegner aus. Wer die Teufelskatze aufdeckt, explodiert sofort!'
   },
+  'alter-the-future-3x-now': {
+    name: 'Verändere die Zukunft JETZT (3x)',
+    shortDesc: 'Sieh dir heimlich die obersten 3 Karten an und ordne sie SOFORT um, selbst wenn du nicht am Zug bist.',
+    mechanics: 'Du kannst diese Karte jederzeit spielen, auch außerhalb deines Zuges. Nimm heimlich die obersten 3 Karten des Nachziehstapels, schaue sie an und lege sie in einer beliebigen Reihenfolge verdeckt oben auf den Stapel zurück.'
+  },
+  'mark': {
+    name: 'Markieren',
+    shortDesc: 'Wähle einen Mitspieler. Er muss 1 Karte aus seiner Hand offen auf den Tisch legen, bis sie gespielt wird.',
+    mechanics: 'Wähle einen Mitspieler und wähle blind 1 Karte aus seiner Hand. Drehe diese Karte um, sodass die Bildseite nach außen zeigt. Sie bleibt für alle sichtbar in seiner Hand, bis sie ausgespielt wird.'
+  },
+  'swap-top-and-bottom': {
+    name: 'Tausche Oben und Unten',
+    shortDesc: 'Tausche die oberste und die unterste Karte des Nachziehstapels, ohne sie anzusehen.',
+    mechanics: 'Nimm die oberste und die unterste Karte des Nachziehstapels und vertausche ihre Positionen, ohne sie dir oder anderen anzusehen.'
+  },
+  'raising-heck': {
+    name: 'Höllenspektakel',
+    shortDesc: 'Nimm alle Explodierenden Kätzchen aus dem Ablagestapel und mische sie in den Nachziehstapel.',
+    mechanics: 'Durchsuche den Ablagestapel nach allen Explodierenden Kätzchen. Mische sie zurück in den Nachziehstapel.'
+  },
+  'reveal-the-future-3x': {
+    name: 'Enthülle die Zukunft (3x)',
+    shortDesc: 'Sieh dir die obersten 3 Karten des Nachziehstapels an und zeige sie allen Mitspielern.',
+    mechanics: 'Nimm die obersten 3 Karten des Nachziehstapels, schaue sie an und zeige sie offen allen Mitspielern am Tisch. Lege sie danach in derselben Reihenfolge verdeckt zurück.'
+  },
+  'clone': {
+    name: 'Klon',
+    shortDesc: 'Wird zu einer Kopie der Karte, die direkt darunter auf dem Ablagestapel liegt.',
+    mechanics: 'Diese Karte nimmt sofort die Identität und alle Effekte der Karte an, auf die sie im Ablagestapel gelegt wird (z.B. ein zweiter Angriff, Aussetzen oder eine Katzenkarte für Kombos).'
+  },
+  'dig-deeper': {
+    name: 'Tiefer graben',
+    shortDesc: 'Ziehe die oberste Karte, sieh sie an und entscheide, ob du sie behältst oder die nächste Karte nimmst.',
+    mechanics: 'Ziehe die oberste Karte des Nachziehstapels und sieh sie dir geheim an. Du kannst entscheiden, ob du sie auf die Hand nimmst (beendet deinen Zug) oder verdeckt ablegst und stattdessen die nächste Karte ziehst.'
+  },
+  'shuffle-now': {
+    name: 'Mischen JETZT',
+    shortDesc: 'Mische den Nachziehstapel SOFORT, zu jedem beliebigen Zeitpunkt spielbar.',
+    mechanics: 'Du kannst diese Karte zu jedem Zeitpunkt spielen, selbst während des Spielzugs eines anderen Spielers. Mische den Nachziehstapel sofort gründlich durch.'
+  },
+  'curse-of-the-cat-butt': {
+    name: 'Fluch des Katzenhinterns',
+    shortDesc: 'Blende einen Spieler! Er muss seine Handkarten mischen und verdeckt spielen, bis er überlebt.',
+    mechanics: 'Wähle einen Spieler. Dieser Spieler muss sofort alle seine Handkarten verdeckt mischen und vor sich ablegen. Er darf seine Karten nicht ansehen und muss Karten blind ausspielen, bis er am Ende seines nächsten Zuges erfolgreich eine Karte zieht.'
+  },
   'catomic-bomb': {
     name: 'Katzenbombe (Catomic Bomb)',
     shortDesc: 'Nimm alle Bomben aus dem Stapel, mische den Rest und lege alle Bomben oben drauf!',
@@ -575,4 +625,65 @@ export function getCardDisplayMechanics(slug, defaultMechanics, lang = 'en') {
 export function getCategoryDisplayName(catId, defaultName, lang = 'en') {
   const dict = TRANSLATIONS[lang]?.categories || TRANSLATIONS.en.categories;
   return dict[catId] || defaultName;
+}
+
+export const DECK_TRANSLATIONS_DE = {
+  'exploding-kittens-original-edition': {
+    name: 'Exploding Kittens: Original Edition',
+    description: 'Das klassische Grundspiel für 2–5 Spieler mit 56 Karten, Entschärfungen und mörderischen Kätzchen.'
+  },
+  'exploding-kittens-nsfw-edition': {
+    name: 'Exploding Kittens: NSFW Edition',
+    description: 'Die unzensierte Erwachsenen-Version mit exakt denselben Regeln, aber urkomisch verstörenden Zeichnungen.'
+  },
+  'exploding-kittens-cat-burglar-edition': {
+    name: 'Exploding Kittens: Cat Burglar Edition',
+    description: 'Enthält die exklusive Einbrecherkatzen-Figur für dramatische Kartenklau-Duelle am Spieltisch.'
+  },
+  'exploding-kittens-party-pack-edition': {
+    name: 'Exploding Kittens: Party Pack Edition',
+    description: 'Unterstützt bis zu 10 Spieler mit 120 Karten aus dem Originalspiel und Imploding Kittens.'
+  },
+  'exploding-kittens-recipes-for-disaster': {
+    name: 'Exploding Kittens: Rezepte für die Katastrophe',
+    description: 'Die ultimative Kollektion mit 121 Karten und 13 kuratierten Rezept-Heften für maßgeschneiderte Runden.'
+  },
+  'exploding-kittens-good-vs-evil': {
+    name: 'Exploding Kittens: Good vs. Evil',
+    description: 'Enthält Gottkatze und Teufelskatze mit der brandneuen Armageddon-Duell-Mechanik der Netflix-Serie.'
+  },
+  'exploding-kittens-zombie-kittens': {
+    name: 'Exploding Kittens: Zombie Kätzchen',
+    description: 'Eigenständiges Spiel, in dem tote Spieler weiter mitspielen und durch Zombie-Kätzchen wiederauferstehen können!'
+  },
+  'exploding-kittens-2-player-edition': {
+    name: 'Exploding Kittens: 2-Spieler Edition',
+    description: 'Kompakte, rasant ausbalancierte Version speziell für intensive 1-gegen-1 Duelle.'
+  },
+  'imploding-kittens-expansion': {
+    name: 'Imploding Kittens: Erweiterung',
+    description: 'Die 1. offizielle Erweiterung (20 Karten) mit dem Implodierenden Kätzchen und dem Schandkragen.'
+  },
+  'streaking-kittens-expansion': {
+    name: 'Streaking Kittens: Erweiterung',
+    description: 'Die 2. Erweiterung (15 Karten) mit Streaking Kitten, Atombombe und Fluch des Katzenhinterns.'
+  },
+  'barking-kittens-expansion': {
+    name: 'Barking Kittens: Erweiterung',
+    description: 'Die 3. Erweiterung (20 Karten) mit Barking Kittens und der tragbaren Turm-der-Macht-Krone.'
+  }
+};
+
+export function getDeckDisplayName(deckId, defaultName, lang = 'en') {
+  if (lang === 'de' && DECK_TRANSLATIONS_DE[deckId]?.name) {
+    return DECK_TRANSLATIONS_DE[deckId].name;
+  }
+  return defaultName;
+}
+
+export function getDeckDisplayDesc(deckId, defaultDesc, lang = 'en') {
+  if (lang === 'de' && DECK_TRANSLATIONS_DE[deckId]?.description) {
+    return DECK_TRANSLATIONS_DE[deckId].description;
+  }
+  return defaultDesc;
 }

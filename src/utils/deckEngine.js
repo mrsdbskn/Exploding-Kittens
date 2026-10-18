@@ -21,8 +21,10 @@ export function calculateDeckRecipe({
   streakingAddsEK = true,
   extraDefusesInDeck = 2,
   bonusExplodingKittens = 0, // Danger Adjuster: extra bombs beyond the official count
-  drawPileSafeRatio = 1 // Danger Adjuster: fraction (0.3 - 1) of safe draw-pile cards to keep
+  drawPileSafeRatio = 1, // Danger Adjuster: fraction (0.3 - 1) of safe draw-pile cards to keep
+  lang = 'en'
 }) {
+  const isGerman = lang === 'de';
   // 1. Calculate the maximum available pool of cards from owned decks
   const availablePool = {}; // slug -> { count, cardInfo, deckSources: [] }
   
@@ -127,11 +129,11 @@ export function calculateDeckRecipe({
         id: 'barking-kitten-pair',
         type: 'warning',
         cardSlug: 'barking-kitten',
-        title: 'Barking Kitten needs its twin!',
-        message: 'Barking Kitten requires at least 2 cards to form a functional pair. When one is played, the other player explodes unless defused.',
+        title: isGerman ? 'Barking Kitten braucht seinen Zwilling!' : 'Barking Kitten needs its twin!',
+        message: isGerman ? 'Barking Kitten benötigt mindestens 2 Karten für ein funktionierendes Paar. Wird eine gespielt, explodiert der andere Spieler, sofern er nicht entschärft.' : 'Barking Kitten requires at least 2 cards to form a functional pair. When one is played, the other player explodes unless defused.',
         actionType: getAvail('barking-kitten') >= 2 ? 'SET_QUANTITY' : 'EXCLUDE',
         actionPayload: { slug: 'barking-kitten', qty: getAvail('barking-kitten') >= 2 ? 2 : 0 },
-        actionLabel: getAvail('barking-kitten') >= 2 ? 'Include Pair (2)' : 'Exclude Barking Kitten'
+        actionLabel: getAvail('barking-kitten') >= 2 ? (isGerman ? 'Paar einbeziehen (2)' : 'Include Pair (2)') : (isGerman ? 'Barking Kitten ausschließen' : 'Exclude Barking Kitten')
       });
     }
   }
@@ -143,11 +145,11 @@ export function calculateDeckRecipe({
         id: 'armageddon-godcat',
         type: 'error',
         cardSlug: 'armageddon',
-        title: 'Armageddon requires Godcat!',
-        message: 'Armageddon can ONLY be played if Godcat is on the playmat. Playing it without Godcat breaks the official rule.',
+        title: isGerman ? 'Armageddon erfordert die Gottkatze!' : 'Armageddon requires Godcat!',
+        message: isGerman ? 'Armageddon kann NUR gespielt werden, wenn Gottkatze auf dem Spielfeld liegt. Ein Ausspielen ohne Gottkatze bricht die offizielle Regel.' : 'Armageddon can ONLY be played if Godcat is on the playmat. Playing it without Godcat breaks the official rule.',
         actionType: getAvail('godcat') > 0 ? 'SET_QUANTITY' : 'EXCLUDE',
         actionPayload: getAvail('godcat') > 0 ? { slug: 'godcat', qty: 1 } : { slug: 'armageddon', qty: 0 },
-        actionLabel: getAvail('godcat') > 0 ? 'Add Godcat' : 'Exclude Armageddon'
+        actionLabel: getAvail('godcat') > 0 ? (isGerman ? 'Gottkatze hinzufügen' : 'Add Godcat') : (isGerman ? 'Armageddon ausschließen' : 'Exclude Armageddon')
       });
     }
     if (!hasCard('devilcat') && getAvail('devilcat') > 0) {
@@ -155,11 +157,11 @@ export function calculateDeckRecipe({
         id: 'armageddon-devilcat',
         type: 'info',
         cardSlug: 'devilcat',
-        title: 'Armageddon plays best with Devilcat',
-        message: 'In Good vs Evil, Armageddon pits Godcat against Devilcat. Adding Devilcat creates the official face-off experience.',
+        title: isGerman ? 'Armageddon funktioniert am besten mit Teufelskatze' : 'Armageddon plays best with Devilcat',
+        message: isGerman ? 'In Good vs Evil lässt Armageddon Gottkatze gegen Teufelskatze antreten. Das Hinzufügen der Teufelskatze sorgt für das offizielle Duell-Erlebnis.' : 'In Good vs Evil, Armageddon pits Godcat against Devilcat. Adding Devilcat creates the official face-off experience.',
         actionType: 'SET_QUANTITY',
         actionPayload: { slug: 'devilcat', qty: 1 },
-        actionLabel: 'Add Devilcat'
+        actionLabel: isGerman ? 'Teufelskatze hinzufügen' : 'Add Devilcat'
       });
     }
   }
@@ -170,11 +172,13 @@ export function calculateDeckRecipe({
       id: 'streaking-kitten-rule',
       type: 'success',
       cardSlug: 'streaking-kitten',
-      title: 'Streaking Kitten Active: +1 Exploding Kitten',
-      message: `Streaking Kitten allows 1 player to safely hold an Exploding Kitten in secret. Therefore, ${playerCount} Exploding Kittens (instead of ${playerCount - 1}) are recommended so everyone can explode.`,
+      title: isGerman ? 'Streaking Kitten aktiv: +1 Explodierendes Kätzchen' : 'Streaking Kitten Active: +1 Exploding Kitten',
+      message: isGerman
+        ? `Streaking Kitten erlaubt es 1 Spieler, ein Explodierendes Kätzchen geheim auf der Hand zu halten. Daher werden ${playerCount} Explodierende Kätzchen (statt ${playerCount - 1}) empfohlen, damit alle ausscheiden können.`
+        : `Streaking Kitten allows 1 player to safely hold an Exploding Kitten in secret. Therefore, ${playerCount} Exploding Kittens (instead of ${playerCount - 1}) are recommended so everyone can explode.`,
       actionType: 'TOGGLE_STREAKING_RULE',
       actionPayload: { enabled: !streakingAddsEK },
-      actionLabel: streakingAddsEK ? 'Using +1 Rule (Active)' : 'Enable +1 EK Rule'
+      actionLabel: streakingAddsEK ? (isGerman ? '+1 Regel aktiv' : 'Using +1 Rule (Active)') : (isGerman ? '+1 Regel aktivieren' : 'Enable +1 EK Rule')
     });
   }
 
@@ -186,11 +190,13 @@ export function calculateDeckRecipe({
       id: 'dead-player-zombie-kitten',
       type: 'warning',
       cardSlug: 'zombie-kitten',
-      title: 'Dead-Player cards active without Zombie Kitten',
-      message: `${activeDeadCards.map(s => catalog[s]?.name || s).join(', ')} require dead players to stay in the game. Without Zombie Kitten cards to revive them, dead-player interactions will be non-functional.`,
+      title: isGerman ? 'Karten für tote Spieler aktiv ohne Zombie Kitten' : 'Dead-Player cards active without Zombie Kitten',
+      message: isGerman
+        ? `Karten für tote Spieler erfordern, dass tote Spieler im Spiel bleiben. Ohne Zombie Kitten Karten zur Wiederbelebung sind diese Interaktionen wirkungslos.`
+        : `${activeDeadCards.map(s => catalog[s]?.name || s).join(', ')} require dead players to stay in the game. Without Zombie Kitten cards to revive them, dead-player interactions will be non-functional.`,
       actionType: getAvail('zombie-kitten') > 0 ? 'SET_QUANTITY' : 'EXCLUDE_DEAD_CARDS',
       actionPayload: getAvail('zombie-kitten') > 0 ? { slug: 'zombie-kitten', qty: Math.min(playerCount, getAvail('zombie-kitten')) } : { slugs: activeDeadCards },
-      actionLabel: getAvail('zombie-kitten') > 0 ? 'Include Zombie Kittens' : 'Remove Dead-Player Cards'
+      actionLabel: getAvail('zombie-kitten') > 0 ? (isGerman ? 'Zombie Kätzchen einbeziehen' : 'Include Zombie Kittens') : (isGerman ? 'Toten-Karten entfernen' : 'Remove Dead-Player Cards')
     });
   }
 
@@ -203,11 +209,13 @@ export function calculateDeckRecipe({
         id: 'cat-cards-pair-warning',
         type: 'warning',
         cardSlug: 'cat-card',
-        title: 'Cat Cards need Pairs or Feral Cats',
-        message: `You currently have only ${catQty} Cat Cards. Standard Cat Cards have no instructions on their own and require at least 2 of the same type to steal cards.`,
+        title: isGerman ? 'Katzenkarten benötigen Paare oder Wilde Katzen' : 'Cat Cards need Pairs or Feral Cats',
+        message: isGerman
+          ? `Du hast aktuell nur ${catQty} Katzenkarten. Normale Katzenkarten haben alleine keinen Effekt und erfordern mindestens 2 gleiche Karten zum Stehlen.`
+          : `You currently have only ${catQty} Cat Cards. Standard Cat Cards have no instructions on their own and require at least 2 of the same type to steal cards.`,
         actionType: getAvail('feral-cat') > 0 ? 'ADD_FERAL_CATS' : 'INFO',
         actionPayload: { slug: 'feral-cat', qty: 2 },
-        actionLabel: getAvail('feral-cat') > 0 ? 'Add Feral Cats (Wildcard)' : 'Acknowledge'
+        actionLabel: getAvail('feral-cat') > 0 ? (isGerman ? 'Wilde Katzen hinzufügen (Joker)' : 'Add Feral Cats (Wildcard)') : (isGerman ? 'Verstanden' : 'Acknowledge')
       });
     }
   }
@@ -218,11 +226,13 @@ export function calculateDeckRecipe({
       id: 'see-alter-future-synergy',
       type: 'info',
       cardSlug: 'alter-the-future-3x',
-      title: 'See the Future vs Alter the Future',
-      message: 'Alter the Future is a strictly stronger upgrade (allows viewing AND rearranging). You can keep both or replace See the Future for higher strategic depth.',
+      title: isGerman ? 'Blick in die Zukunft vs. Verändere die Zukunft' : 'See the Future vs Alter the Future',
+      message: isGerman
+        ? 'Verändere die Zukunft ist ein direktes Upgrade (erlaubt Ansehen UND Umordnen). Du kannst beide behalten oder Blick in die Zukunft für mehr Spieltiefe ersetzen.'
+        : 'Alter the Future is a strictly stronger upgrade (allows viewing AND rearranging). You can keep both or replace See the Future for higher strategic depth.',
       actionType: 'INFO',
       actionPayload: {},
-      actionLabel: 'Got it'
+      actionLabel: isGerman ? 'Verstanden' : 'Got it'
     });
   }
 
@@ -232,13 +242,17 @@ export function calculateDeckRecipe({
       id: 'imploding-kitten-info',
       type: 'info',
       cardSlug: 'imploding-kitten',
-      title: 'Imploding Kitten Hazard',
-      message: implodingReplacesEK 
-        ? 'Imploding Kitten replaces 1 Exploding Kitten (maintains standard hazard count).'
-        : 'Imploding Kitten added as an EXTRA hazard (faster, more cutthroat elimination).',
+      title: isGerman ? 'Implodierendes Kätzchen Gefahr' : 'Imploding Kitten Hazard',
+      message: isGerman
+        ? (implodingReplacesEK
+            ? 'Implodierendes Kätzchen ersetzt 1 Explodierendes Kätzchen (behält Standard-Gefahr bei).'
+            : 'Implodierendes Kätzchen als ZUSÄTZLICHE Gefahr eingefügt (schnellere Ausscheidung).')
+        : (implodingReplacesEK 
+            ? 'Imploding Kitten replaces 1 Exploding Kitten (maintains standard hazard count).'
+            : 'Imploding Kitten added as an EXTRA hazard (faster, more cutthroat elimination).'),
       actionType: 'TOGGLE_IMPLODING_MODE',
       actionPayload: { replaces: !implodingReplacesEK },
-      actionLabel: implodingReplacesEK ? 'Switch to Extra Hazard' : 'Switch to Replace EK'
+      actionLabel: implodingReplacesEK ? (isGerman ? 'Als Extra-Gefahr spielen' : 'Switch to Extra Hazard') : (isGerman ? 'Als Bomben-Ersatz spielen' : 'Switch to Replace EK')
     });
   }
 
@@ -248,11 +262,13 @@ export function calculateDeckRecipe({
       id: 'tower-of-power-stash',
       type: 'info',
       cardSlug: 'tower-of-power',
-      title: 'Tower of Power Crown Stash',
-      message: 'When Tower of Power is drawn, 6 cards from the draw pile are stashed inside the crown. Players steal from the crown instead of your hand.',
+      title: isGerman ? 'Turm der Macht Kronen-Vorrat' : 'Tower of Power Crown Stash',
+      message: isGerman
+        ? 'Wenn Turm der Macht gezogen wird, werden 6 Karten aus dem Nachziehstapel in der Krone verstaut. Andere Spieler stehlen aus der Krone statt aus deiner Hand.'
+        : 'When Tower of Power is drawn, 6 cards from the draw pile are stashed inside the crown. Players steal from the crown instead of your hand.',
       actionType: 'INFO',
       actionPayload: {},
-      actionLabel: 'Understood'
+      actionLabel: isGerman ? 'Verstanden' : 'Understood'
     });
   }
 
@@ -306,27 +322,31 @@ export function calculateDeckRecipe({
       hazardsList.push({
         ...cardInfo,
         quantity: ekQty,
-        ruleNote: bonusEKApplied > 0
-          ? `Insert ${ekQty} Exploding Kittens into the draw pile after dealing (${explodingKittensNeeded} official + ${bonusEKApplied} bonus from the Danger Adjuster).`
-          : `Insert ${ekQty} Exploding Kittens into the draw pile after dealing.`
+        ruleNote: isGerman
+          ? (bonusEKApplied > 0
+              ? `Mische ${ekQty} Explodierende Kätzchen nach dem Austeilen in den Nachziehstapel (${explodingKittensNeeded} offiziell + ${bonusEKApplied} Bonus vom Gefahren-Regler).`
+              : `Mische ${ekQty} Explodierende Kätzchen nach dem Austeilen in den Nachziehstapel.`)
+          : (bonusEKApplied > 0
+              ? `Insert ${ekQty} Exploding Kittens into the draw pile after dealing (${explodingKittensNeeded} official + ${bonusEKApplied} bonus from the Danger Adjuster).`
+              : `Insert ${ekQty} Exploding Kittens into the draw pile after dealing.`)
       });
     } else if (slug === 'imploding-kitten') {
       hazardsList.push({
         ...cardInfo,
         quantity: 1,
-        ruleNote: 'Insert face down into the draw pile. Cannot be defused!'
+        ruleNote: isGerman ? 'Verdeckt in den Nachziehstapel stecken. Kann NICHT entschärft werden!' : 'Insert face down into the draw pile. Cannot be defused!'
       });
     } else if (slug === 'devilcat') {
       tableStashList.push({
         ...cardInfo,
         quantity: 1,
-        ruleNote: 'Place face up on the playmat next to Godcat for the Armageddon duel.'
+        ruleNote: isGerman ? 'Offen neben Gottkatze auf die Spielmatte für das Armageddon-Duell legen.' : 'Place face up on the playmat next to Godcat for the Armageddon duel.'
       });
     } else if (slug === 'godcat') {
       tableStashList.push({
         ...cardInfo,
         quantity: 1,
-        ruleNote: 'Place face up on the playmat next to Devilcat. Usable as any non-Nope card.'
+        ruleNote: isGerman ? 'Offen neben Teufelskatze auf die Spielmatte legen. Gilt als jede Karte außer Nö!.' : 'Place face up on the playmat next to Devilcat. Usable as any non-Nope card.'
       });
     } else if (slug === 'defuse' || slug === 'zombie-kitten') {
       lifesaversList.push({

@@ -104,6 +104,7 @@
     <!-- Presets & Official Recipes Modal -->
     <PresetModal 
       v-if="showPresetModal"
+      :current-lang="currentLang"
       :official-recipes="OFFICIAL_RECIPES"
       :current-config="{
         playerCount,
@@ -118,12 +119,14 @@
     <!-- Instructions & Embedded Rulebooks Modal -->
     <InstructionsModal 
       v-if="showInstructionsModal"
+      :current-lang="currentLang"
       @close="showInstructionsModal = false"
     />
 
     <!-- Live Game Night Companion & Timer Modal (Features 5, 7, 8) -->
     <GameCompanionModal 
       :is-open="showCompanionModal"
+      :current-lang="currentLang"
       :player-count="playerCount"
       :has-dead-player-cards="deckRecipe.isZombieDeckMode || deckRecipe.drawPileCards?.some(c => ['attack-of-the-dead', 'feed-the-dead', 'grave-robber'].includes(c.slug))"
       @close="showCompanionModal = false"
@@ -132,6 +135,7 @@
     <!-- Card Lore & Rules Codex Modal (Feature 6) -->
     <CardLoreCodexModal 
       :is-open="showCodexModal"
+      :current-lang="currentLang"
       :initial-card-slug="inspectedCardSlug"
       @close="showCodexModal = false"
     />
@@ -139,6 +143,7 @@
     <!-- Custom Recipe Studio & Bookmarks Modal (Features 2, 10) -->
     <CustomRecipeModal 
       :is-open="showCustomRecipeModal"
+      :current-lang="currentLang"
       :current-config="{
         playerCount,
         ownedDeckIds,
@@ -169,7 +174,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { DECKS, ALL_CARDS_CATALOG, CATEGORIES, OFFICIAL_RECIPES } from './data/decksData.js';
 import { calculateDeckRecipe } from './utils/deckEngine.js';
 import { calculateDeckProbabilities } from './utils/probabilityEngine.js';
@@ -188,6 +193,41 @@ import QuickStepBar from './components/QuickStepBar.vue';
 import GameCompanionModal from './components/GameCompanionModal.vue';
 import CardLoreCodexModal from './components/CardLoreCodexModal.vue';
 import CustomRecipeModal from './components/CustomRecipeModal.vue';
+
+
+const closeAllModals = () => {
+  inspectedCardSlug.value = null;
+  showPresetModal.value = false;
+  showInstructionsModal.value = false;
+  showCompanionModal.value = false;
+  showCodexModal.value = false;
+  showCustomRecipeModal.value = false;
+};
+
+const hasAnyModalOpen = computed(() => {
+  return !!(
+    inspectedCardSlug.value ||
+    showPresetModal.value ||
+    showInstructionsModal.value ||
+    showCompanionModal.value ||
+    showCodexModal.value ||
+    showCustomRecipeModal.value
+  );
+});
+
+watch(hasAnyModalOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+const handleGlobalKeydown = (e) => {
+  if (e.key === 'Escape' && hasAnyModalOpen.value) {
+    closeAllModals();
+  }
+};
 
 // Navigation state
 const currentStep = ref('decks');
@@ -244,6 +284,7 @@ const handleLoadCustomRecipe = (recipe) => {
 
 // LocalStorage persistence
 onMounted(() => {
+  window.addEventListener('keydown', handleGlobalKeydown);
   try {
     document.documentElement.lang = currentLang.value;
     const saved = localStorage.getItem('ek_saved_config');
@@ -325,6 +366,7 @@ const buildRecipe = (overrides = {}) => calculateDeckRecipe({
   extraDefusesInDeck: extraDefusesInDeck.value,
   bonusExplodingKittens: bonusExplodingKittens.value,
   drawPileSafeRatio: drawPileSafeRatio.value,
+  lang: currentLang.value,
   ...overrides
 });
 
@@ -499,6 +541,10 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
     currentStep.value = 'recipe';
   }
 };
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGlobalKeydown);
+});
 </script>
 
 <style scoped>
@@ -545,6 +591,12 @@ const handleLoadPreset = ({ type, recipe, custom }) => {
     gap: 8px;
     width: auto;
     max-width: calc(100vw - 16px);
+  }
+}
+
+@media print {
+  .bottom-floating-dock {
+    display: none !important;
   }
 }
 </style>

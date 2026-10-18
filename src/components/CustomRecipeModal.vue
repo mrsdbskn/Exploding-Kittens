@@ -6,9 +6,9 @@
         <div class="header-left">
           <span class="header-icon-badge">🧪</span>
           <div>
-            <h2 class="modal-title">Custom Recipe Studio & Saved Bookmarks</h2>
+            <h2 class="modal-title">{{ isGerman ? "Eigene Rezepte & Vorlagen" : "Custom Recipe Studio & Saved Bookmarks" }}</h2>
             <p class="modal-subtitle">
-              Design custom "Recipes for Disaster" recipes, bookmark favorite deck mixes, and load them anytime.
+              {{ isGerman ? "Erstelle eigene Deck-Rezepte, speichere Favoriten und lade sie jederzeit für den nächsten Spieleabend." : "Design custom \"Recipes for Disaster\" recipes, bookmark favorite deck mixes, and load them anytime." }}
             </p>
           </div>
         </div>
@@ -22,14 +22,14 @@
           :class="{ active: activeTab === 'saved' }"
           @click="activeTab = 'saved'"
         >
-          🔖 Saved Recipes ({{ savedRecipes.length }})
+          🔖 {{ isGerman ? "Gespeicherte Rezepte (" + savedRecipes.length + ")" : "Saved Recipes (" + savedRecipes.length + ")" }}
         </button>
         <button 
           class="tab-btn" 
           :class="{ active: activeTab === 'create' }"
           @click="initCreateForm"
         >
-          ➕ Save Current Deck as New Recipe
+          ➕ {{ isGerman ? "Aktuelles Deck als Rezept speichern" : "Save Current Deck as New Recipe" }}
         </button>
       </div>
 
@@ -39,10 +39,10 @@
         <div v-if="activeTab === 'saved'" class="saved-recipes-tab">
           <div v-if="savedRecipes.length === 0" class="empty-recipes-state">
             <span class="empty-icon">📭</span>
-            <h4>No Saved Custom Recipes Yet</h4>
-            <p>Save your current deck configuration to bookmark it for your next game night!</p>
+            <h4>{{ isGerman ? "Noch keine eigenen Rezepte gespeichert" : "No Saved Custom Recipes Yet" }}</h4>
+            <p>{{ isGerman ? "Speichere deine aktuelle Deck-Zusammenstellung für deinen nächsten Spieleabend!" : "Save your current deck configuration to bookmark it for your next game night!" }}</p>
             <button class="m3-btn m3-btn-primary" @click="initCreateForm">
-              Save Current Deck Mix
+              {{ isGerman ? "Aktuelles Deck speichern" : "Save Current Deck Mix" }}
             </button>
           </div>
 
@@ -72,7 +72,7 @@
 
               <div class="recipe-actions-row">
                 <button class="m3-btn m3-btn-primary btn-sm" @click="loadRecipe(rec)">
-                  Load this Recipe ⚡
+                  {{ isGerman ? "Dieses Rezept laden ⚡" : "Load this Recipe ⚡" }}
                 </button>
               </div>
             </div>
@@ -83,7 +83,7 @@
         <div v-else-if="activeTab === 'create'" class="create-recipe-tab">
           <div class="form-grid">
             <div class="form-group">
-              <label class="form-label">Recipe Title *</label>
+              <label class="form-label">{{ isGerman ? "Rezept-Titel *" : "Recipe Title *" }}</label>
               <input 
                 v-model="form.name" 
                 type="text" 
@@ -93,7 +93,7 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Category Badge</label>
+              <label class="form-label">{{ isGerman ? "Kategorie-Kennzeichnung" : "Category Badge" }}</label>
               <input 
                 v-model="form.badge" 
                 type="text" 
@@ -103,7 +103,7 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Recommended Players</label>
+              <label class="form-label">{{ isGerman ? "Empfohlene Spieleranzahl" : "Recommended Players" }}</label>
               <input 
                 v-model="form.players" 
                 type="text" 
@@ -113,7 +113,7 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Estimated Play Time</label>
+              <label class="form-label">{{ isGerman ? "Geschätzte Spieldauer" : "Estimated Play Time" }}</label>
               <input 
                 v-model="form.time" 
                 type="text" 
@@ -123,7 +123,7 @@
             </div>
 
             <div class="form-group full-width">
-              <label class="form-label">Complexity / Flavor</label>
+              <label class="form-label">{{ isGerman ? "Schwierigkeit / Spielgefühl" : "Complexity / Flavor" }}</label>
               <input 
                 v-model="form.complexity" 
                 type="text" 
@@ -133,7 +133,7 @@
             </div>
 
             <div class="form-group full-width">
-              <label class="form-label">Recipe Description / House Rules</label>
+              <label class="form-label">{{ isGerman ? "Beschreibung & Hausregeln" : "Recipe Description / House Rules" }}</label>
               <textarea 
                 v-model="form.description" 
                 class="form-textarea" 
@@ -144,16 +144,16 @@
           </div>
 
           <div class="current-config-summary">
-            <strong>Current Deck Snapshot:</strong>
-            <span>{{ currentConfig.playerCount }} Players • {{ Object.keys(currentConfig.customQuantities || {}).length }} Card Overrides • {{ currentConfig.ownedDeckIds?.length || 1 }} Owned Decks Active</span>
+            <strong>{{ isGerman ? "Aktueller Schnappschuss:" : "Current Deck Snapshot:" }}</strong>
+            <span>{{ currentConfig.playerCount }} {{ isGerman ? "Spieler" : "Players" }} • {{ Object.keys(currentConfig.customQuantities || {}).length }} {{ isGerman ? "Kartenanpassungen" : "Card Overrides" }} • {{ currentConfig.ownedDeckIds?.length || 1 }} {{ isGerman ? "Decks aktiv" : "Owned Decks Active" }}</span>
           </div>
 
           <div class="form-actions">
             <button class="m3-btn m3-btn-tonal" @click="activeTab = 'saved'">
-              Cancel
+              {{ isGerman ? "Abbrechen" : "Cancel" }}
             </button>
             <button class="m3-btn m3-btn-primary" @click="saveNewRecipe" :disabled="!form.name.trim()">
-              Save to My Recipes 💾
+              {{ isGerman ? "Rezept speichern 💾" : "Save to My Recipes 💾" }}
             </button>
           </div>
         </div>
@@ -162,10 +162,10 @@
       <!-- Footer -->
       <div class="modal-footer">
         <button class="m3-btn m3-btn-tonal btn-sm" @click="exportRecipesJson" :disabled="savedRecipes.length === 0">
-          Export Recipes Backup (JSON)
+          {{ isGerman ? "Rezepte-Backup exportieren (JSON)" : "Export Recipes Backup (JSON)" }}
         </button>
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
-          Close
+          {{ isGerman ? "Schließen" : "Close" }}
         </button>
       </div>
     </div>
@@ -173,12 +173,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
-  currentConfig: { type: Object, required: true }
+  currentConfig: { type: Object, required: true },
+  currentLang: { type: String, default: 'en' }
 });
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const emit = defineEmits(['close', 'load-custom-recipe']);
 
@@ -197,9 +200,34 @@ const form = ref({
 const loadSavedFromStorage = () => {
   try {
     const raw = localStorage.getItem('ek_custom_recipes');
-    if (raw) {
-      savedRecipes.value = JSON.parse(raw);
+    let recipes = raw ? JSON.parse(raw) : [];
+
+    const legacyRaw = localStorage.getItem('ek_custom_presets');
+    if (legacyRaw) {
+      const legacy = JSON.parse(legacyRaw);
+      if (Array.isArray(legacy)) {
+        for (const item of legacy) {
+          if (!recipes.some(r => r.name === item.name)) {
+            recipes.push({
+              id: `custom-legacy-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+              name: item.name,
+              badge: 'Saved Preset',
+              players: `${item.playerCount || 4} Players`,
+              time: '15 min',
+              complexity: 'Standard',
+              description: `Saved on ${item.date || 'earlier'}`,
+              config: {
+                playerCount: item.playerCount || 4,
+                ownedDeckIds: item.ownedDeckIds || ['exploding-kittens-original-edition'],
+                customQuantities: item.customQuantities || {},
+                excludedCards: item.excludedCards || []
+              }
+            });
+          }
+        }
+      }
     }
+    savedRecipes.value = recipes;
   } catch (e) {
     savedRecipes.value = [];
   }

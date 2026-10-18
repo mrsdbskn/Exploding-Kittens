@@ -10,6 +10,23 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('canvas-confetti')) return 'vendor-confetti';
+            return 'vendor-vue';
+          }
+          if (id.includes('src/data/decksData.js')) {
+            return 'decks-database';
+          }
+          if (id.includes('src/data/rulesKnowledge.js')) {
+            return 'rules-knowledge';
+          }
+        }
+      }
+    }
   }
 })

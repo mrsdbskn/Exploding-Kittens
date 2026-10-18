@@ -49,6 +49,19 @@
       </div>
     </div>
 
+    <!-- Card Shortage Warning Banner -->
+    <div v-if="!recipe.canDealFullHands" class="m3-card card-shortage-alert">
+      <span class="shortage-icon">⚠️</span>
+      <div class="shortage-text">
+        <h4>{{ isGerman ? 'Kartenmangel für Start-Hände!' : 'Card Shortage for Starting Hands!' }}</h4>
+        <p>
+          {{ isGerman 
+            ? `Es fehlen ${recipe.cardsShortage} sichere Karten, um ${recipe.playerCount} Spielern je ${recipe.starterHandNonDefuse + 1} Handkarten auszuteilen. Füge in Schritt 1 weitere Decks hinzu oder reduziere in Schritt 2 die Spieleranzahl / Handgröße.`
+            : `You need at least ${recipe.cardsShortage} more safe cards to deal ${recipe.starterHandNonDefuse + 1} cards to ${recipe.playerCount} players. Add more decks in Step 1 or decrease player count / hand size in Step 2.` }}
+        </p>
+      </div>
+    </div>
+
     <!-- Stats Summary Ribbon -->
     <div class="stats-ribbon m3-card">
       <div class="stat-pill">
@@ -431,6 +444,7 @@
     <!-- Cat Artworks Archive Modal -->
     <CatArtworkModal
       :is-open="isCatModalOpen"
+      :current-lang="currentLang"
       :initial-variant-slug="activeCatVariantSlug"
       :owned-deck-ids="recipe.ownedDeckIds || []"
       @close="isCatModalOpen = false"
@@ -439,6 +453,7 @@
     <!-- Card Sleeving & Box Storage Calculator Modal (Feature 9) -->
     <SleeveCalculatorModal
       :is-open="showSleeveModal"
+      :current-lang="currentLang"
       :total-cards="recipe.totalGameCards"
       :owned-deck-ids="recipe.ownedDeckIds || []"
       @close="showSleeveModal = false"
@@ -685,20 +700,38 @@ watch(progressPercentage, (newVal) => {
 // Copy recipe as text
 const copyRecipeText = async () => {
   const r = props.recipe;
-  let text = `💥 Exploding Kittens Deck Recipe for ${r.playerCount} Players 💥\n`;
-  text += `==============================================\n`;
-  text += `Total Cards in Game: ${r.totalGameCards}\n`;
-  text += `Starting Hand: 1 Defuse + ${r.starterHandNonDefuse} cards (${r.starterHandNonDefuse + 1} total in hand)\n`;
-  text += `Draw Pile Size: ${r.totalDrawPileSize} cards\n`;
-  text += `Hazards in Deck: ${r.explodingKittensNeeded} Exploding Kittens\n`;
-  text += `Extra Defuses in Draw Pile: ${r.extraDefusesToInsert}\n\n`;
-  text += `📋 Card Breakdown:\n`;
+  let text = '';
+  if (isGerman.value) {
+    text = `💥 Exploding Kittens Deck-Rezept für ${r.playerCount} Spieler 💥\n`;
+    text += `==============================================\n`;
+    text += `Karten gesamt im Spiel: ${r.totalGameCards}\n`;
+    text += `Start-Hand: 1 Entschärfung + ${r.starterHandNonDefuse} Karten (${r.starterHandNonDefuse + 1} Handkarten gesamt)\n`;
+    text += `Nachziehstapel: ${r.totalDrawPileSize} Karten\n`;
+    text += `Gefahren im Stapel: ${r.explodingKittensNeeded} Explodierende Kätzchen\n`;
+    text += `Zusätzliche Entschärfungen im Stapel: ${r.extraDefusesToInsert}\n\n`;
+    text += `📋 Karten-Aufschlüsselung:\n`;
 
-  for (const item of checklistItems.value) {
-    text += `- ${item.quantity}x ${item.name} (${item.role})\n`;
+    for (const item of checklistItems.value) {
+      text += `- ${item.quantity}x ${item.name} (${item.role})\n`;
+    }
+
+    text += `\nErstellt mit dem Exploding Kittens Deck-Architekt`;
+  } else {
+    text = `💥 Exploding Kittens Deck Recipe for ${r.playerCount} Players 💥\n`;
+    text += `==============================================\n`;
+    text += `Total Cards in Game: ${r.totalGameCards}\n`;
+    text += `Starting Hand: 1 Defuse + ${r.starterHandNonDefuse} cards (${r.starterHandNonDefuse + 1} total in hand)\n`;
+    text += `Draw Pile Size: ${r.totalDrawPileSize} cards\n`;
+    text += `Hazards in Deck: ${r.explodingKittensNeeded} Exploding Kittens\n`;
+    text += `Extra Defuses in Draw Pile: ${r.extraDefusesToInsert}\n\n`;
+    text += `📋 Card Breakdown:\n`;
+
+    for (const item of checklistItems.value) {
+      text += `- ${item.quantity}x ${item.name} (${item.role})\n`;
+    }
+
+    text += `\nGenerated with Exploding Kittens Deck Builder`;
   }
-
-  text += `\nGenerated with Exploding Kittens Deck Builder`;
 
   try {
     await navigator.clipboard.writeText(text);
@@ -764,6 +797,27 @@ const printRecipe = () => {
 }
 
 /* Stats Ribbon */
+.card-shortage-alert {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  background-color: rgba(255, 84, 73, 0.15);
+  border: 1px solid rgba(255, 84, 73, 0.4);
+  margin-bottom: 24px;
+}
+.shortage-icon {
+  font-size: 2rem;
+}
+.shortage-text h4 {
+  color: var(--md-sys-color-error);
+  margin-bottom: 4px;
+}
+.shortage-text p {
+  color: var(--md-sys-color-on-surface);
+  font-size: 0.95rem;
+}
+
 .stats-ribbon {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

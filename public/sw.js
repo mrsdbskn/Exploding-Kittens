@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ek-deckbuilder-v1';
+const CACHE_NAME = 'ek-deckbuilder-v2';
 
 const STATIC_ASSETS = [
   './',
@@ -33,7 +33,7 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
-  // Cache-first for images, icons, fonts, and static assets
+  // Cache-first for images, icons, fonts, styles, and scripts
   if (
     url.pathname.includes('/cards/') ||
     url.pathname.includes('/decks/') ||
@@ -56,13 +56,27 @@ self.addEventListener('fetch', (event) => {
             cache.put(event.request, responseToCache);
           });
           return networkResponse;
-        }).catch(() => caches.match('./index.html'));
+        }).catch(() => {
+          // Do not return index.html for assets, which causes fatal MIME-type errors
+          if (event.request.destination === 'image') {
+            return caches.match('./favicon.png');
+          }
+          return new Response('', { status: 503, statusText: 'Service Unavailable' });
+        });
       })
     );
     return;
   }
 
-  // Network-first for other requests with cache fallback
+  // Navigation requests: Network-first with offline index.html fallback
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Network-first for all other requests
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );

@@ -7,9 +7,9 @@
           <div class="header-left">
             <span class="gallery-badge-icon">😼</span>
             <div>
-              <h2 class="gallery-title">Exploding Kittens: 18 Cat Artworks Archive</h2>
+              <h2 class="gallery-title">{{ isGerman ? "Exploding Kittens: 18 Katzen-Artworks Archiv" : "Exploding Kittens: 18 Cat Artworks Archive" }}</h2>
               <p class="gallery-subtitle">
-                All 18 official artwork styles across editions. Select any card to view in full detail.
+                {{ isGerman ? "Alle 18 offiziellen Artwork-Stile aller Editionen. Wähle eine Karte für die Detailansicht." : "All 18 official artwork styles across editions. Select any card to view in full detail." }}
               </p>
             </div>
           </div>
@@ -25,28 +25,28 @@
               :class="{ active: currentFilter === 'all' }"
               @click="currentFilter = 'all'"
             >
-              All 18 Artworks (18)
+              {{ isGerman ? "Alle 18 Artworks (18)" : "All 18 Artworks (18)" }}
             </button>
             <button 
               class="filter-tab-btn" 
               :class="{ active: currentFilter === 'owned' }"
               @click="currentFilter = 'owned'"
             >
-              In Owned Decks ({{ ownedVariants.length }})
+              {{ isGerman ? "In deinen Decks (" + ownedVariants.length + ")" : "In Owned Decks (" + ownedVariants.length + ")" }}
             </button>
             <button 
               class="filter-tab-btn" 
               :class="{ active: currentFilter === 'core' }"
               @click="currentFilter = 'core'"
             >
-              Core 5 Original (5)
+              {{ isGerman ? "5 Original-Klassiker (5)" : "Core 5 Original (5)" }}
             </button>
             <button 
               class="filter-tab-btn" 
               :class="{ active: currentFilter === 'special' }"
               @click="currentFilter = 'special'"
             >
-              Special & Expansions (13)
+              {{ isGerman ? "Spezial & Erweiterungen (13)" : "Special & Expansions (13)" }}
             </button>
           </div>
 
@@ -59,7 +59,7 @@
             <input 
               v-model="searchQuery" 
               type="text" 
-              placeholder="Search cat art name..." 
+              :placeholder="isGerman ? 'Katzen-Artwork suchen...' : 'Search cat art name...'" 
               class="gallery-search-input"
             />
             <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
@@ -91,16 +91,16 @@
               <!-- Owned Status -->
               <div class="ownership-status-badge" :class="isVariantOwned(selectedVariant.slug) ? 'is-owned' : 'is-unowned'">
                 <span v-if="isVariantOwned(selectedVariant.slug)">
-                  ✅ In your deck: <strong>{{ getOwnedQuantity(selectedVariant.slug) }}x cards</strong>
+                  ✅ {{ isGerman ? "In deinem Deck:" : "In your deck:" }} <strong>{{ getOwnedQuantity(selectedVariant.slug) }}x {{ isGerman ? "Karten" : "cards" }}</strong>
                 </span>
                 <span v-else>
-                  📦 Not in current owned decks
+                  📦 {{ isGerman ? "Nicht in deinen ausgewählten Decks" : "Not in current owned decks" }}
                 </span>
               </div>
 
               <!-- Decks Featuring this Artwork -->
               <div class="preview-decks-section">
-                <span class="preview-label">Featured In Editions:</span>
+                <span class="preview-label">{{ isGerman ? "Enthalten in diesen Editionen:" : "Featured In Editions:" }}</span>
                 <div class="preview-decks-chips">
                   <span 
                     v-for="dSlug in getDecksForVariant(selectedVariant.slug)" 
@@ -117,10 +117,9 @@
 
               <!-- Combo Reminder -->
               <div class="combo-rule-box">
-                <span class="combo-title">🐱 Special Combo Mechanics</span>
+                <span class="combo-title">🐱 {{ isGerman ? "Katzenkarten-Kombos" : "Special Combo Mechanics" }}</span>
                 <p class="combo-text">
-                  Play <strong>2 matching {{ selectedVariant.name }}</strong> cards to steal a random card from another player.
-                  Or play 3 matching cards to name a specific card to steal!
+                  {{ isGerman ? "Spiele 2 gleiche Karten, um 1 zufällige Handkarte eines Mitspielers zu klauen. Bei 3 gleichen Karten darfst du eine bestimmte Karte verlangen!" : "Play 2 matching cards to steal a random card from another player. Or play 3 matching cards to name a specific card to steal!" }}
                 </p>
               </div>
             </div>
@@ -158,10 +157,10 @@
         <!-- Modal Footer -->
         <div class="gallery-footer">
           <span class="footer-hint">
-            💡 Tip: Exploding Kittens standard rules allow combining cat cards across decks into identical matching pairs.
+            💡 {{ isGerman ? "Tipp: Die offiziellen Regeln erlauben das Kombinieren identischer Katzenkarten aus verschiedenen Decks zu passenden Paaren." : "Tip: Exploding Kittens standard rules allow combining cat cards across decks into identical matching pairs." }}
           </span>
           <button class="m3-btn m3-btn-primary" @click="close">
-            Done
+            {{ isGerman ? "Fertig" : "Done" }}
           </button>
         </div>
       </div>
@@ -176,8 +175,11 @@ import { CAT_VARIANTS_CATALOG, DECKS } from '../data/decksData.js';
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
   initialVariantSlug: { type: String, default: null },
-  ownedDeckIds: { type: Array, default: () => [] }
+  ownedDeckIds: { type: Array, default: () => [] },
+  currentLang: { type: String, default: 'en' }
 });
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const emit = defineEmits(['close']);
 

@@ -4,10 +4,9 @@
       <button class="close-btn" @click="$emit('close')">✕</button>
 
       <div class="modal-header">
-        <h2 class="modal-title">📖 Recipe Booklets & Custom Presets</h2>
+        <h2 class="modal-title">{{ isGerman ? "📖 Offizielle Rezepte & Vorlagen" : "📖 Recipe Booklets & Custom Presets" }}</h2>
         <p class="modal-desc">
-          Choose an official recipe from <em>Recipes for Disaster</em> or your own custom saved builds.
-          Applying a recipe automatically sets player recommendations, active cards, and hazard counts.
+          {{ isGerman ? "Wähle ein offizielles Rezept aus \"Rezepte für die Katastrophe\" oder gespeicherte Vorlagen. Das Laden setzt Spieleranzahl, aktive Karten und Bomben automatisch." : "Choose an official recipe from \"Recipes for Disaster\" or your own custom saved builds. Applying a recipe automatically sets player recommendations, active cards, and hazard counts." }}
         </p>
       </div>
 
@@ -18,14 +17,14 @@
           :class="{ active: activeTab === 'official' }"
           @click="activeTab = 'official'"
         >
-          Official Recipes ({{ officialRecipes.length }})
+          {{ isGerman ? "Offizielle Rezepte (" + officialRecipes.length + ")" : "Official Recipes (" + officialRecipes.length + ")" }}
         </button>
         <button 
           class="tab-btn" 
           :class="{ active: activeTab === 'custom' }"
           @click="activeTab = 'custom'"
         >
-          My Custom Presets ({{ customPresets.length }})
+          {{ isGerman ? "Meine Vorlagen (" + customPresets.length + ")" : "My Custom Presets (" + customPresets.length + ")" }}
         </button>
       </div>
 
@@ -42,7 +41,7 @@
               <h3 class="preset-name">{{ rec.name }}</h3>
             </div>
             <button class="m3-btn m3-btn-primary btn-sm" @click="applyRecipe(rec)">
-              Load Recipe
+              {{ isGerman ? "Rezept laden" : "Load Recipe" }}
             </button>
           </div>
 
@@ -55,7 +54,7 @@
           </div>
 
           <div class="preset-cards-summary">
-            <span class="summary-title">Key cards:</span>
+            <span class="summary-title">{{ isGerman ? "Wichtige Karten:" : "Key cards:" }}</span>
             <span class="cards-preview-text">
               {{ Object.entries(rec.cardCounts).map(([k, v]) => `${v}x ${formatCardSlug(k)}`).join(', ') }}
             </span>
@@ -70,7 +69,7 @@
           <input 
             v-model="newPresetName" 
             type="text" 
-            placeholder="Name your custom deck setup (e.g. Friday Chaos Night)..."
+            :placeholder="isGerman ? 'Name der Vorlage (z.B. Freitagabend Chaos)...' : 'Name your custom deck setup (e.g. Friday Chaos Night)...'"
             class="custom-input"
             @keyup.enter="saveCurrentBuild"
           />
@@ -79,7 +78,7 @@
             :disabled="!newPresetName.trim()"
             @click="saveCurrentBuild"
           >
-            Save Current Deck
+            {{ isGerman ? "Aktuelles Deck speichern" : "Save Current Deck" }}
           </button>
         </div>
 
@@ -94,10 +93,10 @@
               <h3 class="preset-name">{{ cp.name }}</h3>
               <div class="custom-card-actions">
                 <button class="m3-btn m3-btn-primary btn-sm" @click="applyCustom(cp)">
-                  Load
+                  {{ isGerman ? "Laden" : "Load" }}
                 </button>
                 <button class="m3-btn m3-btn-tonal btn-sm delete-btn" @click="deleteCustom(idx)">
-                  Delete
+                  {{ isGerman ? "Löschen" : "Delete" }}
                 </button>
               </div>
             </div>
@@ -110,13 +109,13 @@
           </div>
         </div>
         <div v-else class="empty-custom">
-          <p>No saved custom presets yet. Configure a deck and save it here to reload anytime!</p>
+          <p>{{ isGerman ? "Noch keine eigenen Vorlagen gespeichert. Konfiguriere ein Deck und speichere es hier ab!" : "No saved custom presets yet. Configure a deck and save it here to reload anytime!" }}</p>
         </div>
       </div>
 
       <div class="modal-footer">
         <button class="m3-btn m3-btn-tonal" @click="$emit('close')">
-          Close
+          {{ isGerman ? "Schließen" : "Close" }}
         </button>
       </div>
     </div>
@@ -124,12 +123,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps({
   officialRecipes: { type: Array, required: true },
-  currentConfig: { type: Object, required: true }
+  currentConfig: { type: Object, required: true },
+  currentLang: { type: String, default: 'en' }
 });
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const emit = defineEmits(['close', 'load-preset']);
 

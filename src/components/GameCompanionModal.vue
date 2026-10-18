@@ -6,9 +6,9 @@
         <div class="header-left">
           <span class="header-icon-badge">🎮</span>
           <div>
-            <h2 class="companion-title">Table Companion & Turn Tracker</h2>
+            <h2 class="companion-title">{{ isGerman ? "Spielabend-Begleiter & Runden-Tracker" : "Table Companion & Turn Tracker" }}</h2>
             <p class="companion-subtitle">
-              Live game night helper for tracking dead players, turn timers, and special card powers.
+              {{ isGerman ? "Live-Helfer am Spieltisch: Timer für Züge, Verfolgung toter Spieler und Soundeffekte." : "Live game night helper for tracking dead players, turn timers, and special card powers." }}
             </p>
           </div>
         </div>
@@ -29,19 +29,19 @@
 
       <!-- Quick SFX Tactical Bar (Feature 8) -->
       <div class="tactical-sfx-bar">
-        <span class="sfx-bar-label">⚡ Tactical SFX:</span>
+        <span class="sfx-bar-label">⚡ {{ isGerman ? "Taktische Sounds:" : "Tactical SFX:" }}</span>
         <div class="sfx-buttons-row">
           <button class="sfx-btn sfx-nope" @click="playSfx('nope')">
-            🛑 "NOPE!"
+            🛑 "NÖ!"
           </button>
           <button class="sfx-btn sfx-boom" @click="playSfx('boom')">
-            💥 "EXPLODE!"
+            💥 {{ isGerman ? "\"BUMM!\"" : "\"EXPLODE!\"" }}
           </button>
           <button class="sfx-btn sfx-defuse" @click="playSfx('defuse')">
-            🛡️ "DEFUSED!"
+            🛡️ {{ isGerman ? "\"ENTSCHÄRFT!\"" : "\"DEFUSED!\"" }}
           </button>
           <button class="sfx-btn sfx-purr" @click="playSfx('purr')">
-            🐱 Purr
+            🐱 {{ isGerman ? "Schnurren" : "Purr" }}
           </button>
         </div>
       </div>
@@ -51,7 +51,7 @@
         <div class="timer-left">
           <div class="timer-display-box" :class="{ 'is-warning': timerSeconds <= 5 && timerActive }">
             <span class="timer-digits">{{ formattedTime }}</span>
-            <span class="timer-status">{{ timerActive ? 'TURN IN PROGRESS' : 'TIMER PAUSED' }}</span>
+            <span class="timer-status">{{ timerActive ? (isGerman ? 'ZUG LÄUFT' : 'TURN IN PROGRESS') : (isGerman ? 'TIMER PAUSIERT' : 'TIMER PAUSED') }}</span>
           </div>
 
           <div class="timer-controls">
@@ -60,19 +60,19 @@
               :class="timerActive ? 'm3-btn-tonal' : 'm3-btn-primary'"
               @click="toggleTimer"
             >
-              {{ timerActive ? '⏸️ Pause' : '▶️ Start Turn' }}
+              {{ timerActive ? (isGerman ? '⏸️ Pause' : '⏸️ Pause') : (isGerman ? '▶️ Zug starten' : '▶️ Start Turn') }}
             </button>
             <button class="m3-btn m3-btn-tonal" @click="resetTimer">
-              ↺ Reset
+              {{ isGerman ? "↺ Zurücksetzen" : "↺ Reset" }}
             </button>
             <button class="m3-btn m3-btn-primary" @click="nextPlayerTurn">
-              Next Player ⏭️
+              {{ isGerman ? "Nächster Spieler ⏭️" : "Next Player ⏭️" }}
             </button>
           </div>
         </div>
 
         <div class="timer-presets">
-          <span class="presets-label">Speed Mode:</span>
+          <span class="presets-label">{{ isGerman ? "Zeitlimit:" : "Speed Mode:" }}</span>
           <div class="presets-chips">
             <button 
               v-for="s in [30, 45, 60, 90]" 
@@ -92,11 +92,11 @@
         <div class="undead-calc">
           <span class="undead-icon">🧟</span>
           <div class="undead-info">
-            <strong>Zombie Rules Active:</strong>
+            <strong>{{ isGerman ? "Zombie-Regeln aktiv:" : "Zombie Rules Active:" }}</strong>
             <span>
-              {{ deadCount }} dead player(s). 
-              <em>Attack of the Dead</em> forces: 
-              <strong class="attack-dead-calc">{{ deadCount * 3 }} turns!</strong>
+              {{ isGerman ? deadCount + " tote(r) Spieler." : deadCount + " dead player(s)." }} 
+              {{ isGerman ? "Angriff der Toten zwingt zu:" : "Attack of the Dead forces:" }} 
+              <strong class="attack-dead-calc">{{ deadCount * 3 }} {{ isGerman ? "Zügen!" : "turns!" }}</strong>
             </span>
           </div>
         </div>
@@ -105,13 +105,13 @@
       <!-- Player Management Grid -->
       <div class="players-container">
         <div class="players-header-row">
-          <h3 class="players-title">Players at Table ({{ players.length }})</h3>
+          <h3 class="players-title">{{ isGerman ? "Spieler am Tisch (" + players.length + ")" : "Players at Table (" + players.length + ")" }}</h3>
           <div class="players-count-buttons">
             <button class="m3-btn m3-btn-tonal btn-xs" @click="addPlayer" :disabled="players.length >= 10">
-              + Add Player
+              {{ isGerman ? "+ Spieler hinzufügen" : "+ Add Player" }}
             </button>
             <button class="m3-btn m3-btn-tonal btn-xs" @click="removePlayer" :disabled="players.length <= 2">
-              - Remove
+              {{ isGerman ? "- Entfernen" : "- Remove" }}
             </button>
           </div>
         </div>
@@ -135,10 +135,10 @@
               <input 
                 v-model="p.name" 
                 class="player-name-input"
-                placeholder="Player Name"
+                :placeholder="isGerman ? 'Spielername' : 'Player Name'"
                 @click.stop
               />
-              <span v-if="activePlayerIndex === idx" class="turn-badge">ACTIVE</span>
+              <span v-if="activePlayerIndex === idx" class="turn-badge">{{ isGerman ? "AM ZUG" : "ACTIVE" }}</span>
             </div>
 
             <!-- Alive / Dead Toggle Button -->
@@ -147,7 +147,7 @@
               :class="p.alive ? 'is-alive' : 'is-eliminated'"
               @click.stop="togglePlayerAlive(idx)"
             >
-              {{ p.alive ? '✅ Alive & Armed' : '💀 Dead (Undead)' }}
+              {{ p.alive ? (isGerman ? '✅ Am Leben' : '✅ Alive & Armed') : (isGerman ? '💀 Tot (Untot)' : '💀 Dead (Undead)') }}
             </button>
 
             <!-- Player Quick Badges / Roles -->

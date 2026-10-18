@@ -1,5 +1,8 @@
+import assert from 'node:assert';
 import { calculateDeckRecipe } from './src/utils/deckEngine.js';
 import { DECKS, ALL_CARDS_CATALOG, CATEGORIES, OFFICIAL_RECIPES, CAT_VARIANTS_CATALOG } from './src/data/decksData.js';
+import { calculateDeckProbabilities } from './src/utils/probabilityEngine.js';
+import { DANGER_PRESETS, settingsFromPreset } from './src/utils/dangerPresets.js';
 
 console.log('--- Testing Exploding Kittens Deck Engine ---');
 
@@ -23,8 +26,8 @@ console.log('  Draw Pile Size:', test1.totalDrawPileSize);
 console.log('  Can deal full hands:', test1.canDealFullHands);
 console.log('  Suggestions count:', test1.suggestions.length);
 
-console.assert(test1.explodingKittensNeeded === 3, 'EK needed should be 3 for 4 players');
-console.assert(test1.canDealFullHands === true, 'Should be able to deal hands');
+assert.strictEqual(test1.explodingKittensNeeded, 3, 'EK needed should be 3 for 4 players');
+assert.strictEqual(test1.canDealFullHands, true, 'Should be able to deal hands');
 
 // Test 2: Streaking Kitten +1 Rule
 const test2 = calculateDeckRecipe({
@@ -39,7 +42,7 @@ console.log('\nTest 2 (Streaking Kitten 4p):');
 console.log('  Exploding Kittens Needed:', test2.explodingKittensNeeded, '(Expected: 4 with Streaking Kitten)');
 const streakingSugg = test2.suggestions.find(s => s.id === 'streaking-kitten-rule');
 console.log('  Streaking suggestion detected:', !!streakingSugg);
-console.assert(test2.explodingKittensNeeded === 4, 'Streaking Kitten adds 1 EK');
+assert.strictEqual(test2.explodingKittensNeeded, 4, 'Streaking Kitten adds 1 EK');
 
 // Test 3: Barking Kitten twin rule
 const test3 = calculateDeckRecipe({
@@ -52,7 +55,7 @@ const test3 = calculateDeckRecipe({
 console.log('\nTest 3 (Barking Kitten 1 card):');
 const bkSugg = test3.suggestions.find(s => s.id === 'barking-kitten-pair');
 console.log('  Barking kitten warning detected:', !!bkSugg);
-console.assert(!!bkSugg, 'Should alert when only 1 Barking Kitten is active');
+assert.ok(!!bkSugg, 'Should alert when only 1 Barking Kitten is active');
 
 // Test 4: Armageddon without Godcat
 const test4 = calculateDeckRecipe({
@@ -65,7 +68,7 @@ const test4 = calculateDeckRecipe({
 console.log('\nTest 4 (Armageddon without Godcat):');
 const armaSugg = test4.suggestions.find(s => s.id === 'armageddon-godcat');
 console.log('  Armageddon error detected:', !!armaSugg);
-console.assert(!!armaSugg && armaSugg.type === 'error', 'Should error when Armageddon is active without Godcat');
+assert.ok(!!armaSugg && armaSugg.type === 'error', 'Should error when Armageddon is active without Godcat');
 
 // Test 5: Dead-Player cards without Zombie Kitten
 const test5 = calculateDeckRecipe({
@@ -78,6 +81,8 @@ const test5 = calculateDeckRecipe({
 console.log('\nTest 5 (Dead player cards without Zombie Kitten):');
 const deadSugg = test5.suggestions.find(s => s.id === 'dead-player-zombie-kitten');
 console.log('  Dead player warning detected:', !!deadSugg);
+assert.ok(!!deadSugg, 'Should alert when dead player cards active without Zombie Kitten');
+
 // Test 6: Party Pack Edition - 35 Cat Cards and 120 Total Cards
 const test6 = calculateDeckRecipe({
   ownedDeckIds: ['exploding-kittens-party-pack-edition'],
@@ -89,14 +94,14 @@ const test6 = calculateDeckRecipe({
 console.log('\nTest 6 (Party Pack Edition 10p):');
 console.log('  Party Pack Cat Cards Total:', test6.availablePool['cat-card'].totalAvailable, '(Expected: 35)');
 console.log('  Party Pack Total Cards in Deck:', test6.totalGameCards);
-console.assert(test6.availablePool['cat-card'].totalAvailable === 35, 'Party Pack must have exactly 35 Cat Cards');
-console.assert(test6.totalGameCards >= 100, 'Party Pack is a mega 120 card deck');
+assert.strictEqual(test6.availablePool['cat-card'].totalAvailable, 35, 'Party Pack must have exactly 35 Cat Cards');
+assert.ok(test6.totalGameCards >= 100, 'Party Pack is a mega 120 card deck');
 
 // Test 7: Verify 18 Cat Artwork Styles Catalog
 console.log('\nTest 7 (18 Cat Artwork Styles Archive):');
 console.log('  Total cat variants in catalog:', CAT_VARIANTS_CATALOG.length, '(Expected: 18)');
-console.assert(CAT_VARIANTS_CATALOG.length === 18, 'Must have all 18 official artwork styles');
-console.assert(ALL_CARDS_CATALOG['cat-card'].icons.length === 18, 'Catalog cat-card must include all 18 icons');
+assert.strictEqual(CAT_VARIANTS_CATALOG.length, 18, 'Must have all 18 official artwork styles');
+assert.strictEqual(ALL_CARDS_CATALOG['cat-card'].icons.length, 18, 'Catalog cat-card must include all 18 icons');
 
 // Test 8: Verify Cat Variant Breakdown in Recipe Output
 const test8 = calculateDeckRecipe({
@@ -107,16 +112,13 @@ const test8 = calculateDeckRecipe({
 
 console.log('\nTest 8 (Multi-Deck Cat Variants Assembly Breakdown):');
 console.log('  Active cat variants count:', test8.catVariantsBreakdown.length, '(Expected: 9 = 5 Original + 4 GvE)');
-console.assert(test8.catVariantsBreakdown.length === 9, 'Should have 9 unique cat styles across Original + Good vs Evil');
+assert.strictEqual(test8.catVariantsBreakdown.length, 9, 'Should have 9 unique cat styles across Original + Good vs Evil');
 for (const v of test8.catVariantsBreakdown) {
-  console.assert(v.icon && v.name && v.quantity === 4, `Variant ${v.name} must have valid icon and count`);
+  assert.ok(v.icon && v.name && v.quantity === 4, `Variant ${v.name} must have valid icon and count`);
 }
 console.log('  All 9 cat variants have valid icons, artwork paths, and quantities!');
 
 // Test 9: Danger Adjuster Levers (Bonus EK and Safe Card Trimming)
-import { calculateDeckProbabilities } from './src/utils/probabilityEngine.js';
-import { DANGER_PRESETS, settingsFromPreset } from './src/utils/dangerPresets.js';
-
 console.log('\nTest 9 (Danger Adjuster Volatility Levers):');
 const test9Original = calculateDeckRecipe({
   ownedDeckIds: ['exploding-kittens-original-edition', 'exploding-kittens-party-pack-edition'],
@@ -147,10 +149,10 @@ console.log('  High-Hazard Draw Pile Size:', test9HighHazard.totalDrawPileSize, 
 console.log('  Official Volatility Score:', probOfficial.volatilityScore);
 console.log('  High-Hazard Volatility Score:', probHazard.volatilityScore);
 
-console.assert(test9HighHazard.bonusEKApplied === 2, 'Should apply 2 bonus Exploding Kittens');
-console.assert(test9HighHazard.trimmedCardsTotal > 0, 'Should trim safe cards from draw pile');
-console.assert(probHazard.volatilityScore > probOfficial.volatilityScore, 'High hazard must increase volatility score');
-console.assert(DANGER_PRESETS.length === 5, 'Must have 5 danger presets');
+assert.strictEqual(test9HighHazard.bonusEKApplied, 2, 'Should apply 2 bonus Exploding Kittens');
+assert.ok(test9HighHazard.trimmedCardsTotal > 0, 'Should trim safe cards from draw pile');
+assert.ok(probHazard.volatilityScore > probOfficial.volatilityScore, 'High hazard must increase volatility score');
+assert.strictEqual(DANGER_PRESETS.length, 5, 'Must have 5 danger presets');
 console.log('  Danger Adjuster levers and volatility calculations verified!');
 
 console.log('\n All engine tests passed with 100% success!');

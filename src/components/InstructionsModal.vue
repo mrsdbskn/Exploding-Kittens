@@ -6,10 +6,10 @@
       <!-- Modal Header -->
       <div class="modal-header">
         <div class="header-text">
-          <span class="m3-badge m3-badge-primary">Embedded Rulebooks</span>
-          <h2 class="modal-title">📖 Exploding Kittens Official Instructions</h2>
+          <span class="m3-badge m3-badge-primary">{{ isGerman ? "Offizielle Regelbücher" : "Embedded Rulebooks" }}</span>
+          <h2 class="modal-title">{{ isGerman ? "📖 Exploding Kittens Offizielle Anleitungen" : "📖 Exploding Kittens Official Instructions" }}</h2>
           <p class="modal-subtitle">
-            Browse complete official rulebooks and turn mechanics for all 11 editions and expansions.
+            {{ isGerman ? "Durchsuche die vollständigen offiziellen Regelwerke und Spielmechaniken aller 11 Editionen und Erweiterungen." : "Browse complete official rulebooks and turn mechanics for all 11 editions and expansions." }}
           </p>
         </div>
 
@@ -18,7 +18,7 @@
           <input 
             v-model="searchQuery" 
             type="text" 
-            placeholder="Search rules (e.g. combo, paw, attack, defuse)..." 
+            :placeholder="isGerman ? 'Regeln durchsuchen (z.B. Kombo, Tatze, Angriff, Entschärfen)...' : 'Search rules (e.g. combo, paw, attack, defuse)...'" 
             class="rules-search-input"
           />
           <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
@@ -59,7 +59,7 @@
                 rel="noopener noreferrer"
                 class="m3-btn m3-btn-tonal btn-sm pdf-link-btn"
               >
-                <span>Official PDF</span>
+                <span>{{ isGerman ? "Offizielles PDF" : "Official PDF" }}</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                   <polyline points="15 3 21 3 21 9"/>
@@ -86,7 +86,7 @@
       <!-- Modal Footer -->
       <div class="modal-footer">
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
-          Close Instructions
+          {{ isGerman ? "Anleitung schließen" : "Close Instructions" }}
         </button>
       </div>
     </div>
@@ -97,7 +97,13 @@
 import { ref, computed } from 'vue';
 import { RULEBOOKS } from '../data/rulesKnowledge.js';
 
+const props = defineProps({
+  currentLang: { type: String, default: 'en' }
+});
+
 defineEmits(['close']);
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 const rulebooks = RULEBOOKS;
 const selectedDeckId = ref(RULEBOOKS[0].deckId);

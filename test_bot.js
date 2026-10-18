@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { queryRulesEngine } from './src/utils/rulesBotEngine.js';
 
 console.log('--- Testing Rules Bot Engine ---');
@@ -20,7 +21,7 @@ for (const q of testQuestions) {
   console.log(`\nQ (EN): "${q}"`);
   console.log(`Reference: ${res.reference}`);
   console.log(`Answer: ${res.answer.slice(0, 100)}...`);
-  console.assert(res.answer && res.answer.length > 20, `Answer should be substantive for "${q}"`);
+  assert.ok(res.answer && res.answer.length > 20, `Answer should be substantive for "${q}"`);
 }
 
 console.log('\n--- Testing German Rules Bot Queries ---');
@@ -40,7 +41,7 @@ for (const q of germanQuestions) {
   console.log(`\nQ (DE): "${q}"`);
   console.log(`Reference: ${res.reference}`);
   console.log(`Answer: ${res.answer.slice(0, 100)}...`);
-  console.assert(res.answer && res.answer.length > 20, `Answer should be substantive for German "${q}"`);
+  assert.ok(res.answer && res.answer.length > 20, `Answer should be substantive for German "${q}"`);
 }
 
 console.log('\nAll English & German Rules Bot queries tested successfully!');

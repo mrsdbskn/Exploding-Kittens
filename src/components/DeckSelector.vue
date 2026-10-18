@@ -98,7 +98,7 @@
 
         <!-- Deck Info -->
         <div class="deck-info">
-          <h3 class="deck-name">{{ deck.name }}</h3>
+          <h3 class="deck-name">{{ formatDeckName(deck.id, deck.name) }}</h3>
           
           <div class="deck-meta">
             <span class="deck-card-count">
@@ -115,7 +115,7 @@
           </div>
 
           <p class="deck-description">
-            {{ deck.description || (isGerman ? 'Enthält vollständiges eigenständiges Spiel oder Erweiterungs-Set mit einzigartigen Mechaniken.' : 'Includes complete standalone or expansion card set with unique mechanics.') }}
+            {{ formatDeckDesc(deck.id, deck.description) || (isGerman ? 'Enthält vollständiges eigenständiges Spiel oder Erweiterungs-Set mit einzigartigen Mechaniken.' : 'Includes complete standalone or expansion card set with unique mechanics.') }}
           </p>
         </div>
 
@@ -186,7 +186,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { getCardDisplayName } from '../data/translations.js';
+import { getCardDisplayName, getDeckDisplayName, getDeckDisplayDesc } from '../data/translations.js';
 
 const props = defineProps({
   decks: {
@@ -218,6 +218,14 @@ const filterOptions = computed(() => [
 
 const formatCardTitle = (slug, defaultName) => {
   return getCardDisplayName(slug, defaultName, props.currentLang);
+};
+
+const formatDeckName = (deckId, defaultName) => {
+  return getDeckDisplayName(deckId, defaultName, props.currentLang);
+};
+
+const formatDeckDesc = (deckId, defaultDesc) => {
+  return getDeckDisplayDesc(deckId, defaultDesc, props.currentLang);
 };
 
 

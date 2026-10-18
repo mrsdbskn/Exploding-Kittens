@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { ALL_CARDS_CATALOG, CATEGORIES, DECKS } from './src/data/decksData.js';
 import { calculateDeckRecipe } from './src/utils/deckEngine.js';
 
@@ -21,6 +22,7 @@ for (let i = 0; i < allCards.length - 1; i++) {
   }
 }
 console.log(`[Lore View] Strict A-Z order verified: ${isSortedAZ ? 'PASSED ✅' : 'FAILED ❌'}`);
+assert.ok(isSortedAZ, 'All cards in catalog must sort A-Z');
 
 // Test Z-A sorting
 const allCardsZA = [...allCards].sort((a, b) => b.name.localeCompare(a.name));
@@ -38,12 +40,17 @@ DECKS.forEach(deck => {
     }
   }
   console.log(`   • ${deck.name}: ${sortedDeckCards.length} cards -> ${deckSorted ? 'A-Z ✅' : 'FAILED ❌'}`);
+  assert.ok(deckSorted, `Deck ${deck.name} cards must be sortable A-Z`);
 });
 
-// 3. Deck Recipe Output Sorting
+// 3. Deck Recipe Output Sorting (With REAL deck IDs)
 console.log('\n[Deck Recipe Engine] Checking generated recipe draw pile and cat variants:');
 const recipe = calculateDeckRecipe({
-  ownedDeckIds: ['original-edition', 'good-vs-evil', 'streaking-kittens'],
+  ownedDeckIds: [
+    'exploding-kittens-original-edition',
+    'exploding-kittens-good-vs-evil',
+    'streaking-kittens-expansion'
+  ],
   decks: DECKS,
   catalog: ALL_CARDS_CATALOG,
   playerCount: 5,
@@ -53,13 +60,17 @@ const recipe = calculateDeckRecipe({
   streakingAddsEK: true
 });
 
+assert.ok(recipe.drawPileCards.length > 0, 'Recipe must contain cards in draw pile');
+assert.ok(recipe.catVariantsBreakdown.length > 0, 'Recipe must contain cat variants breakdown');
+
 let recipeSafeCardsSorted = true;
 for (let i = 0; i < recipe.drawPileCards.length - 1; i++) {
   if (recipe.drawPileCards[i].name.localeCompare(recipe.drawPileCards[i + 1].name) > 0) {
     recipeSafeCardsSorted = false;
   }
 }
-console.log(`[Deck Recipe Engine] Safe cards in draw pile sorted A-Z: ${recipeSafeCardsSorted ? 'PASSED ✅' : 'FAILED ❌'}`);
+console.log(`[Deck Recipe Engine] Safe cards in draw pile (${recipe.drawPileCards.length} cards) sorted A-Z: ${recipeSafeCardsSorted ? 'PASSED ✅' : 'FAILED ❌'}`);
+assert.ok(recipeSafeCardsSorted, 'Recipe draw pile cards must be sorted A-Z');
 
 let catVariantsSorted = true;
 for (let i = 0; i < recipe.catVariantsBreakdown.length - 1; i++) {
@@ -67,10 +78,7 @@ for (let i = 0; i < recipe.catVariantsBreakdown.length - 1; i++) {
     catVariantsSorted = false;
   }
 }
-console.log(`[Deck Recipe Engine] Cat variants breakdown sorted A-Z: ${catVariantsSorted ? 'PASSED ✅' : 'FAILED ❌'}`);
+console.log(`[Deck Recipe Engine] Cat variants breakdown (${recipe.catVariantsBreakdown.length} variants) sorted A-Z: ${catVariantsSorted ? 'PASSED ✅' : 'FAILED ❌'}`);
+assert.ok(catVariantsSorted, 'Recipe cat variants breakdown must be sorted A-Z');
 
-if (isSortedAZ && recipeSafeCardsSorted && catVariantsSorted) {
-  console.log('\n✨ All Card Sorting Tests Passed with 100% Success! ✨');
-} else {
-  process.exit(1);
-}
+console.log('\n✨ All Card Sorting Tests Passed with 100% Success! ✨');

@@ -126,6 +126,20 @@ const formatDeckName = (slug) => {
 };
 
 const getSynergyTip = (slug) => {
+  if (isGerman.value) {
+    const tipsDe = {
+      'barking-kitten': 'Spiele immer mit dem 2. Barking Kitten im Stapel! Hat ein anderer Spieler das Gegenstück, muss er sofort entschärfen oder explodiert.',
+      'streaking-kitten': 'Erlaubt es dir, 1 Explodierendes Kätzchen geheim auf der Hand zu halten. Zieht ein Gegner blind daraus, explodiert er!',
+      'armageddon': 'Startet das Duell zwischen Gottkatze und Teufelskatze. Stelle sicher, dass Gottkatze auf der Spielmatte liegt.',
+      'cat-card': 'Katzenkarten haben alleine keinen Effekt. Spiele 2 gleiche für eine Zufallskarte, 3 gleiche für eine Wunschkarte oder 5 verschiedene für eine beliebige Karte aus dem Ablagestapel!',
+      'feral-cat': 'Gilt als Joker für jede Katzenkarte, wodurch 2er- und 3er-Kombos viel einfacher werden.',
+      'catomic-bomb': 'Nimmt alle Bomben und legt sie oben auf den Stapel. Halte Aussetzen, Richtungswechsel oder Verändere die Zukunft bereit!',
+      'alter-the-future-3x': 'Direktes Upgrade zu Blick in die Zukunft: Erlaubt geheimes Ansehen UND Umordnen der obersten 3 Karten.',
+      'bury': 'Erlaubt es, eine Karte anzusehen und geheim an beliebiger Stelle im Nachziehstapel zu vergraben.',
+      'tower-of-power': 'Du trägst die Turm-der-Macht-Krone mit 6 Karten. Jeder, der von dir stiehlt, muss blind aus der Krone ziehen!'
+    };
+    return tipsDe[slug] || null;
+  }
   const tips = {
     'barking-kitten': 'Always play with the 2nd Barking Kitten in the deck! If someone else holds the second one, they must defuse or explode immediately.',
     'streaking-kitten': 'Allows you to secretly hold an Exploding Kitten in your hand! If another player tries to steal a card from you blindly and picks your Exploding Kitten, they explode.',

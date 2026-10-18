@@ -6,9 +6,9 @@
         <div class="header-left">
           <span class="sleeve-badge-icon">🎴</span>
           <div>
-            <h2 class="sleeve-title">Card Sleeving & Box Storage Calculator</h2>
+            <h2 class="sleeve-title">{{ isGerman ? "Kartenhüllen & Schachtel-Passform-Rechner" : "Card Sleeving & Box Storage Calculator" }}</h2>
             <p class="sleeve-subtitle">
-              Physical logistics for board game collectors: sleeve counts, stack thickness, and box fitting.
+              {{ isGerman ? "Physische Logistik für Sammler: Hüllenanzahl, Stapelhöhe und Schachtelkapazität." : "Physical logistics for board game collectors: sleeve counts, stack thickness, and box fitting." }}
             </p>
           </div>
         </div>
@@ -21,34 +21,34 @@
         <div class="stats-grid">
           <div class="stat-box">
             <span class="stat-number">{{ totalCards }}</span>
-            <span class="stat-label">Total Game Cards</span>
+            <span class="stat-label">{{ isGerman ? "Karten gesamt" : "Total Game Cards" }}</span>
           </div>
 
           <div class="stat-box">
             <span class="stat-number">63.5 × 88 mm</span>
-            <span class="stat-label">Standard Sleeve Size</span>
+            <span class="stat-label">{{ isGerman ? "Standard-Hüllengröße" : "Standard Sleeve Size" }}</span>
           </div>
 
           <div class="stat-box">
             <span class="stat-number">{{ packsOf100 }}</span>
-            <span class="stat-label">100-Pack Sleeves ({{ leftover100 }} extra)</span>
+            <span class="stat-label">{{ isGerman ? "100er-Pack (" + leftover100 + " übrig)" : "100-Pack Sleeves (" + leftover100 + " extra)" }}</span>
           </div>
 
           <div class="stat-box">
             <span class="stat-number">{{ packsOf50 }}</span>
-            <span class="stat-label">50-Pack Sleeves ({{ leftover50 }} extra)</span>
+            <span class="stat-label">{{ isGerman ? "50er-Pack (" + leftover50 + " übrig)" : "50-Pack Sleeves (" + leftover50 + " extra)" }}</span>
           </div>
         </div>
 
         <!-- Stack Thickness & Comparison Table -->
         <div class="spec-section">
-          <h4 class="section-heading">📏 Deck Stack Height & Thickness</h4>
+          <h4 class="section-heading">📏 {{ isGerman ? "Stapelhöhe & Kartendicke" : "Deck Stack Height & Thickness" }}</h4>
           <div class="thickness-comparison">
             <div class="thickness-card">
               <span class="thick-icon">📄</span>
-              <span class="thick-type">Raw (Unsleeved)</span>
+              <span class="thick-type">{{ isGerman ? "Ohne Hüllen (Roh)" : "Raw (Unsleeved)" }}</span>
               <span class="thick-val">{{ unsleevedHeightMm }} mm</span>
-              <span class="thick-sub">~0.30mm per card</span>
+              <span class="thick-sub">{{ isGerman ? "~0,30mm pro Karte" : "~0.30mm per card" }}</span>
             </div>
 
             <div class="thickness-card highlight-card">
@@ -69,7 +69,7 @@
 
         <!-- Physical Box Storage Compatibility Check -->
         <div class="spec-section">
-          <h4 class="section-heading">📦 Physical Game Box Fit Guide</h4>
+          <h4 class="section-heading">📦 {{ isGerman ? "Schachtel-Kompatibilität" : "Physical Game Box Fit Guide" }}</h4>
           <div class="boxes-fit-list">
             <div 
               v-for="b in boxFitAnalysis" 
@@ -81,7 +81,7 @@
                 <span class="box-status-icon">{{ b.fits ? '✅' : (b.tight ? '⚠️' : '❌') }}</span>
                 <div>
                   <strong class="box-name">{{ b.name }}</strong>
-                  <span class="box-capacity">Capacity: ~{{ b.capacity }} sleeved cards</span>
+                  <span class="box-capacity">{{ isGerman ? "Kapazität: ~" + b.capacity + " gehüllte Karten" : "Capacity: ~" + b.capacity + " sleeved cards" }}</span>
                 </div>
               </div>
               <span class="box-verdict-badge">{{ b.verdict }}</span>
@@ -91,7 +91,7 @@
 
         <!-- Recommended Sleeve Brands -->
         <div class="brands-tip-box">
-          <strong>💡 Recommended Sleeve Brands:</strong>
+          <strong>💡 {{ isGerman ? "Empfohlene Hüllen-Marken:" : "Recommended Sleeve Brands:" }}</strong>
           <span>Dragon Shield Clear Matte (63.5×88), GameGenic Matte Standard, or Mayday Games Chimera Standard.</span>
         </div>
       </div>
@@ -99,7 +99,7 @@
       <!-- Footer -->
       <div class="sleeve-footer">
         <button class="m3-btn m3-btn-primary" @click="$emit('close')">
-          Done
+          {{ isGerman ? "Fertig" : "Done" }}
         </button>
       </div>
     </div>
@@ -112,8 +112,11 @@ import { computed } from 'vue';
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
   totalCards: { type: Number, default: 56 },
-  ownedDeckIds: { type: Array, default: () => [] }
+  ownedDeckIds: { type: Array, default: () => [] },
+  currentLang: { type: String, default: 'en' }
 });
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 defineEmits(['close']);
 
@@ -129,34 +132,35 @@ const premiumSleevedHeightMm = computed(() => Math.round(props.totalCards * 0.58
 
 const boxFitAnalysis = computed(() => {
   const c = props.totalCards;
+  const isDe = isGerman.value;
   return [
     {
-      name: 'Original / NSFW Edition Tuck Box',
+      name: isDe ? 'Original / NSFW Klappschachtel' : 'Original / NSFW Edition Tuck Box',
       capacity: 60,
       fits: c <= 56,
       tight: c > 56 && c <= 65,
-      verdict: c <= 56 ? 'Perfect Fit' : (c <= 65 ? 'Very Tight with Sleeves' : 'Will Not Fit')
+      verdict: c <= 56 ? (isDe ? 'Perfekte Passform' : 'Perfect Fit') : (c <= 65 ? (isDe ? 'Sehr eng mit Hüllen' : 'Very Tight with Sleeves') : (isDe ? 'Passt nicht' : 'Will Not Fit'))
     },
     {
-      name: 'Party Pack Magnetic Drawer Box',
+      name: isDe ? 'Party Pack Magnet-Schubfach' : 'Party Pack Magnetic Drawer Box',
       capacity: 160,
       fits: c <= 150,
       tight: c > 150 && c <= 170,
-      verdict: c <= 150 ? 'Spacious Fit (Fits Sleeved)' : 'Tight Fit'
+      verdict: c <= 150 ? (isDe ? 'Viel Platz (mit Hüllen)' : 'Spacious Fit (Fits Sleeved)') : (isDe ? 'Knappe Passform' : 'Tight Fit')
     },
     {
-      name: 'Recipes for Disaster Organizer Box',
+      name: isDe ? 'Rezepte für die Katastrophe Sortier-Box' : 'Recipes for Disaster Organizer Box',
       capacity: 250,
       fits: c <= 240,
       tight: false,
-      verdict: 'Excellent Fit (Divided Trays)'
+      verdict: isDe ? 'Exzellent (Fächer-Einsatz)' : 'Excellent Fit (Divided Trays)'
     },
     {
-      name: 'Good vs Evil / Zombie Kittens Box',
+      name: isDe ? 'Good vs Evil / Zombie Kätzchen Box' : 'Good vs Evil / Zombie Kittens Box',
       capacity: 75,
       fits: c <= 70,
       tight: c > 70 && c <= 80,
-      verdict: c <= 70 ? 'Fits Comfortably' : (c <= 80 ? 'Snug Fit' : 'Overflows')
+      verdict: c <= 70 ? (isDe ? 'Bequeme Passform' : 'Fits Comfortably') : (c <= 80 ? (isDe ? 'Eng' : 'Snug Fit') : (isDe ? 'Zu klein' : 'Overflows'))
     }
   ];
 });

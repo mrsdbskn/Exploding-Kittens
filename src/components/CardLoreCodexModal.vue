@@ -6,9 +6,9 @@
         <div class="header-left">
           <span class="codex-badge-icon">📖</span>
           <div>
-            <h2 class="codex-title">Exploding Kittens Card Lore Codex</h2>
+            <h2 class="codex-title">{{ isGerman ? "Exploding Kittens Karten-Kodex" : "Exploding Kittens Card Lore Codex" }}</h2>
             <p class="codex-subtitle">
-              Comprehensive encyclopedia of all 45 cards: illustrations, mechanics, strategic tips, and Oatmeal lore.
+              {{ isGerman ? "Vollständige Enzyklopädie aller 45 Karten: Illustrationen, offizielle Mechaniken, strategische Tipps und Oatmeal-Lore." : "Comprehensive encyclopedia of all 45 cards: illustrations, mechanics, strategic tips, and Oatmeal lore." }}
             </p>
           </div>
         </div>
@@ -27,7 +27,7 @@
             <input 
               v-model="searchQuery" 
               type="text" 
-              placeholder="Search card name or keyword..." 
+              :placeholder="isGerman ? 'Karten nach Name oder Stichwort suchen...' : 'Search card name or keyword...'" 
               class="codex-search-input"
             />
             <button v-if="searchQuery" class="clear-btn" @click="searchQuery = ''">✕</button>
@@ -53,7 +53,7 @@
             :class="{ active: selectedCategory === cat.id }"
             @click="selectedCategory = cat.id"
           >
-            {{ cat.name }}
+            {{ getCategoryDisplayName(cat.id, cat.name, currentLang) }}
           </button>
         </div>
       </div>
@@ -74,24 +74,24 @@
             <span class="m3-badge m3-badge-primary">
               {{ formatCategory(selectedCard.category) }}
             </span>
-            <h3 class="codex-card-title">{{ selectedCard.name }}</h3>
-            <p class="codex-tagline">{{ selectedCard.shortDesc }}</p>
+            <h3 class="codex-card-title">{{ getCardDisplayName(selectedCard.slug, selectedCard.name, currentLang) }}</h3>
+            <p class="codex-tagline">{{ getCardDisplayDesc(selectedCard.slug, selectedCard.shortDesc, currentLang) }}</p>
 
             <!-- Official Mechanics -->
             <div class="codex-section-block">
-              <span class="block-title">📜 Official Rules & Mechanics</span>
-              <p class="mechanics-text">{{ selectedCard.mechanics || 'Follow instructions printed on the face of the card.' }}</p>
+              <span class="block-title">📜 {{ isGerman ? "Offizielle Regeln & Mechanik" : "Official Rules & Mechanics" }}</span>
+              <p class="mechanics-text">{{ getCardDisplayMechanics(selectedCard.slug, selectedCard.mechanics, currentLang) || (isGerman ? "Befolge die Anweisungen auf der Karte." : "Follow instructions printed on the face of the card.") }}</p>
             </div>
 
             <!-- Strategy & Combos -->
             <div class="codex-section-block" v-if="getSynergyTip(selectedCard.slug)">
-              <span class="block-title">💡 Strategic Synergy Tip</span>
+              <span class="block-title">💡 {{ isGerman ? "Strategischer Synergie-Tipp" : "Strategic Synergy Tip" }}</span>
               <p class="synergy-text">{{ getSynergyTip(selectedCard.slug) }}</p>
             </div>
 
             <!-- Included In Decks -->
             <div class="codex-section-block">
-              <span class="block-title">📦 Featured In Decks</span>
+              <span class="block-title">📦 {{ isGerman ? "Enthalten in diesen Decks" : "Featured In Decks" }}</span>
               <div class="decks-chips-list">
                 <span 
                   v-for="dSlug in (selectedCard.decks || [])" 
@@ -143,11 +143,15 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { ALL_CARDS_CATALOG, CATEGORIES, DECKS } from '../data/decksData.js';
+import { getCardDisplayName, getCardDisplayDesc, getCardDisplayMechanics, getCategoryDisplayName, getDeckDisplayName } from '../data/translations.js';
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
-  initialCardSlug: { type: String, default: null }
+  initialCardSlug: { type: String, default: null },
+  currentLang: { type: String, default: 'en' }
 });
+
+const isGerman = computed(() => props.currentLang === 'de');
 
 defineEmits(['close']);
 
@@ -206,7 +210,9 @@ const formatCategory = (cat) => {
 
 const formatDeckName = (deckSlug) => {
   const deck = DECKS.find(d => d.id === deckSlug || d.slug === deckSlug);
-  return deck ? deck.name.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '') : deckSlug;
+  if (!deck) return deckSlug;
+  const localized = getDeckDisplayName(deck.id, deck.name, props.currentLang);
+  return localized.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '');
 };
 
 const getSynergyTip = (slug) => {
