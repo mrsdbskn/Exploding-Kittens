@@ -4,7 +4,7 @@
       <!-- Brand / Logo -->
       <div class="brand">
         <div class="brand-icon-wrapper">
-          <span class="brand-emoji">💣😼</span>
+          <img :src="'./cards/exploding-kitten/exploding-kitten.png'" alt="Exploding Kittens" class="brand-logo-img" />
         </div>
         <div class="brand-text">
           <h1 class="brand-title">Exploding Kittens</h1>
@@ -195,11 +195,20 @@ const steps = computed(() => [
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 16px rgba(255, 117, 89, 0.2);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.brand-emoji {
-  font-size: 22px;
-  line-height: 1;
+.brand-logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand:hover .brand-logo-img {
+  transform: scale(1.15) rotate(-5deg);
 }
 
 .brand-title {
@@ -338,8 +347,9 @@ const steps = computed(() => [
     width: 36px;
     height: 36px;
   }
-  .brand-emoji {
-    font-size: 18px;
+  .brand-logo-img {
+    width: 26px;
+    height: 26px;
   }
   .header-actions {
     display: flex;
@@ -373,3 +383,4 @@ const steps = computed(() => [
   }
 }
 </style>
+
