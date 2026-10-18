@@ -320,8 +320,11 @@
             <div class="cat-variant-qty-chip">{{ v.quantity }}x</div>
           </div>
           <div class="cat-variant-meta">
-            <span class="cat-variant-name">{{ v.name }}</span>
-            <span class="cat-variant-deck">
+            <span class="cat-variant-name" :title="v.name">{{ v.name }}</span>
+            <span 
+              class="cat-variant-deck" 
+              :title="v.deckSources?.map(d => d.deckName).join(', ')"
+            >
               {{ v.deckSources?.map(d => d.deckName.replace('Exploding Kittens: ', '').replace('Exploding Kittens ', '')).join(', ') }}
             </span>
           </div>
@@ -837,15 +840,18 @@ const printRecipe = () => {
   background-color: var(--md-sys-color-surface-container-low);
   border-radius: var(--md-shape-lg);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  min-width: 0;
 }
 
 .stat-icon {
   font-size: 1.75rem;
+  flex-shrink: 0;
 }
 
 .stat-meta {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .stat-val {
@@ -1243,8 +1249,9 @@ const printRecipe = () => {
 
 .cat-variants-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  width: 100%;
 }
 
 .cat-variant-card {
@@ -1259,6 +1266,10 @@ const printRecipe = () => {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cat-variant-card:hover {
@@ -1308,12 +1319,19 @@ const printRecipe = () => {
   gap: 2px;
   margin-bottom: 10px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .cat-variant-name {
   font-size: 0.9375rem;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cat-variant-deck {
@@ -1322,6 +1340,10 @@ const printRecipe = () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: block;
 }
 
 .cat-preview-btn {
@@ -1502,7 +1524,7 @@ const printRecipe = () => {
 
 .curve-bars-grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 8px;
   align-items: flex-end;
   height: 90px;
@@ -1570,7 +1592,7 @@ const printRecipe = () => {
   .hero-actions {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
@@ -1582,7 +1604,7 @@ const printRecipe = () => {
   }
 
   .stats-ribbon {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 12px;
     gap: 8px;
     margin-bottom: 20px;
@@ -1664,13 +1686,35 @@ const printRecipe = () => {
     margin-bottom: 20px;
   }
 
+  .cat-variants-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .cat-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cat-total-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+
   .cat-variants-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+    width: 100%;
   }
 
   .cat-variant-card {
     padding: 10px 8px;
+    min-width: 0;
   }
 
   .cat-art-thumb-wrapper {
@@ -1753,6 +1797,42 @@ const printRecipe = () => {
   .recipe-bottom-nav .m3-btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .cat-variants-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .cat-variant-card {
+    padding: 10px 6px;
+    min-width: 0;
+  }
+
+  .cat-art-thumb-wrapper {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 4px;
+  }
+
+  .cat-variant-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .cat-variant-name {
+    font-size: 0.78rem;
+  }
+
+  .cat-variant-deck {
+    font-size: 0.68rem;
+  }
+
+  .cat-preview-btn {
+    padding: 3px 8px;
+    font-size: 0.68rem;
   }
 }
 
