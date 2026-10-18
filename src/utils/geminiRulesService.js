@@ -2,13 +2,54 @@ import { RULEBOOKS, RULES_FAQS } from '../data/rulesKnowledge.js';
 
 const STORAGE_KEY_API_KEY = 'ek_gemini_api_key';
 const STORAGE_KEY_MODEL = 'ek_gemini_model';
-export const DEFAULT_MODEL = 'gemini-flash-lite-latest';
+export const DEFAULT_MODEL = 'gemini-3.8-flash';
+export const BACKUP_MODEL = 'gemini-3.5-flash-lite';
 
 export const SUPPORTED_GEMINI_MODELS = [
-  { id: 'gemini-flash-lite-latest', name: 'Gemini Flash Lite (Ultra-Fast & Recommended ⚡)', description: 'Sub-second answers (<1s) for instant rulings' },
-  { id: 'gemini-flash-latest', name: 'Gemini Flash (Balanced)', description: 'Detailed grounded rulings' },
-  { id: 'gemini-pro-latest', name: 'Gemini Pro (Deep Reasoning)', description: 'Complex multi-card dispute analysis' }
+  { 
+    id: 'gemini-3.8-flash', 
+    name: 'Gemini 3.8 Flash (High Intelligence • Auto-Backup ⚡)', 
+    description: 'Top-tier reasoning (20 RPD free limit; automatically fails over to 3.5 Flash Lite when used up)' 
+  },
+  { 
+    id: 'gemini-3.5-flash-lite', 
+    name: 'Gemini 3.5 Flash Lite (High Quota • 1,500 RPD ⚡)', 
+    description: 'Sub-second answers (<1s) with generous 1,500 requests/day free tier quota' 
+  },
+  { 
+    id: 'gemini-flash-lite-latest', 
+    name: 'Gemini Flash Lite (Latest)', 
+    description: 'Fast, balanced lightweight model' 
+  },
+  { 
+    id: 'gemini-flash-latest', 
+    name: 'Gemini Flash (Balanced)', 
+    description: 'Standard grounded rulings' 
+  },
+  { 
+    id: 'gemini-pro-latest', 
+    name: 'Gemini Pro (Deep Reasoning)', 
+    description: 'Best for complex multi-card dispute analysis' 
+  }
 ];
+
+// Track models that recently hit quota limit (HTTP 429) to avoid latency on subsequent turns
+const quotaExhaustedModels = new Map();
+
+export function isModelQuotaExhausted(model) {
+  const ts = quotaExhaustedModels.get(model);
+  if (!ts) return false;
+  // Cache for 15 minutes before re-checking primary
+  if (Date.now() - ts > 15 * 60 * 1000) {
+    quotaExhaustedModels.delete(model);
+    return false;
+  }
+  return true;
+}
+
+export function markModelQuotaExhausted(model) {
+  quotaExhaustedModels.set(model, Date.now());
+}
 
 // Auto-import API key from URL parameter if present (?gemini_key=... or ?gemini=...)
 export function autoImportKeyFromUrl() {
@@ -135,50 +176,74 @@ CRITICAL RULES INVARIANTS:
 
 /**
  * Validate an API key by making a lightweight test query.
+ * If the primary model returns 429 (quota exhausted), tests the backup model.
  */
 export async function testGeminiApiKey(apiKey, model = DEFAULT_MODEL) {
   if (!apiKey || !apiKey.trim()) {
     return { ok: false, error: 'No API key provided.' };
   }
 
-  const modelPath = model.startsWith('models/') ? model : `models/${model}`;
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey.trim()}`;
-
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          { role: 'user', parts: [{ text: 'Respond with exactly: OK' }] }
-        ],
-        generationConfig: {
-          maxOutputTokens: 150,
-          temperature: 0.1,
-          thinkingConfig: { thinkingBudget: 0 }
-        }
-      })
-    });
-
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      const msg = errData?.error?.message || `HTTP ${response.status} ${response.statusText}`;
-      return { ok: false, error: msg };
-    }
-
-    const data = await response.json();
-    const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (candidateText) {
-      return { ok: true, message: `Connected to ${model} successfully!` };
-    }
-    return { ok: false, error: 'No content received from Gemini.' };
-  } catch (err) {
-    return { ok: false, error: err.message || 'Network error connecting to Google API.' };
+  const modelsToTest = [model];
+  if (model !== BACKUP_MODEL) {
+    modelsToTest.push(BACKUP_MODEL);
   }
+
+  let quotaExhaustedOnPrimary = false;
+
+  for (const m of modelsToTest) {
+    const modelPath = m.startsWith('models/') ? m : `models/${m}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey.trim()}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            { role: 'user', parts: [{ text: 'OK' }] }
+          ],
+          generationConfig: {
+            maxOutputTokens: 20,
+            temperature: 0.1,
+            thinkingConfig: { thinkingBudget: 0 }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          quotaExhaustedOnPrimary = true;
+          markModelQuotaExhausted(m);
+          continue; // Try backup model
+        }
+        const errData = await response.json().catch(() => ({}));
+        const msg = errData?.error?.message || `HTTP ${response.status} ${response.statusText}`;
+        return { ok: false, error: msg };
+      }
+
+      const data = await response.json();
+      const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (candidateText) {
+        if (quotaExhaustedOnPrimary) {
+          return {
+            ok: true,
+            message: `Verbunden! (${model} hat sein 20-RPD-Limit erreicht; automatisches Backup auf 3.5 Flash Lite ist aktiv ⚡)`
+          };
+        }
+        return { ok: true, message: `Verbunden mit ${m} erfolgreich!` };
+      }
+    } catch (err) {
+      return { ok: false, error: err.message || 'Netzwerkfehler zur Google API.' };
+    }
+  }
+
+  return { ok: false, error: 'Alle Modelle haben ihr Kontingent (429 Quota) erreicht.' };
 }
 
 /**
- * Send a chat turn to Gemini with full grounding and conversational history.
+ * Send a chat turn to Gemini with full grounding, history, and automatic quota failover.
+ * If the primary model (e.g. 3.8 Flash) hits its 20 RPD quota limit (HTTP 429),
+ * it seamlessly switches to 3.5 Flash Lite without disruption.
  */
 export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en') {
   const apiKey = getGeminiApiKey();
@@ -186,9 +251,22 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     throw new Error('Gemini API key is not configured.');
   }
 
-  const model = getGeminiModel();
-  const modelPath = model.startsWith('models/') ? model : `models/${model}`;
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
+  const selectedModel = getGeminiModel();
+
+  // Build candidate fallback list: [primary, backup1, backup2]
+  const candidates = [selectedModel];
+  if (selectedModel !== BACKUP_MODEL) {
+    candidates.push(BACKUP_MODEL);
+  }
+  if (!candidates.includes('gemini-flash-lite-latest')) {
+    candidates.push('gemini-flash-lite-latest');
+  }
+
+  // If primary model was recently marked 429 quota exhausted, promote backup to front
+  if (isModelQuotaExhausted(selectedModel) && candidates.length > 1) {
+    const primary = candidates.shift();
+    candidates.push(primary);
+  }
 
   // Convert previous messages to Gemini format (limit to last 8 turns to conserve context)
   const contents = [];
@@ -217,23 +295,58 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     }
   };
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+  let responseText = null;
+  let activeModelUsed = selectedModel;
+  let isBackupUsed = false;
+  let lastError = null;
 
-  if (!response.ok) {
-    const errorJson = await response.json().catch(() => ({}));
-    const errorMsg = errorJson?.error?.message || `HTTP ${response.status}: ${response.statusText}`;
-    throw new Error(errorMsg);
+  for (const modelToTry of candidates) {
+    try {
+      const modelPath = modelToTry.startsWith('models/') ? modelToTry : `models/${modelToTry}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        const status = response.status;
+        const errorMsg = errorJson?.error?.message || `HTTP ${status}: ${response.statusText}`;
+
+        // Quota exhausted (429) or temporary server error (503/500): switch to backup model
+        if (status === 429 || status === 503 || status === 500) {
+          if (status === 429) {
+            markModelQuotaExhausted(modelToTry);
+          }
+          console.warn(`Gemini model ${modelToTry} quota/rate limit hit (${status}), automatically switching to backup model...`);
+          lastError = new Error(errorMsg);
+          continue; // Try next candidate in the chain!
+        }
+
+        // Fatal errors (e.g. invalid key)
+        throw new Error(errorMsg);
+      }
+
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (text) {
+        responseText = text;
+        activeModelUsed = modelToTry;
+        isBackupUsed = (modelToTry !== selectedModel);
+        break; // Success!
+      }
+    } catch (err) {
+      lastError = err;
+      console.warn(`Query to model ${modelToTry} encountered error:`, err);
+    }
   }
 
-  const data = await response.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!text) {
-    throw new Error('No answer generated by Gemini.');
+  if (!responseText) {
+    throw lastError || new Error('No answer generated by Gemini.');
   }
 
   // Detect any related card slugs mentioned in the text for interactive preview buttons
@@ -245,17 +358,24 @@ export async function queryGeminiRules(userQuery, chatHistory = [], lang = 'en')
     'tower-of-power', 'curse-of-the-cat-butt'
   ];
 
-  const lowerText = text.toLowerCase();
+  const lowerText = responseText.toLowerCase();
   const relatedCards = potentialCards.filter(slug => {
     const readable = slug.replace(/-/g, ' ');
     return lowerText.includes(slug) || lowerText.includes(readable);
   }).slice(0, 3);
 
+  let refTag = `Gemini AI (${activeModelUsed})`;
+  if (isBackupUsed) {
+    refTag += lang === 'de' ? ' • Auto-Backup ⚡' : ' • Auto-Backup ⚡';
+  }
+  refTag += lang === 'de' ? ' • Offizielle Regelbücher Grounding' : ' • Grounded in Official Rulebooks';
+
   return {
-    answer: text,
-    reference: lang === "de" ? `Gemini AI (${model}) • Offizielle Regelbücher Grounding` : `Gemini AI (${model}) • Grounded in Official Rulebooks`,
+    answer: responseText,
+    reference: refTag,
     relatedCards,
     isGemini: true,
-    modelUsed: model
+    modelUsed: activeModelUsed,
+    isBackupUsed
   };
 }

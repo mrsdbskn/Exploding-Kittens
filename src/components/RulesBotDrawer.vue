@@ -150,10 +150,17 @@
             <div class="setting-field">
               <label class="setting-label">{{ isGerman ? 'Gemini Modell' : 'Gemini Model' }}</label>
               <select v-model="selectedModel" class="bot-select">
-                <option value="gemini-flash-lite-latest">Gemini Flash Lite (Ultra-Fast &amp; Recommended ⚡)</option>
-                <option value="gemini-flash-latest">Gemini Flash (Balanced)</option>
-                <option value="gemini-pro-latest">Gemini Pro (Deep Reasoning)</option>
+                <option value="gemini-3.8-flash">{{ isGerman ? 'Gemini 3.8 Flash (High Intelligence • mit 3.5 Backup ⚡)' : 'Gemini 3.8 Flash (High Intelligence • with 3.5 Backup ⚡)' }}</option>
+                <option value="gemini-3.5-flash-lite">{{ isGerman ? 'Gemini 3.5 Flash Lite (Hohe Quote • 1.500 RPD ⚡)' : 'Gemini 3.5 Flash Lite (High Quota • 1,500 RPD ⚡)' }}</option>
+                <option value="gemini-flash-lite-latest">{{ isGerman ? 'Gemini Flash Lite (Latest)' : 'Gemini Flash Lite (Latest)' }}</option>
+                <option value="gemini-flash-latest">{{ isGerman ? 'Gemini Flash (Ausgewogen)' : 'Gemini Flash (Balanced)' }}</option>
+                <option value="gemini-pro-latest">{{ isGerman ? 'Gemini Pro (Deep Reasoning)' : 'Gemini Pro (Deep Reasoning)' }}</option>
               </select>
+              <span class="setting-hint" style="margin-top: 6px; display: block; font-size: 0.78rem; opacity: 0.9; line-height: 1.35;">
+                {{ isGerman 
+                  ? '⚡ Intelligenter Quota-Schutz: Sollte das 20-Anfragen-Limit von Gemini 3.8 Flash aufgebraucht sein (429 Quota), schaltet der Schiedsrichter automatisch und ohne Unterbrechung auf Gemini 3.5 Flash Lite (1.500 RPD) um.' 
+                  : '⚡ Smart Quota Protection: If the 20 RPD free tier quota of Gemini 3.8 Flash is reached (429 Quota), the referee automatically falls back to Gemini 3.5 Flash Lite (1,500 RPD) with zero disruption.' }}
+              </span>
             </div>
 
             <!-- Test Connection Feedback Banner -->
@@ -333,7 +340,7 @@ const messagesContainer = ref(null);
 // Settings state
 const showSettings = ref(false);
 const apiKeyInput = ref('');
-const selectedModel = ref('gemini-flash-lite-latest');
+const selectedModel = ref('gemini-3.8-flash');
 const showApiKeyText = ref(false);
 const isTesting = ref(false);
 const testResult = ref(null);
